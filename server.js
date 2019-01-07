@@ -41,7 +41,7 @@ app.listen(http_port,()=>{
 });
 
 var envVariables = ['TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN',
-  'TWILIO_NUMBER', 'MISSED_CALLS_EMAIL_ADDRESS', 'HOST', 'ALICE_NUMBER',
+  'TWILIO_PHONE_NUMBER', 'MISSED_CALLS_EMAIL_ADDRESS', 'HOST', 'ALICE_NUMBER',
   'BOB_NUMBER'];
 envVariables.forEach(function (variableName) {
   if (!process.env[variableName]) {
