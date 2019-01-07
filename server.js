@@ -12,6 +12,12 @@ const client=require('twilio')(accountSid,authToken);
 const http_port=1337;
 var workspace = require('./lib/workspace')();
 
+function exitErrorHandler(error) {
+  console.error('An error occurred:');
+  console.error(error);
+  process.exit(1);
+}
+
 app.post('/enqueue_call',function(req,res){
 	const response=new VoiceResponse();
 	const enqueue=response.enqueue({
