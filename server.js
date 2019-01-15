@@ -46,8 +46,9 @@ app.post('/wait',function(req,res){
 //pass the reservationSid to the gather twiml using GET
 app.post('/agent_answer',function(req,res){
 	console.log("endpoint: agent_answer");
+	console.log("res.body: "+JSON.stringify(req.body));
 	const response=new VoiceResponse();
-	response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.body.reservationSid);
+	response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.body.ReservationSid);
 	res.send(response.toString());
 });
 
