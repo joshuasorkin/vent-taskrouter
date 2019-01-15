@@ -36,16 +36,18 @@ app.post('/enqueue_call',function(req,res){
 
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
-	response.say('Please wait while I find someone to give you attention.');
+	response.say('Please wait while I find a receiver.');
 	response.play(process.env.WAIT_URL);
 	res.send(response.toString());
 });
 
-
+//this endpoint just serves as a redirect, sort of a POST->GET wrapper, because the assignment callback
+//doesn't seem to have a way to use GET method, and we need to be able to
+//pass the reservationSid to the gather twiml using GET
 app.post('/agent_answer',function(req,res){
 	console.log("endpoint: agent_answer");
 	const response=new VoiceResponse();
-	response.redirect({method:'GET'},'/agent_answer?reservationSid='+req.body.reservationSid);
+	response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.body.reservationSid);
 });
 
 app.get('/agent_answer_start',function(req,res){
@@ -59,7 +61,7 @@ app.get('/agent_answer_start',function(req,res){
 		action:url,
 		method:'GET'
 	});
-	response.redirect({method:'GET'},'/agent_answer?reservationSid='+req.query.reservationSid);
+	response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.query.reservationSid);
 	res.send(response.toString());
 });
 
@@ -78,7 +80,7 @@ app.post('/agent_answer_process',function(req,res){
 			response.hangup();
 		default:
 			response.say('I didn\'t understand your response.');
-			response.redirect({method:'GET'},'/agent_answer?reservationSid='+req.query.reservationSid);
+			response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.query.reservationSid);
 	}
 });
 
@@ -93,7 +95,7 @@ app.post('/assignment/', function (req, res) {
     res.send({
       instruction: "call",
 	  from:process.env.TWILIO_PHONE_NUMBER,
-	  url:process.env.APP_BASE_URL+'/agent_answer?reservationSid='+req.body.ReservationSid,
+	  url:process.env.APP_BASE_URL+'/agent_answer',
 	  
 	  post_work_activity_sid:process.env.TWILIO_IDLE_SID
       //post_work_activity_sid: app.get('workspaceInfo').activities.idle
