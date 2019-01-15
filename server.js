@@ -48,6 +48,7 @@ app.post('/agent_answer',function(req,res){
 	console.log("endpoint: agent_answer");
 	const response=new VoiceResponse();
 	response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.body.reservationSid);
+	res.send(response.toString());
 });
 
 app.get('/agent_answer_start',function(req,res){
