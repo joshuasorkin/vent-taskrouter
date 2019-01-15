@@ -49,7 +49,8 @@ app.post('/assignment/', function (req, res) {
 	
 	res.type('application/json');
     res.send({
-      instruction: "dequeue"
+      instruction: "dequeue",
+	  post_work_activity_sid:process.env.TWILIO_IDLE_SID
       //post_work_activity_sid: app.get('workspaceInfo').activities.idle
     });
   });
