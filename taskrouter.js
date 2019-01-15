@@ -13,13 +13,16 @@ class Taskrouter{
 		const workflowSid=process.env.TWILIO_WORKFLOW_SID;
 		const configurationJSON=this.workflowConfigurer.configurationJSON();
 		console.log("configuration: "+JSON.stringify(configurationJSON));
-		this.workspace.workflows(workflowSid)
+		return this.workspace.workflows(workflowSid)
 					.update({
 						assignmentCallbackUrl:process.env.APP_BASE_URL+'/assignment',
-						configuration:configurationJSON
+						configuration:JSON.stringify(configurationJSON)
 					})
-                 .then(workflow => console.log(workflow.configuration))
-                 .done();
+                 .then(workflow => {
+					 console.log("workflow update then:\n"+workflow.configuration);
+					 return workflow;
+				 })
+				 .catch(err=>console.log("Error during workflow update: "+err));
 	}
 	
 }

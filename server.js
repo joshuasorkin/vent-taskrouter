@@ -44,7 +44,9 @@ app.post('/wait',function(req,res){
 // POST /call/assignment
 app.post('/assignment/', function (req, res) {
 	console.log("task attributes: "+req.body.TaskAttributes);
+	console.log("worker attributes: "+req.body.WorkerAttributes);
 	console.log("reservation sid: "+req.body.ReservationSid);
+	
 	res.type('application/json');
     res.send({
       instruction: "dequeue"
@@ -57,7 +59,9 @@ app.listen(http_port,()=>{
 	console.log("Configuring a Twilio's TaskRouter Workspace");
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	taskrouter=new Taskrouter(clientWorkspace);
-	taskrouter.configureWorkflow().done();
+	taskrouter.configureWorkflow()
+				.then(workflow=>console.log("returned from configureWorkflow"))
+				.done();
 	
 	/*
 	clientWorkspace.workflows(workflowSid)
