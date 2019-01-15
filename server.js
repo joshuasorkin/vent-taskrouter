@@ -41,6 +41,48 @@ app.post('/wait',function(req,res){
 	res.send(response.toString());
 });
 
+
+app.post('/agent_answer',function(req,res){
+	console.log("endpoint: agent_answer");
+	const response=new VoiceResponse();
+	response.redirect({method:'GET'},'/agent_answer?reservationSid='+req.body.reservationSid);
+});
+
+app.get('/agent_answer_start',function(req,res){
+	console.log("endpoint: agent_answer_start");
+	url='/agent_answer_process?reservationSid='+req.query.reservationSid;
+	console.log("url: "+url);
+	const response=new VoiceResponse();
+	response.say('You have a call from Vent.  Press 1 to accept, or 2 to refuse.');
+	const gather=response.gather({
+		numDigits:1,
+		action:url,
+		method:'GET'
+	});
+	response.redirect({method:'GET'},'/agent_answer?reservationSid='+req.query.reservationSid);
+	res.send(response.toString());
+});
+
+app.post('/agent_answer_process',function(req,res){
+	console.log("endpoint: agent_answer_process");
+	const response=new VoiceResponse();
+	switch(req.body.Digits){
+		case '1':
+			response.say('Thank you.  Now connecting you to caller.');
+			const dial=response.dial();
+			const queue=dial.queue({
+				reservationSid:req.query.reservationSid
+			});
+		case '2':
+			response.say('Sorry that you\'re not available.  Goodbye!');
+			response.hangup();
+		default:
+			response.say('I didn\'t understand your response.');
+			response.redirect({method:'GET'},'/agent_answer?reservationSid='+req.query.reservationSid);
+	}
+});
+
+
 // POST /call/assignment
 app.post('/assignment/', function (req, res) {
 	console.log("task attributes: "+req.body.TaskAttributes);
@@ -49,11 +91,16 @@ app.post('/assignment/', function (req, res) {
 	
 	res.type('application/json');
     res.send({
-      instruction: "dequeue",
+      instruction: "call",
+	  from:process.env.TWILIO_PHONE_NUMBER,
+	  url:process.env.APP_BASE_URL+'/agent_answer?reservationSid='+req.body.ReservationSid,
+	  
 	  post_work_activity_sid:process.env.TWILIO_IDLE_SID
       //post_work_activity_sid: app.get('workspaceInfo').activities.idle
     });
-  });
+ });
+
+  
 
 app.listen(http_port,()=>{
 	console.log(`app listening on port ${http_port}`);
