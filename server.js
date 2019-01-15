@@ -5,6 +5,7 @@ const twilio=require('twilio');
 const app = express();
 const bodyParser = require('body-parser');
 const VoiceResponse=require('twilio').twiml.VoiceResponse;
+const MessageResponse=require('twilio').twiml.MessageResponse;
 const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 const workspaceSid = process.env.TWILIO_WORKSPACE_SID; //add your workspace sid
@@ -23,6 +24,33 @@ function exitErrorHandler(error) {
 }
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.post('/sms',function(req,res){
+	body=req.body.Body;
+	var responseBody;
+	var activitySid;
+	if (body=="on"){
+		activitySid=process.env.TWILIO_IDLE_SID;
+		responseBody="available";
+	}
+	else{
+		activitySid=process.env.TWILIO_OFFLINE_SID;
+		responseBody="not available";
+	}
+	const response=new MessageResponse();
+	clientWorkspace.workers
+					.each({
+						targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
+					})
+					.update({
+						ActivitySid:activitySid
+					})
+					.then(worker=>console.log(worker.activityName))
+					.done();
+	response.message(responseBody);
+	res.writeHead(200, {'Content-Type': 'text/xml'});
+	res.end(response.toString());
+});
 
 app.post('/enqueue_call',function(req,res){
 	const response=new VoiceResponse();
@@ -47,6 +75,13 @@ app.post('/wait',function(req,res){
 app.post('/agent_answer',function(req,res){
 	console.log("endpoint: agent_answer");
 	console.log("res.body: "+JSON.stringify(req.body));
+	clientWorkspace.tasks
+					.each({
+						evaluateTaskAttributes:"worker_call_sid == '"+req.body.CallSid+"'"
+					},task=>{
+						console.log
+					})
+					.done();
 	const response=new VoiceResponse();
 	response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.body.ReservationSid);
 	res.send(response.toString());
