@@ -5,7 +5,7 @@ const twilio=require('twilio');
 const app = express();
 const bodyParser = require('body-parser');
 const VoiceResponse=require('twilio').twiml.VoiceResponse;
-const MessageResponse=require('twilio').twiml.MessageResponse;
+const MessagingResponse=require('twilio').twiml.MessagingResponse;
 const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 const workspaceSid = process.env.TWILIO_WORKSPACE_SID; //add your workspace sid
@@ -14,8 +14,9 @@ const client=require('twilio')(accountSid,authToken);
 //var workspace = require('./lib/workspace')();
 const http_port=process.env.HTTP_PORT;
 const Taskrouter=require('./taskrouter');
+const UrlSerializer=require('./urlSerializer');
 var clientWorkspace;
-
+var urlSerializer=new UrlSerializer();
 
 function exitErrorHandler(error) {
   console.error('An error occurred:');
@@ -37,16 +38,17 @@ app.post('/sms',function(req,res){
 		activitySid=process.env.TWILIO_OFFLINE_SID;
 		responseBody="not available";
 	}
-	const response=new MessageResponse();
 	clientWorkspace.workers
 					.each({
 						targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
-					})
-					.update({
-						ActivitySid:activitySid
-					})
-					.then(worker=>console.log(worker.activityName))
-					.done();
+					},worker=>{
+						worker.update({
+							ActivitySid:activitySid
+						})
+						.then(worker=>console.log("worker updated to: "+worker.activityName))
+					});
+	
+	const response=new MessagingResponse();
 	response.message(responseBody);
 	res.writeHead(200, {'Content-Type': 'text/xml'});
 	res.end(response.toString());
@@ -69,6 +71,8 @@ app.post('/wait',function(req,res){
 	res.send(response.toString());
 });
 
+
+/*
 //this endpoint just serves as a redirect, sort of a POST->GET wrapper, because the assignment callback
 //doesn't seem to have a way to use GET method, and we need to be able to
 //pass the reservationSid to the gather twiml using GET
@@ -86,10 +90,13 @@ app.post('/agent_answer',function(req,res){
 	response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.body.ReservationSid);
 	res.send(response.toString());
 });
+*/
 
-app.get('/agent_answer_start',function(req,res){
-	console.log("endpoint: agent_answer_start");
-	url='/agent_answer_process?reservationSid='+req.query.reservationSid;
+app.get('/agent_answer',function(req,res){
+	parameters=urlSerializer.deserialize(req,'parameters');
+	console.log("endpoint: agent_answer");
+	url=urlSerializer.serialize('agent_answer_process',parameters,'parameters');
+	redirectUrl=urlSerializer.serialize('agent_answer',parameters,'parameters');
 	console.log("url: "+url);
 	const response=new VoiceResponse();
 	response.say('You have a call from Vent.  Press 1 to accept, or 2 to refuse.');
@@ -98,26 +105,29 @@ app.get('/agent_answer_start',function(req,res){
 		action:url,
 		method:'GET'
 	});
-	response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.query.reservationSid);
+	response.redirect({method:'GET'},redirectUrl);
 	res.send(response.toString());
 });
 
 app.post('/agent_answer_process',function(req,res){
 	console.log("endpoint: agent_answer_process");
+	parameters=urlSerializer.deserialize(req,'parameters');
+	redirectUrl=urlSerializer.serialize('agent_answer',parameters,'parameters');
 	const response=new VoiceResponse();
 	switch(req.body.Digits){
 		case '1':
 			response.say('Thank you.  Now connecting you to caller.');
+			workspace.
 			const dial=response.dial();
 			const queue=dial.queue({
-				reservationSid:req.query.reservationSid
+				reservationSid:parameters.reservationSid
 			});
 		case '2':
 			response.say('Sorry that you\'re not available.  Goodbye!');
 			response.hangup();
 		default:
 			response.say('I didn\'t understand your response.');
-			response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.query.reservationSid);
+			response.redirect({method:'GET'},redirectUrl);
 	}
 });
 
@@ -127,16 +137,24 @@ app.post('/assignment/', function (req, res) {
 	console.log("task attributes: "+req.body.TaskAttributes);
 	console.log("worker attributes: "+req.body.WorkerAttributes);
 	console.log("reservation sid: "+req.body.ReservationSid);
+	taskSid=req.body.TaskSid;
+	reservationSid=req.body.ReservationSid;
+	parameters={
+		taskSid:taskSid,
+		reservationSid:reservationSid
+	}
+	url=urlSerializer.serialize('agent_answer',parameters,'parameters');
+	var call=client.calls.create({
+		url:url,
+		to: req.body.WorkerAttributes.contact_uri,
+		from: process.env.TWILIO_PHONE_NUMBER,
+		method: 'GET'
+		
+	}).then(x=>console.log("createCallToHost: logging return value of client calls create "+x));
+	
 	
 	res.type('application/json');
-    res.send({
-      instruction: "call",
-	  from:process.env.TWILIO_PHONE_NUMBER,
-	  url:process.env.APP_BASE_URL+'/agent_answer',
-	  
-	  post_work_activity_sid:process.env.TWILIO_IDLE_SID
-      //post_work_activity_sid: app.get('workspaceInfo').activities.idle
-    });
+    res.status(200).send({ error: "error occurred at assignment endpoint" });
  });
 
   

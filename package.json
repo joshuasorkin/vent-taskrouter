@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/joshuasorkin/vent-taskrouter/issues"
   },
-  "homepage": "https://github.com/joshuasorkin/vent-taskrouter#readme"
+  "homepage": "https://github.com/joshuasorkin/vent-taskrouter#readme",
+  "dependencies": {
+    "querystring": "^0.2.0"
+  }
 }
