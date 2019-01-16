@@ -164,6 +164,9 @@ app.post('/assignment/', function (req, res) {
 	console.log("reservation sid: "+req.body.ReservationSid);
 	taskSid=req.body.TaskSid;
 	reservationSid=req.body.ReservationSid;
+	WorkerAttributes=req.body.WorkerAttributes;
+	contact_uri=WorkerAttributes['contact_uri'];
+	console.log("contact_uri: "+contact_uri);
 	parameters={
 		taskSid:taskSid,
 		reservationSid:reservationSid
@@ -171,7 +174,7 @@ app.post('/assignment/', function (req, res) {
 	url=urlSerializer.serialize('agent_answer',parameters,'parameters');
 	var call=client.calls.create({
 		url:url,
-		to: req.body.WorkerAttributes.contact_uri,
+		to: contact_uri,
 		from: process.env.TWILIO_PHONE_NUMBER,
 		method: 'GET'
 		
