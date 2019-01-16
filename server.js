@@ -120,7 +120,7 @@ app.get('/agent_answer_process',function(req,res){
 	parameters=urlSerializer.deserialize(req,'parameters');
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters,'parameters');
 	const response=new VoiceResponse();
-	switch(req.body.Digits){
+	switch(req.query.Digits){
 		case '1':
 			response.say('Thank you.  Now connecting you to caller.');
 			workspace
@@ -143,10 +143,12 @@ app.get('/agent_answer_process',function(req,res){
 					console.log(reservation.workerName);
 				});
 			
+			/*
 			const dial=response.dial();
 			const queue=dial.queue({
 				reservationSid:parameters.reservationSid
 			});
+			*/
 		case '2':
 			response.say('Sorry that you\'re not available.  Goodbye!');
 			response.hangup();
