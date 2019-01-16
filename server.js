@@ -109,6 +109,12 @@ app.get('/agent_answer',function(req,res){
 	res.send(response.toString());
 });
 
+app.post('/conferenceEvents',function(req,res){
+	console.log("conference event: "+req.body.StatusCallbackEvent);
+	res.status(200).send();
+});
+
+
 app.post('/agent_answer_process',function(req,res){
 	console.log("endpoint: agent_answer_process");
 	parameters=urlSerializer.deserialize(req,'parameters');
@@ -117,7 +123,26 @@ app.post('/agent_answer_process',function(req,res){
 	switch(req.body.Digits){
 		case '1':
 			response.say('Thank you.  Now connecting you to caller.');
-			workspace.
+			workspace
+				.tasks(parameters.taskSid)
+				.reservations(parameters.reservationSid)
+				.update({
+					instruction:'conference',
+					from:process.env.TWILIO_PHONE_NUMBER,
+					conferenceStatusCallback:process.env.APP_BASE_URL+'/conferenceEvents',
+					conferenceStatusCallbackEvent:[
+						'start',
+						'end',
+						'join',
+						'leave',
+						'mute',
+						'hold'
+				]})
+				.then((reservation) => {
+					console.log(reservation.reservationStatus);
+					console.log(reservation.workerName);
+				});
+			
 			const dial=response.dial();
 			const queue=dial.queue({
 				reservationSid:parameters.reservationSid

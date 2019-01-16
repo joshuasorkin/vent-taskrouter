@@ -25,6 +25,19 @@ class Taskrouter{
 				 .catch(err=>console.log("Error during workflow update: "+err));
 	}
 	
+	updateReservation(taskSid,reservationSid,status){
+		this.workspace
+			.tasks(parameters.taskSid)
+			.reservations(parameters.reservationSid)
+			.update({
+				reservationStatus:'accepted'
+			})
+			.then((reservation) => {
+				console.log(reservation.reservationStatus);
+				console.log(reservation.workerName);
+			});
+	}
+	
 }
 
 module.exports=Taskrouter;
