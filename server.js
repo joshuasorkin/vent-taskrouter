@@ -123,7 +123,7 @@ app.get('/agent_answer_process',function(req,res){
 	switch(req.query.Digits){
 		case '1':
 			response.say('Thank you.  Now connecting you to caller.');
-			workspace
+			clientWorkspace
 				.tasks(parameters.taskSid)
 				.reservations(parameters.reservationSid)
 				.update({
