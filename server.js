@@ -164,8 +164,8 @@ app.post('/assignment/', function (req, res) {
 	console.log("reservation sid: "+req.body.ReservationSid);
 	taskSid=req.body.TaskSid;
 	reservationSid=req.body.ReservationSid;
-	WorkerAttributes=req.body.WorkerAttributes;
-	contact_uri=WorkerAttributes['contact_uri'];
+	WorkerAttributes=JSON.parse(req.body.WorkerAttributes);
+	contact_uri=WorkerAttributes.contact_uri;
 	console.log("contact_uri: "+contact_uri);
 	parameters={
 		taskSid:taskSid,
