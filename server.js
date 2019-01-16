@@ -115,7 +115,7 @@ app.post('/conferenceEvents',function(req,res){
 });
 
 
-app.post('/agent_answer_process',function(req,res){
+app.get('/agent_answer_process',function(req,res){
 	console.log("endpoint: agent_answer_process");
 	parameters=urlSerializer.deserialize(req,'parameters');
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters,'parameters');
