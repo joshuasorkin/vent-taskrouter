@@ -165,6 +165,7 @@ app.post('/assignment/', function (req, res) {
 	console.log("worker attributes: "+req.body.WorkerAttributes);
 	console.log("reservation sid: "+req.body.ReservationSid);
 	taskSid=req.body.TaskSid;
+	console.log("task sid: "+taskSid);
 	reservationSid=req.body.ReservationSid;
 	WorkerAttributes=JSON.parse(req.body.WorkerAttributes);
 	contact_uri=WorkerAttributes.contact_uri;
