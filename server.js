@@ -105,7 +105,9 @@ app.get('/agent_answer',function(req,res){
 		action:url,
 		method:'GET'
 	});
-	response.redirect({method:'GET'},redirectUrl);
+	//response.redirect({method:'GET'},redirectUrl);
+	response.say('I didn\'t get any input from you.  Goodbye!');
+	response.hangup();
 	res.send(response.toString());
 });
 
