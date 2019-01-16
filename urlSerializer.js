@@ -1,9 +1,10 @@
-require('querystring');
+const querystring=require('querystring');
 require('env2')('.env');
+
 
 class UrlSerializer{
 	serialize(endpoint,paramArray,paramArrayName){
-		url=process.env.APP_BASE_URL+"/"+endpoint;
+		var url=process.env.APP_BASE_URL+"/"+endpoint;
 		return url+"?"+querystring.stringify({[paramArrayName]:JSON.stringify(paramArray)});
 	}
 
@@ -12,3 +13,5 @@ class UrlSerializer{
 	}
 	
 }
+
+module.exports=UrlSerializer;
