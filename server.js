@@ -194,7 +194,15 @@ app.post('/assignment/', function (req, res) {
 
 app.listen(http_port,()=>{
 	console.log(`app listening on port ${http_port}`);
-	console.log("Configuring a Twilio's TaskRouter Workspace");
+	console.log("Configuring incoming call urls...");
+	client.incomingPhoneNumbers(process.env.TWILIO_PHONE_NUMBER_SID)
+		.update({
+			smsUrl:APP_BASE_URL+"/enqueue_call",
+			voiceUrl:APP_BASE_URL+"/sms"
+		})
+		.then(incoming_phone_number=>console.log(incoming_phone_number.friendlyName)
+		.done();
+	console.log("Configuring workspace...");
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	taskrouter=new Taskrouter(clientWorkspace);
 	taskrouter.configureWorkflow()
