@@ -195,13 +195,16 @@ app.post('/assignment/', function (req, res) {
 app.listen(http_port,()=>{
 	console.log(`app listening on port ${http_port}`);
 	console.log("Configuring incoming call urls...");
+	
+	baseUrl=process.env.APP_BASE_URL;
 	client.incomingPhoneNumbers(process.env.TWILIO_PHONE_NUMBER_SID)
 		.update({
-			smsUrl:APP_BASE_URL+"/enqueue_call",
-			voiceUrl:APP_BASE_URL+"/sms"
+			smsUrl:baseUrl+"/sms",
+			voiceUrl:baseUrl+"/enqueue_call"
 		})
-		.then(incoming_phone_number=>console.log(incoming_phone_number.friendlyName)
+		.then(incoming_phone_number=>console.log(incoming_phone_number.friendlyName))
 		.done();
+		
 	console.log("Configuring workspace...");
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	taskrouter=new Taskrouter(clientWorkspace);
