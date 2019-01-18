@@ -125,6 +125,19 @@ app.get('/agent_answer_process',function(req,res){
 	switch(req.query.Digits){
 		case '1':
 			response.say('Thank you.  Now connecting you to caller.');
+			const dial=response.dial();
+			conferenceCallbackUrl=urlSerializer.serialize('conferenceEvents',parameters,'parameters');
+			dial.conference({
+				waitUrl:process.env.WAIT_URL,
+				statusCallbackEvent:[
+					'start',
+					'end',
+					'join'
+				],
+				statusCallback:conferenceCallbackUrl
+			},parameters.reservationSid);
+			
+			/*
 			clientWorkspace
 				.tasks(parameters.taskSid)
 				.reservations(parameters.reservationSid)
@@ -144,7 +157,7 @@ app.get('/agent_answer_process',function(req,res){
 					console.log(reservation.reservationStatus);
 					console.log(reservation.workerName);
 				});
-			
+			*/
 			/*
 			const dial=response.dial();
 			const queue=dial.queue({
@@ -176,7 +189,8 @@ app.post('/assignment/', function (req, res) {
 		taskSid:taskSid,
 		reservationSid:reservationSid
 	}
-	url=urlSerializer.serialize('agent_answer',parameters,'parameters');
+	url=urlSerializer.serialize('agent_answer',parameters,'parameters');	
+	
 	var call=client.calls.create({
 		url:url,
 		to: contact_uri,
@@ -185,9 +199,23 @@ app.post('/assignment/', function (req, res) {
 		
 	}).then(x=>console.log("createCallToHost: logging return value of client calls create "+x));
 	
+	var response=new VoiceResponse();
+	response.say("Please continue to hold while we find an agent.");
+	const dial=response.dial();
+	conferenceCallbackUrl=urlSerializer.serialize('conferenceEvents',parameters,'parameters');
+	dial.conference({
+		waitUrl:process.env.WAIT_URL,
+		statusCallbackEvent:[
+			'start',
+			'end',
+			'join'
+		],
+		statusCallback:conferenceCallbackUrl
+	},parameters.reservationSid);
+
 	
 	res.type('application/json');
-    res.status(200).send({ error: "error occurred at assignment endpoint" });
+    res.status(200).send(response.toString());
  });
 
   
