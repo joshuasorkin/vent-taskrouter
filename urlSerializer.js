@@ -3,13 +3,18 @@ require('env2')('.env');
 
 
 class UrlSerializer{
-	serialize(endpoint,paramArray,paramArrayName){
+	
+	constructor(){
+		this.paramArrayName="parameters";
+	}
+	
+	serialize(endpoint,paramArray){
 		var url=process.env.APP_BASE_URL+"/"+endpoint;
-		return url+"?"+querystring.stringify({[paramArrayName]:JSON.stringify(paramArray)});
+		return url+"?"+querystring.stringify({[this.paramArrayName]:JSON.stringify(paramArray)});
 	}
 
-	deserialize(req,paramArrayName){
-		return JSON.parse(req.query[paramArrayName]);
+	deserialize(req){
+		return JSON.parse(req.query[this.paramArrayName]);
 	}
 	
 }

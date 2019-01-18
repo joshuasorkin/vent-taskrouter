@@ -15,8 +15,10 @@ const client=require('twilio')(accountSid,authToken);
 const http_port=process.env.HTTP_PORT;
 const Taskrouter=require('./taskrouter');
 const UrlSerializer=require('./urlSerializer');
+const ConferenceGenerator=require('./conferenceGenerator');
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
+var conferenceGenerator=new ConferenceGenerator();
 
 function exitErrorHandler(error) {
   console.error('An error occurred:');
@@ -93,10 +95,10 @@ app.post('/agent_answer',function(req,res){
 */
 
 app.get('/agent_answer',function(req,res){
-	parameters=urlSerializer.deserialize(req,'parameters');
+	parameters=urlSerializer.deserialize(req);
 	console.log("endpoint: agent_answer");
-	url=urlSerializer.serialize('agent_answer_process',parameters,'parameters');
-	redirectUrl=urlSerializer.serialize('agent_answer',parameters,'parameters');
+	url=urlSerializer.serialize('agent_answer_process',parameters);
+	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	console.log("url: "+url);
 	const response=new VoiceResponse();
 	response.say('You have a call from Vent.  Press 1 to accept, or 2 to refuse.');
@@ -116,27 +118,22 @@ app.post('/conferenceEvents',function(req,res){
 	res.status(200).send();
 });
 
+app.get('/updateCallToConference',function(req,res){
+	parameters=urlSerializer.deserialize(req);
+}
 
 app.get('/agent_answer_process',function(req,res){
 	console.log("endpoint: agent_answer_process");
-	parameters=urlSerializer.deserialize(req,'parameters');
-	redirectUrl=urlSerializer.serialize('agent_answer',parameters,'parameters');
+	parameters=urlSerializer.deserialize(req);
+	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	const response=new VoiceResponse();
 	switch(req.query.Digits){
 		case '1':
-			response.say('Thank you.  Now connecting you to caller.');
-			const dial=response.dial();
-			conferenceCallbackUrl=urlSerializer.serialize('conferenceEvents',parameters,'parameters');
-			dial.conference({
-				waitUrl:process.env.WAIT_URL,
-				statusCallbackEvent:[
-					'start',
-					'end',
-					'join'
-				],
-				statusCallback:conferenceCallbackUrl
-			},parameters.reservationSid);
-			
+			response=conferenceGenerator.generateConference(parameters,'Thank you.  Now connecting you to caller.');
+			client.calls(parameters.CallSid)
+					.update({
+						
+					})
 			/*
 			clientWorkspace
 				.tasks(parameters.taskSid)
@@ -171,6 +168,7 @@ app.get('/agent_answer_process',function(req,res){
 			response.say('I didn\'t understand your response.');
 			response.redirect({method:'GET'},redirectUrl);
 	}
+	res.send(response.toString());
 });
 
 
@@ -189,7 +187,7 @@ app.post('/assignment/', function (req, res) {
 		taskSid:taskSid,
 		reservationSid:reservationSid
 	}
-	url=urlSerializer.serialize('agent_answer',parameters,'parameters');	
+	url=urlSerializer.serialize('agent_answer',parameters);	
 	
 	var call=client.calls.create({
 		url:url,
@@ -199,23 +197,9 @@ app.post('/assignment/', function (req, res) {
 		
 	}).then(x=>console.log("createCallToHost: logging return value of client calls create "+x));
 	
-	var response=new VoiceResponse();
-	response.say("Please continue to hold while we find an agent.");
-	const dial=response.dial();
-	conferenceCallbackUrl=urlSerializer.serialize('conferenceEvents',parameters,'parameters');
-	dial.conference({
-		waitUrl:process.env.WAIT_URL,
-		statusCallbackEvent:[
-			'start',
-			'end',
-			'join'
-		],
-		statusCallback:conferenceCallbackUrl
-	},parameters.reservationSid);
-
 	
 	res.type('application/json');
-    res.status(200).send(response.toString());
+    res.status(200).send({error:'an error occurred in assignment callback'});
  });
 
   
