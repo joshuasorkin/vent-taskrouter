@@ -120,6 +120,8 @@ app.post('/conferenceEvents',function(req,res){
 
 app.get('/updateCallToConference',function(req,res){
 	parameters=urlSerializer.deserialize(req);
+	response=conferenceGenerator.generateConference(parameters,null);
+	res.send(response.toString());
 }
 
 app.get('/agent_answer_process',function(req,res){
