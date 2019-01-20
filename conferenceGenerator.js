@@ -22,7 +22,8 @@ class ConferenceGenerator{
 				'end',
 				'join'
 			],
-			statusCallback:conferenceCallbackUrl
+			statusCallback:conferenceCallbackUrl,
+			statusCallbackMethod:'GET'
 		},parameters.reservationSid);
 		return response;	
 	}
