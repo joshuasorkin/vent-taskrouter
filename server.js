@@ -120,7 +120,7 @@ app.post('/conferenceEvents',function(req,res){
 
 app.get('/updateCallToConference',function(req,res){
 	parameters=urlSerializer.deserialize(req);
-	response=conferenceGenerator.generateConference(parameters,null);
+	var response=conferenceGenerator.generateConference(parameters,null);
 	res.send(response.toString());
 });
 
@@ -129,7 +129,7 @@ app.get('/agent_answer_process',function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	conferenceUpdateUrl=urlSerializer.serialize('updateCallToConference',parameters);
-	const response=new VoiceResponse();
+	var response=new VoiceResponse();
 	switch(req.query.Digits){
 		case '1':
 			response=conferenceGenerator.generateConference(parameters,'Thank you.  Now connecting you to caller.');
