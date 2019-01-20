@@ -32,48 +32,64 @@ app.post('/sms',function(req,res){
 	var body=req.body.Body;
 	bodyArray=body.split(" ");
 	var responseBody;
-	var activitySid;
-	res.writeHead(200, {'Content-Type': 'text/xml'});
-
+	var activitySid=process.env.TWILIO_OFFLINE_SID;
+	const response=new MessagingResponse();
+	var promise;
 	switch (bodyArray[0].toLowerCase()){
 		case "on":
-			activitySid=process.env.TWILIO_IDLE_SID;
-			responseBody="available";	
+			promise=(function(){
+				activitySid=process.env.TWILIO_IDLE_SID;
+				clientWorkspace.workers
+				.each({
+					targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
+				},worker=>{
+					worker.update({
+						ActivitySid:activitySid
+					})
+					.then(worker=>console.log("worker updated to: "+worker.activityName))
+				});				
+				responseBody="available";
+			})();
 			break;
 		case "add":
-			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
-				clientWorkspace
-					.workers
-					.create({attributes: JSON.stringify({
-						languages: 'en',
-						contact_uri: bodyArray[2]
-					}), friendlyName: bodyArray[3]}).
-					then(worker=>{
-						responseBody="worker created: "+worker.friendlyName;
-					})
-					.done();
-			}
-			else{
-				responseBody="incorrect admin password";
-			}
+			promise=(function(){
+				if (bodyArray[1]==process.env.ADMIN_PASSWORD){
+					clientWorkspace
+						.workers
+						.create({attributes: JSON.stringify({
+							languages: 'en',
+							contact_uri: bodyArray[2]
+						}), friendlyName: bodyArray[3]}).
+						then(worker=>{
+							responseBody="worker created: "+worker.friendlyName;
+							response.message(responseBody);
+							console.log("response body: "+responseBody);
+						})
+				}
+				else{
+					responseBody="incorrect admin password";
+				}
+			})();
 			break;
 		default:
-			activitySid=process.env.TWILIO_OFFLINE_SID;
-			responseBody="not available";
+			promise=(function(){
+				clientWorkspace.workers
+				.each({
+					targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
+				},worker=>{
+					worker.update({
+						ActivitySid:activitySid
+					})
+					.then(worker=>console.log("worker updated to: "+worker.activityName))
+				});
+				responseBody="not available";
+			})();
 	}
-	clientWorkspace.workers
-					.each({
-						targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
-					},worker=>{
-						worker.update({
-							ActivitySid:activitySid
-						})
-						.then(worker=>console.log("worker updated to: "+worker.activityName))
-					});
-	
-	const response=new MessagingResponse();
-	response.message(responseBody);
-	res.send(response.toString());
+	promise.then({
+		response.message(responseBody);
+		res.writeHead(200, {'Content-Type': 'text/xml'});
+		res.end(response.toString());
+	});
 });
 
 app.post('/enqueue_call',function(req,res){
