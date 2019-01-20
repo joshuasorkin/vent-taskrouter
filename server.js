@@ -95,6 +95,7 @@ app.get('/agent_answer',function(req,res){
 
 app.get('/conferenceEvents',function(req,res){
 	console.log("conference event: "+req.body.StatusCallbackEvent);
+	res.type('application/json');
 	res.status(200).send();
 });
 

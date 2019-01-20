@@ -13,7 +13,8 @@ class ConferenceGenerator{
 			response.say(initialSay);
 		}
 		const dial=response.dial();
-		var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters,'parameters');
+		//var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters,'parameters');
+		var conferenceCallbackUrl=process.env.APP_BASE_URL+'/conferenceEvents';
 		console.log("conferenceGenerator's conferenceCallbackUrl: "+conferenceCallbackUrl);
 		dial.conference({
 			waitUrl:process.env.WAIT_URL,
@@ -23,7 +24,7 @@ class ConferenceGenerator{
 				'join'
 			],
 			statusCallback:conferenceCallbackUrl,
-			statusCallbackMethod:'GET'
+			statusCallbackMethod:'POST'
 		},parameters.reservationSid);
 		return response;	
 	}
