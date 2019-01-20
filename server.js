@@ -29,16 +29,37 @@ function exitErrorHandler(error) {
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/sms',function(req,res){
-	body=req.body.Body;
+	var body=req.body.Body;
+	bodyArray=body.split(" ");
 	var responseBody;
 	var activitySid;
-	if (body=="on"){
-		activitySid=process.env.TWILIO_IDLE_SID;
-		responseBody="available";
-	}
-	else{
-		activitySid=process.env.TWILIO_OFFLINE_SID;
-		responseBody="not available";
+	res.writeHead(200, {'Content-Type': 'text/xml'});
+
+	switch (bodyArray[0].toLowerCase()){
+		case "on":
+			activitySid=process.env.TWILIO_IDLE_SID;
+			responseBody="available";	
+			break;
+		case "add":
+			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
+				clientWorkspace
+					.workers
+					.create({attributes: JSON.stringify({
+						languages: 'en',
+						contact_uri: bodyArray[2]
+					}), friendlyName: bodyArray[3]}).
+					then(worker=>{
+						responseBody="worker created: "+worker.friendlyName;
+					})
+					.done();
+			}
+			else{
+				responseBody="incorrect admin password";
+			}
+			break;
+		default:
+			activitySid=process.env.TWILIO_OFFLINE_SID;
+			responseBody="not available";
 	}
 	clientWorkspace.workers
 					.each({
@@ -52,8 +73,7 @@ app.post('/sms',function(req,res){
 	
 	const response=new MessagingResponse();
 	response.message(responseBody);
-	res.writeHead(200, {'Content-Type': 'text/xml'});
-	res.end(response.toString());
+	res.send(response.toString());
 });
 
 app.post('/enqueue_call',function(req,res){
