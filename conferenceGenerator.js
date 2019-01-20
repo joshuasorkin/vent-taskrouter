@@ -17,7 +17,7 @@ class ConferenceGenerator{
 		var conferenceCallbackUrl=process.env.APP_BASE_URL+'/conferenceEvents';
 		console.log("conferenceGenerator's conferenceCallbackUrl: "+conferenceCallbackUrl);
 		dial.conference({
-			waitUrl:process.env.WAIT_URL,
+			waitUrl:process.env.WAIT_URL_BUCKET,
 			statusCallbackEvent:[
 				'start',
 				'end',
