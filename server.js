@@ -180,6 +180,16 @@ app.get('/agent_answer_process',function(req,res){
 		case '2':
 			response.say('Sorry that you\'re not available.  Goodbye!');
 			response.hangup();
+			clientWorkspace
+							.tasks(parameters.taskSid)
+							.reservations(parameters.reservationSid)
+							.update({
+								reservationStatus:'rejected'
+							})
+							.then(reservation=>{
+								console.log("reservation status: "+reservation.reservationStatus);
+								console.log("worker name: "+reservation.workerName);
+							})
 		default:
 			response.say('I didn\'t understand your response.');
 			response.redirect({method:'GET'},redirectUrl);
