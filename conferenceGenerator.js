@@ -13,7 +13,7 @@ class ConferenceGenerator{
 			response.say(initialSay);
 		}
 		const dial=response.dial();
-		conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters,'parameters');
+		var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters,'parameters');
 		console.log("conferenceGenerator's conferenceCallbackUrl: "+conferenceCallbackUrl);
 		dial.conference({
 			waitUrl:process.env.WAIT_URL,
