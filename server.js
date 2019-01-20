@@ -157,6 +157,7 @@ app.get('/agent_answer_process',function(req,res){
 				reservationSid:parameters.reservationSid
 			});
 			*/
+			break;
 		case '2':
 			response.say('Sorry that you\'re not available.  Goodbye!');
 			response.hangup();
@@ -169,7 +170,8 @@ app.get('/agent_answer_process',function(req,res){
 							.then(reservation=>{
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
-							})
+							});
+			break;
 		default:
 			response.say('I didn\'t understand your response.');
 			response.redirect({method:'GET'},redirectUrl);
@@ -205,11 +207,11 @@ app.post('/assignment/', function (req, res) {
 		from: process.env.TWILIO_PHONE_NUMBER,
 		method: 'GET'
 		
-	}).then(x=>console.log("createCallToHost: logging return value of client calls create "+x));
+	}).then(call=>console.log("createCallToHost: logging return value of client calls create, 'to' value "+call.to));
 	
 	
 	res.type('application/json');
-    res.status(200).send({error:'an error occurred in assignment callback'});
+    res.status(200).send({error:'an error occurred in sending response to assignment callback'});
  });
 
   
