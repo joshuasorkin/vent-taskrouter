@@ -133,7 +133,7 @@ app.get('/agent_answer_process',function(req,res){
 	switch(req.query.Digits){
 		case '1':
 			response=conferenceGenerator.generateConference(parameters,'Thank you.  Now connecting you to caller.');
-			client.calls(parameters.CallSid)
+			client.calls(parameters.callSid)
 					.update({
 						url:conferenceUpdateUrl,
 						method:'GET'
@@ -205,13 +205,17 @@ app.post('/assignment/', function (req, res) {
 	console.log("reservation sid: "+req.body.ReservationSid);
 	taskSid=req.body.TaskSid;
 	console.log("task sid: "+taskSid);
+	TaskAttributes=JSON.parse(req.body.TaskAttributes);
+	callSid=TaskAttributes.call_sid;
+	console.log("call sid: "+callSid);
 	reservationSid=req.body.ReservationSid;
 	WorkerAttributes=JSON.parse(req.body.WorkerAttributes);
 	contact_uri=WorkerAttributes.contact_uri;
 	console.log("contact_uri: "+contact_uri);
 	parameters={
 		taskSid:taskSid,
-		reservationSid:reservationSid
+		reservationSid:reservationSid,
+		callSid:callSid
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 	
