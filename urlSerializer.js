@@ -11,9 +11,9 @@ class UrlSerializer{
 	serialize(endpoint,paramArray){
 		var url=process.env.APP_BASE_URL+"/"+endpoint;
 		console.log("urlSerializer base url: "+url);
-		arrayString=JSON.stringify(paramArray);
+		var arrayString=JSON.stringify(paramArray);
 		console.log("urlSerializer stringified parameter array: "+arrayString);
-		fullUrl=url+"?"+querystring.stringify({[this.paramArrayName]:arrayString});
+		var fullUrl=url+"?"+querystring.stringify({[this.paramArrayName]:arrayString});
 		console.log("urlSerializer full url: "+fullUrl);
 		return fullUrl;
 	}
