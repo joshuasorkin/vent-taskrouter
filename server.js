@@ -74,26 +74,6 @@ app.post('/wait',function(req,res){
 });
 
 
-/*
-//this endpoint just serves as a redirect, sort of a POST->GET wrapper, because the assignment callback
-//doesn't seem to have a way to use GET method, and we need to be able to
-//pass the reservationSid to the gather twiml using GET
-app.post('/agent_answer',function(req,res){
-	console.log("endpoint: agent_answer");
-	console.log("res.body: "+JSON.stringify(req.body));
-	clientWorkspace.tasks
-					.each({
-						evaluateTaskAttributes:"worker_call_sid == '"+req.body.CallSid+"'"
-					},task=>{
-						console.log
-					})
-					.done();
-	const response=new VoiceResponse();
-	response.redirect({method:'GET'},'/agent_answer_start?reservationSid='+req.body.ReservationSid);
-	res.send(response.toString());
-});
-*/
-
 app.get('/agent_answer',function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	console.log("endpoint: agent_answer");
