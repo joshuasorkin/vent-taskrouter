@@ -93,7 +93,7 @@ app.get('/agent_answer',function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/conferenceEvents',function(req,res){
+app.get('/conferenceEvents',function(req,res){
 	console.log("conference event: "+req.body.StatusCallbackEvent);
 	res.status(200).send();
 });
