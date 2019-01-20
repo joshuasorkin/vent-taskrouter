@@ -128,13 +128,27 @@ app.get('/agent_answer_process',function(req,res){
 	console.log("endpoint: agent_answer_process");
 	parameters=urlSerializer.deserialize(req);
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
+	conferenceUpdateUrl=urlSerializer.serialize('updateCallToConference',parameters);
 	const response=new VoiceResponse();
 	switch(req.query.Digits){
 		case '1':
 			response=conferenceGenerator.generateConference(parameters,'Thank you.  Now connecting you to caller.');
 			client.calls(parameters.CallSid)
 					.update({
-						
+						url:conferenceUpdateUrl,
+						method:'GET'
+					})
+					.then(call=>{
+						clientWorkspace
+							.tasks(parameters.taskSid)
+							.reservations(parameters.reservationSid)
+							.update({
+								reservationStatus:'accepted'
+							})
+							.then(reservation=>{
+								console.log("reservation status: "+reservation.reservationStatus);
+								console.log("worker name: "+reservation.workerName);
+							})
 					})
 			/*
 			clientWorkspace
