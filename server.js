@@ -86,11 +86,9 @@ app.post('/sms',async function(req,res){
 								});
 							});
 	}
-	promise.then(value=>{
-		response.message(responseBody);
-		res.writeHead(200, {'Content-Type': 'text/xml'});
-		res.end(response.toString());
-	});
+	response.message(responseValue);
+	res.writeHead(200, {'Content-Type': 'text/xml'});
+	res.end(response.toString());
 });
 
 app.post('/enqueue_call',function(req,res){
