@@ -25,18 +25,14 @@ class Taskrouter{
 				 .catch(err=>console.log("Error during workflow update: "+err));
 	}
 	
-	updateReservation(taskSid,reservationSid,status){
-		this.workspace
-			.tasks(parameters.taskSid)
-			.reservations(parameters.reservationSid)
-			.update({
-				reservationStatus:'accepted'
-			})
-			.then((reservation) => {
-				console.log(reservation.reservationStatus);
-				console.log(reservation.workerName);
-			});
-	}
+	updateWorker(workerSid){
+		activitySid=process.env.TWILIO_IDLE_SID;
+		return workspace
+				.workers(workerSid)
+				.update({
+						ActivitySid:activitySid
+				})
+				.then(worker=>"worker "+worker.friendlyName+" updated to: "+worker.activityName);
 	
 }
 

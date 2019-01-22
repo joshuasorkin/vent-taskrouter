@@ -28,7 +28,7 @@ function exitErrorHandler(error) {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/sms',function(req,res){
+app.post('/sms',async function(req,res){
 	var body=req.body.Body;
 	bodyArray=body.split(" ");
 	var responseBody;
@@ -37,55 +37,56 @@ app.post('/sms',function(req,res){
 	var promise;
 	switch (bodyArray[0].toLowerCase()){
 		case "on":
-			promise=(function(){
-				activitySid=process.env.TWILIO_IDLE_SID;
-				clientWorkspace.workers
+			responseValue=await clientWorkspace.workers
 				.each({
 					targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
 				},worker=>{
+					console.log("worker friendlyname: "+worker.friendlyName);
+					activitySid=process.env.TWILIO_IDLE_SID;
 					worker.update({
 						ActivitySid:activitySid
 					})
-					.then(worker=>console.log("worker updated to: "+worker.activityName))
+					.then(worker=>{
+						"worker updated to: "+worker.activityName;
+						return "available";
+					});
 				});				
-				responseBody="available";
-			})();
 			break;
 		case "add":
-			promise=(function(){
-				if (bodyArray[1]==process.env.ADMIN_PASSWORD){
-					clientWorkspace
-						.workers
-						.create({attributes: JSON.stringify({
-							languages: 'en',
-							contact_uri: bodyArray[2]
-						}), friendlyName: bodyArray[3]}).
-						then(worker=>{
-							responseBody="worker created: "+worker.friendlyName;
-							response.message(responseBody);
-							console.log("response body: "+responseBody);
-						})
-				}
-				else{
-					responseBody="incorrect admin password";
-				}
-			})();
+			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
+				
+				responseValue=await clientWorkspace
+					.workers
+					.create({attributes: JSON.stringify({
+						languages: 'en',
+						contact_uri: bodyArray[2]
+					}), friendlyName: bodyArray[3]}).
+					then(worker=>{
+						responseBody="worker created: "+worker.friendlyName;
+						response.message(responseBody);
+						console.log("response body: "+responseBody);
+						return responseBody;
+					})
+			}
+			else{
+				responseValue="incorrect admin password";
+			}
 			break;
 		default:
-			promise=(function(){
-				clientWorkspace.workers
-				.each({
-					targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
-				},worker=>{
-					worker.update({
-						ActivitySid:activitySid
-					})
-					.then(worker=>console.log("worker updated to: "+worker.activityName))
-				});
-				responseBody="not available";
-			})();
+			responseValue=await clientWorkspace.workers
+							.each({
+								targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
+							},worker=>{
+								worker.update({
+									ActivitySid:activitySid
+								})
+								.then(worker=>{
+									console.log("worker updated to: "+worker.activityName);
+									return "not available";
+								});
+							});
 	}
-	promise.then({
+	promise.then(value=>{
 		response.message(responseBody);
 		res.writeHead(200, {'Content-Type': 'text/xml'});
 		res.end(response.toString());
@@ -230,11 +231,13 @@ app.post('/assignment/', function (req, res) {
 	reservationSid=req.body.ReservationSid;
 	WorkerAttributes=JSON.parse(req.body.WorkerAttributes);
 	contact_uri=WorkerAttributes.contact_uri;
+	workerSid=req.body.WorkerSid;
 	console.log("contact_uri: "+contact_uri);
 	parameters={
 		taskSid:taskSid,
 		reservationSid:reservationSid,
-		callSid:callSid
+		callSid:callSid,
+		workerSid:workerSid
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 	
