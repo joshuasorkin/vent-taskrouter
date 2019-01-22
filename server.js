@@ -60,17 +60,22 @@ app.post('/sms',async function(req,res){
 					.create({attributes: JSON.stringify({
 						languages: 'en',
 						contact_uri: bodyArray[2]
-					}), friendlyName: bodyArray[3]}).
-					then(worker=>{
+					}), friendlyName: bodyArray[3]})
+					.then(worker=>{
 						responseBody="worker created: "+worker.friendlyName;
 						response.message(responseBody);
 						console.log("response body: "+responseBody);
 						return responseBody;
 					})
+					.catch(err=>{
+						console.log(err);
+						return err;
+					});
 			}
 			else{
 				responseValue="incorrect admin password";
 			}
+			
 			break;
 		default:
 			responseValue=await clientWorkspace.workers
@@ -86,6 +91,7 @@ app.post('/sms',async function(req,res){
 								});
 							});
 	}
+	console.log('response value: '+responseValue);
 	response.message(responseValue);
 	res.writeHead(200, {'Content-Type': 'text/xml'});
 	res.end(response.toString());

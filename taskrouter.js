@@ -25,14 +25,23 @@ class Taskrouter{
 				 .catch(err=>console.log("Error during workflow update: "+err));
 	}
 	
-	updateWorker(workerSid){
+	updateWorker(contact_uri){
 		activitySid=process.env.TWILIO_IDLE_SID;
-		return workspace
-				.workers(workerSid)
-				.update({
+		return workspace.workers
+				.each({
+					targetWorkersExpression:'contact_uri=="'+contact_uri+"'"
+				},worker=>{
+					console.log("worker friendlyname: "+worker.friendlyName);
+					activitySid=process.env.TWILIO_IDLE_SID;
+					worker.update({
 						ActivitySid:activitySid
-				})
-				.then(worker=>"worker "+worker.friendlyName+" updated to: "+worker.activityName);
+					})
+					.then(worker=>{
+						"worker updated to: "+worker.activityName;
+						return "available";
+					});
+				});
+	}
 	
 }
 
