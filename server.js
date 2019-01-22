@@ -37,9 +37,10 @@ app.post('/sms',async function(req,res){
 	var promise;
 	switch (bodyArray[0].toLowerCase()){
 		case "on":
+			console.log("on request made");
 			responseValue=await clientWorkspace.workers
 				.each({
-					targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
+					targetWorkersExpression:'contact_uri==\''+req.body.From+'\''"
 				},worker=>{
 					console.log("worker friendlyname: "+worker.friendlyName);
 					activitySid=process.env.TWILIO_IDLE_SID;
@@ -69,7 +70,7 @@ app.post('/sms',async function(req,res){
 					})
 					.catch(err=>{
 						console.log(err);
-						return err;
+						return "Error: "+err.message;
 					});
 			}
 			else{
