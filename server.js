@@ -40,16 +40,15 @@ app.post('/sms',async function(req,res){
 			console.log("on request made");
 			responseValue=await clientWorkspace.workers
 				.each({
-					targetWorkersExpression:'contact_uri==\''+req.body.From+'\''"
-				},worker=>{
+					targetWorkersExpression:'contact_uri==\''+req.body.From+'\''
+				},worker=> {
 					console.log("worker friendlyname: "+worker.friendlyName);
 					activitySid=process.env.TWILIO_IDLE_SID;
 					worker.update({
 						ActivitySid:activitySid
 					})
 					.then(worker=>{
-						"worker updated to: "+worker.activityName;
-						return "available";
+						return "worker updated to: "+worker.activityName;
 					});
 				});				
 			break;
@@ -96,6 +95,21 @@ app.post('/sms',async function(req,res){
 	response.message(responseValue);
 	res.writeHead(200, {'Content-Type': 'text/xml'});
 	res.end(response.toString());
+});
+
+app.get('/conferenceAnnounceTime',function(req,res){
+	const response=new VoiceResponse();
+	parameters=urlSerializer.deserialize(req);
+	timeRemaining=parameters.timeRemaining;
+	var unit;
+	if (timeRemaining==1){
+		unit="minute";
+	}
+	else{
+		unite="minutes";
+	}
+	response.say('You have '+timeRemaining+' '+unit+'remaining.');
+	res.send(response.toString());
 });
 
 app.post('/enqueue_call',function(req,res){
@@ -155,7 +169,9 @@ app.get('/agent_answer_process',function(req,res){
 	var response=new VoiceResponse();
 	switch(req.query.Digits){
 		case '1':
+			//prepare twiml to put agent into conference
 			response=conferenceGenerator.generateConference(parameters,'Thank you.  Now connecting you to caller.');
+			//put caller into conference
 			client.calls(parameters.callSid)
 					.update({
 						url:conferenceUpdateUrl,
