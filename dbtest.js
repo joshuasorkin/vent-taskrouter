@@ -7,9 +7,8 @@ worker={
 	contact_uri:'+15105753138',
 	sid:'3i9un9384r8939'
 }
-db.createWorker(worker)
-.then(result=>console.log(result))
-.catch(err=>console.log("error: "+err));
+db.getWorkerSid(worker.contact_uri)
+.then(result=>console.log(result));
 
 /*
 db.getAvailableAgent(process.env.testgoodphonenumber)ge

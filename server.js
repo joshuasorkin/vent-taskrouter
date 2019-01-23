@@ -28,8 +28,20 @@ function exitErrorHandler(error) {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.post('/senditonward',function(req,res){
+	const response=new MessagingResponse();
+	console.log(req.body.Body);
+	client.messages.create({
+		body:req.body.Body,
+		to:process.env.testgoodphonenumber
+	}).then(result=>{
+		res.status(200).send();
+	});
+});
+
 app.post('/sms',async function(req,res){
 	var body=req.body.Body;
+	console.log(body);
 	bodyArray=body.split(" ");
 	var responseBody;
 	var activitySid=process.env.TWILIO_OFFLINE_SID;
