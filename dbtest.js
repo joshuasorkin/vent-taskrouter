@@ -9,7 +9,7 @@ worker={
 }
 db.createWorker(worker)
 .then(result=>console.log(result))
-.catch(err=>console.log("error: "+err);
+.catch(err=>console.log("error: "+err));
 
 /*
 db.getAvailableAgent(process.env.testgoodphonenumber)ge

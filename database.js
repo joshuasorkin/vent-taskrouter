@@ -24,7 +24,7 @@ class Database{
 			sequelize.query("insert into worker (contact_uri,sid) values ('"+worker.contact_uri+"','"+worker.sid+"')")
 			.then(result=>{resolve(result)})
 			.catch(err=>reject(err));
-		}
+		});
 	}
 	
 	//following select query on Worker table, returns a promise as follows:
