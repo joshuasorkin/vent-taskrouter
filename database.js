@@ -21,7 +21,9 @@ class Database{
 	
 	createWorker(worker){
 		return new Promise(function(resolve,reject){
-			sequelize.query("insert into worker (contact_uri,sid) values ('"+worker.attributes.contact_uri+"','"+worker.sid+"')")
+			const attributes=JSON.parse(worker.attributes);
+			const contact_uri=attributes.contact_uri;
+			sequelize.query("insert into worker (contact_uri,sid) values ('"+contact_uri+"','"+worker.sid+"')")
 			.then(result=>{resolve(result)})
 			.catch(err=>reject(err));
 		});

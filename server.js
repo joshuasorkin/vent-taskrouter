@@ -16,9 +16,11 @@ const http_port=process.env.HTTP_PORT;
 const Taskrouter=require('./taskrouter');
 const UrlSerializer=require('./urlSerializer');
 const ConferenceGenerator=require('./conferenceGenerator');
+const Worker=require('./worker');
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
 var conferenceGenerator=new ConferenceGenerator();
+var worker;
 
 function exitErrorHandler(error) {
   console.error('An error occurred:');
@@ -27,17 +29,6 @@ function exitErrorHandler(error) {
 }
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.post('/senditonward',function(req,res){
-	const response=new MessagingResponse();
-	console.log(req.body.Body);
-	client.messages.create({
-		body:req.body.Body,
-		to:process.env.testgoodphonenumber
-	}).then(result=>{
-		res.status(200).send();
-	});
-});
 
 app.post('/sms',async function(req,res){
 	var body=req.body.Body;
@@ -50,39 +41,18 @@ app.post('/sms',async function(req,res){
 	switch (bodyArray[0].toLowerCase()){
 		case "on":
 			console.log("on request made");
-			responseValue=await clientWorkspace.workers
-				.each({
-					targetWorkersExpression:'contact_uri==\''+req.body.From+'\''
-				},worker=> {
-					console.log("worker friendlyname: "+worker.friendlyName);
-					activitySid=process.env.TWILIO_IDLE_SID;
-					worker.update({
-						ActivitySid:activitySid
-					})
-					.then(worker=>{
-						return "worker updated to: "+worker.activityName;
-					});
-				});				
+			responseValue=worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID)			
+							.then(worker=>{
+								return "worker "+worker.friendlyName+" updated to: "+worker.activityName;
+							})
+							.catch(err=>{
+								console.log("/sms error: "+err);
+							});
 			break;
 		case "add":
 			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
 				
-				responseValue=await clientWorkspace
-					.workers
-					.create({attributes: JSON.stringify({
-						languages: 'en',
-						contact_uri: bodyArray[2]
-					}), friendlyName: bodyArray[3]})
-					.then(worker=>{
-						responseBody="worker created: "+worker.friendlyName;
-						response.message(responseBody);
-						console.log("response body: "+responseBody);
-						return responseBody;
-					})
-					.catch(err=>{
-						console.log(err);
-						return "Error: "+err.message;
-					});
+				responseValue=await worker.create(bodyArray[2],bodyArray[3]);
 			}
 			else{
 				responseValue="incorrect admin password";
@@ -304,6 +274,7 @@ app.listen(http_port,()=>{
 		
 	console.log("Configuring workspace...");
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
+	worker=new Worker(clientWorkspace);
 	taskrouter=new Taskrouter(clientWorkspace);
 	taskrouter.configureWorkflow()
 				.then(workflow=>console.log("returned from configureWorkflow"))
