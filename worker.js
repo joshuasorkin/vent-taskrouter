@@ -32,19 +32,19 @@ class Worker{
 	
 	
 	updateWorker(contact_uri,activitySid){
-		database.getWorkerSid(contact_uri)
-		.then(workerSid=>{
-			console.log("workerSid is "+workerSid);
-			this.workspace.workers(workerSid)
-				.update({
-					ActivitySid:activitySid
-				})
-				.then(worker=>{
-					worker
-				})
-				
-				.catch(err=>console.log("updateWorker error: "+err));
-		});
+		return database.getWorkerSid(contact_uri)
+				.then(workerSid=>{
+					console.log("workerSid is "+workerSid);
+					this.workspace.workers(workerSid)
+						.update({
+							ActivitySid:activitySid
+						})
+						.then(worker=>{
+							console.log("worker has been updated to activity: "+worker.activityName);
+							return worker;
+						})
+						.catch(err=>console.log("updateWorker error: "+err));
+				});
 	}
 	
 }
