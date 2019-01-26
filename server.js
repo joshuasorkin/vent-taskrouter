@@ -28,6 +28,7 @@ function exitErrorHandler(error) {
   process.exit(1);
 }
 
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/sms',async function(req,res){
@@ -41,7 +42,7 @@ app.post('/sms',async function(req,res){
 	switch (bodyArray[0].toLowerCase()){
 		case "on":
 			console.log("on request made");
-			responseValue=worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID)			
+			responseValue=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID)			
 							.then(worker=>{
 								return "worker "+worker.friendlyName+" updated to: "+worker.activityName;
 							})
@@ -153,6 +154,8 @@ app.get('/agent_answer_process',function(req,res){
 		case '1':
 			//prepare twiml to put agent into conference
 			response=conferenceGenerator.generateConference(parameters,'Thank you.  Now connecting you to caller.');
+			
+			console.log("worker accepted call");
 			//put caller into conference
 			client.calls(parameters.callSid)
 					.update({
@@ -202,8 +205,10 @@ app.get('/agent_answer_process',function(req,res){
 		case '2':
 			response.say('Sorry that you\'re not available.  Goodbye!');
 			response.hangup();
+			console.log("worker rejected call");
 			clientWorkspace
-							.tasks(parameters.taskSid)
+							//.tasks(parameters.taskSid)
+							.workers(parameters.workerSid)
 							.reservations(parameters.reservationSid)
 							.update({
 								reservationStatus:'rejected'
@@ -304,3 +309,4 @@ app.listen(http_port,()=>{
 	.catch(err=>{console.log("error occurred: "+err)});
 	*/
 });
+

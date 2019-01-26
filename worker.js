@@ -37,7 +37,7 @@ class Worker{
 					console.log("workerSid is "+workerSid);
 					this.workspace.workers(workerSid)
 						.update({
-							ActivitySid:activitySid
+							activitySid:activitySid
 						})
 						.then(worker=>{
 							console.log("worker has been updated to activity: "+worker.activityName);
