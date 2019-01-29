@@ -89,7 +89,7 @@ app.get('/conferenceAnnounceTime',function(req,res){
 		unit="minute";
 	}
 	else{
-		unite="minutes";
+		unit="minutes";
 	}
 	response.say('You have '+timeRemaining+' '+unit+'remaining.');
 	res.send(response.toString());
@@ -138,6 +138,7 @@ app.post('/conferenceEvents',function(req,res){
 	var responseValue;
 	switch(event){
 		case "conference-start":
+			conference.announce(req.body.ConferenceSid,5);
 			break;
 		case "participant-leave":
 			break;

@@ -32,13 +32,12 @@ class ConferenceGenerator{
 	}
 
 	announce(conferenceSid,timeRemaining){
-		var url=process.env.APP_BASE_URL+'/conferenceAnnounce';
 		var parameters={
 			timeRemaining:timeRemaining
 		}
-		url=this.urlSerializer.serialize(url,parameters);
+		var url=this.urlSerializer.serialize('conferenceAnnounce',parameters);
 		console.log("conference.announce url: "+url);
-		client.conferences(conferenceSid)
+		this.client.conferences(conferenceSid)
 			.update({
 				announceUrl:url
 			})
