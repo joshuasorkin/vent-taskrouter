@@ -2,7 +2,7 @@ const UrlSerializer=require('./urlSerializer');
 const VoiceResponse=require('twilio').twiml.VoiceResponse;
 require('env2')('.env');
 
-class ConferenceGenerator{
+class Conference{
 	
 	constructor(client,workspace){
 		this.client=client;
@@ -52,7 +52,7 @@ class ConferenceGenerator{
 				assignmentStatus:'complete',
 				reason:'conference ended'
 			})
-			.then({
+			.then(task=>{
 				this.client.conferences(conferenceSid)
 				.update({
 					announceUrl:process.env.APP_BASE_URL+'/conferenceAnnounceEnd',
@@ -73,4 +73,4 @@ class ConferenceGenerator{
 	
 }
 
-module.exports=ConferenceGenerator;
+module.exports=Conference;
