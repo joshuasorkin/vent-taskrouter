@@ -47,9 +47,10 @@ class Conference{
 	}
 
 	endConference(conferenceSid,taskSid){
-		this.workspace.tasks(parameters.taskSid)
+		console.log("conference: running endConference");
+		this.workspace.tasks(taskSid)
 			.update({
-				assignmentStatus:'complete',
+				assignmentStatus:'completed',
 				reason:'conference ended'
 			})
 			.then(task=>{
@@ -67,8 +68,10 @@ class Conference{
 					});
 
 				})
+				.catch(err=>console.log(err));
 
 			})
+			.catch(err=>console.log(err));
 	}
 
 

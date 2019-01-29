@@ -149,6 +149,7 @@ app.get('/conferenceEvents',function(req,res){
 			conference.announce(req.query.ConferenceSid,5);
 			break;
 		case "participant-leave":
+			console.log("now ending conference...");
 			conference.endConference(req.query.ConferenceSid,parameters.taskSid);
 			break;
 		default:
