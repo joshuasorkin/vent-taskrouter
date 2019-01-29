@@ -19,7 +19,7 @@ const Conference=require('./conference');
 const Worker=require('./worker');
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
-var conference=new Conference(client);
+var conference;
 var worker;
 
 function exitErrorHandler(error) {
@@ -80,6 +80,13 @@ app.post('/sms',async function(req,res){
 	res.end(response.toString());
 });
 
+
+app.post('/conferenceAnnounceEnd',function(req,res){
+	const response=new VoiceResponse();
+	response.say('The other participant has left the conference.  Thank you for participating.  Now ending conference.');
+	res.send(response.toString());
+});
+
 app.get('/conferenceAnnounceTime',function(req,res){
 	const response=new VoiceResponse();
 	parameters=urlSerializer.deserialize(req);
@@ -91,7 +98,7 @@ app.get('/conferenceAnnounceTime',function(req,res){
 	else{
 		unit="minutes";
 	}
-	response.say('You have '+timeRemaining+' '+unit+'remaining.');
+	response.say('You have '+timeRemaining+' '+unit+' remaining.');
 	res.send(response.toString());
 });
 
@@ -132,15 +139,17 @@ app.get('/agent_answer',function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/conferenceEvents',function(req,res){
-	event=req.body.StatusCallbackEvent;
-	console.log("conference event: "+req.body.StatusCallbackEvent);
+app.get('/conferenceEvents',function(req,res){
+	parameters=urlSerializer.deserialize(req);
+	event=req.query.StatusCallbackEvent;
+	console.log("conference event: "+event);
 	var responseValue;
 	switch(event){
 		case "conference-start":
-			conference.announce(req.body.ConferenceSid,5);
+			conference.announce(req.query.ConferenceSid,5);
 			break;
 		case "participant-leave":
+			conference.endConference(req.query.ConferenceSid,parameters.taskSid);
 			break;
 		default:
 			responseValue="";
@@ -294,6 +303,7 @@ app.listen(http_port,()=>{
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	worker=new Worker(clientWorkspace);
 	taskrouter=new Taskrouter(clientWorkspace);
+	conference=new Conference(client,clientWorkspace);
 	taskrouter.configureWorkflow()
 				.then(workflow=>console.log("returned from configureWorkflow"))
 				.done();

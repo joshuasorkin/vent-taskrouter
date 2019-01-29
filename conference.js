@@ -4,8 +4,9 @@ require('env2')('.env');
 
 class ConferenceGenerator{
 	
-	constructor(client){
+	constructor(client,workspace){
 		this.client=client;
+		this.workspace=workspace;
 		this.urlSerializer=new UrlSerializer();
 	}
 	generateConference(parameters,initialSay){
@@ -14,8 +15,8 @@ class ConferenceGenerator{
 			response.say(initialSay);
 		}
 		const dial=response.dial();
-		//var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters,'parameters');
-		var conferenceCallbackUrl=process.env.APP_BASE_URL+'/conferenceEvents';
+		var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters,'parameters');
+		//var conferenceCallbackUrl=process.env.APP_BASE_URL+'/conferenceEvents';
 		console.log("conferenceGenerator's conferenceCallbackUrl: "+conferenceCallbackUrl);
 		dial.conference({
 			waitUrl:process.env.WAIT_URL_BUCKET,
@@ -26,7 +27,7 @@ class ConferenceGenerator{
 				'leave'
 			],
 			statusCallback:conferenceCallbackUrl,
-			statusCallbackMethod:'POST'
+			statusCallbackMethod:'GET'
 		},parameters.reservationSid);
 		return response;	
 	}
@@ -43,6 +44,29 @@ class ConferenceGenerator{
 				announceMethod:'GET'
 			})
 			.then(conference=>console.log(conference.friendlyName));
+	}
+
+	endConference(conferenceSid,taskSid){
+		this.workspace.tasks(parameters.taskSid)
+			.update({
+				assignmentStatus:'complete',
+				reason:'conference ended'
+			})
+			.then({
+				this.client.conferences(conferenceSid)
+				.update({
+					announceUrl:process.env.APP_BASE_URL+'/conferenceAnnounceEnd',
+					announceMethod:'POST'
+				})
+				.then(conference=>{
+					this.client.conferences(conference.conferenceSid)
+					.update({
+						status:'completed'
+					});
+
+				})
+
+			})
 	}
 
 
