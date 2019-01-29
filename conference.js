@@ -35,11 +35,12 @@ class ConferenceGenerator{
 		var parameters={
 			timeRemaining:timeRemaining
 		}
-		var url=this.urlSerializer.serialize('conferenceAnnounce',parameters);
+		var url=this.urlSerializer.serialize('conferenceAnnounceTime',parameters);
 		console.log("conference.announce url: "+url);
 		this.client.conferences(conferenceSid)
 			.update({
-				announceUrl:url
+				announceUrl:url,
+				announceMethod:'GET'
 			})
 			.then(conference=>console.log(conference.friendlyName));
 	}
