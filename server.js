@@ -15,11 +15,11 @@ const client=require('twilio')(accountSid,authToken);
 const http_port=process.env.HTTP_PORT;
 const Taskrouter=require('./taskrouter');
 const UrlSerializer=require('./urlSerializer');
-const ConferenceGenerator=require('./conferenceGenerator');
+const Conference=require('./conference');
 const Worker=require('./worker');
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
-var conferenceGenerator=new ConferenceGenerator();
+var conference=new Conference(client);
 var worker;
 
 function exitErrorHandler(error) {
@@ -133,14 +133,26 @@ app.get('/agent_answer',function(req,res){
 });
 
 app.post('/conferenceEvents',function(req,res){
+	event=req.body.StatusCallbackEvent;
 	console.log("conference event: "+req.body.StatusCallbackEvent);
+	var responseValue;
+	switch(event){
+		case "conference-start":
+			break;
+		case "participant-leave":
+			break;
+		default:
+			responseValue="";
+
+	}
+
 	res.type('application/json');
 	res.status(200).send();
 });
 
 app.get('/updateCallToConference',function(req,res){
 	parameters=urlSerializer.deserialize(req);
-	var response=conferenceGenerator.generateConference(parameters,null);
+	var response=conference.generateConference(parameters,null);
 	res.send(response.toString());
 });
 
@@ -153,7 +165,7 @@ app.get('/agent_answer_process',function(req,res){
 	switch(req.query.Digits){
 		case '1':
 			//prepare twiml to put agent into conference
-			response=conferenceGenerator.generateConference(parameters,'Thank you.  Now connecting you to caller.');
+			response=conference.generateConference(parameters,'Thank you.  Now connecting you to caller.');
 			
 			console.log("worker accepted call");
 			//put caller into conference

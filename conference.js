@@ -4,7 +4,8 @@ require('env2')('.env');
 
 class ConferenceGenerator{
 	
-	constructor(){
+	constructor(client){
+		this.client=client;
 		this.urlSerializer=new UrlSerializer();
 	}
 	generateConference(parameters,initialSay){
@@ -21,13 +22,30 @@ class ConferenceGenerator{
 			statusCallbackEvent:[
 				'start',
 				'end',
-				'join'
+				'join',
+				'leave'
 			],
 			statusCallback:conferenceCallbackUrl,
 			statusCallbackMethod:'POST'
 		},parameters.reservationSid);
 		return response;	
 	}
+
+	announce(conferenceSid,timeRemaining){
+		var url=process.env.APP_BASE_URL+'/conferenceAnnounce';
+		var parameters={
+			timeRemaining:timeRemaining
+		}
+		url=this.urlSerializer.serialize(url,parameters);
+		console.log("conference.announce url: "+url);
+		client.conferences(conferenceSid)
+			.update({
+				announceUrl:url
+			})
+			.then(conference=>console.log(conference.friendlyName));
+	}
+
+
 	
 }
 
