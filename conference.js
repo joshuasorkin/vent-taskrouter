@@ -53,13 +53,15 @@ class Conference{
 				reason:'conference ended'
 			})
 			.then(task=>{
+				console.log("task sid: "+task.sid);
 				this.client.conferences(conferenceSid)
 				.update({
 					announceUrl:process.env.APP_BASE_URL+'/conferenceAnnounceEnd',
 					announceMethod:'POST'
 				})
 				.then(conference=>{
-					this.client.conferences(conference.conferenceSid)
+					console.log("conference name: "+conference.friendlyName);
+					this.client.conferences(conference.sid)
 					.update({
 						status:'completed'
 					});
