@@ -46,7 +46,26 @@ class Conference{
 			.then(conference=>console.log(conference.friendlyName));
 	}
 
-	endConference(conferenceSid,taskSid){
+	endConference(task,conferenceSid){
+		console.log("task sid: "+task.sid);
+		var announceUrl=process.env.APP_BASE_URL+'/conferenceAnnounceEnd';
+		console.log("conference end announceUrl: "+announceUrl);
+		this.client.conferences(conferenceSid)
+		.update({
+			announceUrl:announceUrl,
+			announceMethod:'POST'
+		})
+		.then(conference=>{
+			console.log("conference name: "+conference.friendlyName);
+			this.client.conferences(conference.sid)
+			.update({
+				status:'completed'
+			});
+		})
+		.catch(err=>console.log("conference update error: "+err));
+	}
+
+	endConferenceTask(conferenceSid,taskSid){
 		console.log("conference: running endConference");
 		this.workspace.tasks(taskSid)
 			.update({
@@ -54,24 +73,9 @@ class Conference{
 				reason:'conference ended'
 			})
 			.then(task=>{
-				console.log("task sid: "+task.sid);
-				this.client.conferences(conferenceSid)
-				.update({
-					announceUrl:process.env.APP_BASE_URL+'/conferenceAnnounceEnd',
-					announceMethod:'POST'
-				})
-				.then(conference=>{
-					console.log("conference name: "+conference.friendlyName);
-					this.client.conferences(conference.sid)
-					.update({
-						status:'completed'
-					});
-
-				})
-				.catch(err=>console.log(err));
-
+				endConference(task,conferenceSid);
 			})
-			.catch(err=>console.log(err));
+			.catch(err=>console.log("conference task update error: "+err));
 	}
 
 

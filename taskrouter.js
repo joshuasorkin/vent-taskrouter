@@ -9,6 +9,17 @@ class Taskrouter{
 		this.workflowConfigurer=new WorkflowConfigurer();
 	}
 	
+	configureWorkspace(){
+		return this.workspace
+				.update({
+					eventCallbackUrl:process.env.APP_BASE_URL+'/workspaceEvent'
+				})
+				.then(workspace=>{
+					console.log("workspace update then");
+				})
+				.catch(err=>console.log("configureWorkspace error: "+err.message));
+	}
+
 	configureWorkflow(){
 		const workflowSid=process.env.TWILIO_WORKFLOW_SID;
 		const configurationJSON=this.workflowConfigurer.configurationJSON();

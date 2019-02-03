@@ -83,6 +83,7 @@ app.post('/sms',async function(req,res){
 
 app.post('/conferenceAnnounceEnd',function(req,res){
 	const response=new VoiceResponse();
+	console.log("running conferenceAnnounceEnd");
 	response.say('The other participant has left the conference.  Thank you for participating.  Now ending conference.');
 	res.send(response.toString());
 });
@@ -250,7 +251,7 @@ app.get('/agent_answer_process',function(req,res){
 
 
 // POST /call/assignment
-app.post('/assignment/', function (req, res) {
+app.post('/assignment', function (req, res) {
 	console.log("task attributes: "+req.body.TaskAttributes);
 	console.log("worker attributes: "+req.body.WorkerAttributes);
 	console.log("reservation sid: "+req.body.ReservationSid);
@@ -285,7 +286,15 @@ app.post('/assignment/', function (req, res) {
     res.status(200).send({error:'an error occurred in sending response to assignment callback'});
  });
 
-  
+app.post('/workspaceEvent',function(req,res){
+	eventType=req.body.EventType;
+	eventDescription=req.body.EventDescription;
+	resourceType=req.body.ResourceType;
+	resourceSid=req.body.ResourceSid;
+	console.log("Event Details:\n"+eventType+"\n"+eventDescription+"\n"+resourceType+"\n"+resourceSid);
+	res.type('application/json');
+	res.status(204).send({error:'error occurred in processing workspace event callback'});
+});
 
 app.listen(http_port,()=>{
 	console.log(`app listening on port ${http_port}`);
@@ -305,6 +314,7 @@ app.listen(http_port,()=>{
 	worker=new Worker(clientWorkspace);
 	taskrouter=new Taskrouter(clientWorkspace);
 	conference=new Conference(client,clientWorkspace);
+	taskrouter.configureWorkspace();
 	taskrouter.configureWorkflow()
 				.then(workflow=>console.log("returned from configureWorkflow"))
 				.done();
