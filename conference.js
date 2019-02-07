@@ -32,6 +32,12 @@ class Conference{
 		return response;	
 	}
 
+	getParticipants(conferenceSid,callback){
+		this.client.conferences(conferenceSid)
+		.participants
+		.each(participant => callback(participant));
+	}
+
 	announce(conferenceSid,timeRemaining){
 		var parameters={
 			timeRemaining:timeRemaining

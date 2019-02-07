@@ -61,18 +61,14 @@ app.post('/sms',async function(req,res){
 			
 			break;
 		default:
-			responseValue=await clientWorkspace.workers
-							.each({
-								targetWorkersExpression:'contact_uri=="'+req.body.From+"'"
-							},worker=>{
-								worker.update({
-									ActivitySid:activitySid
-								})
-								.then(worker=>{
-									console.log("worker updated to: "+worker.activityName);
-									return "not available";
-								});
-							});
+			console.log("sms: default, setting worker to offline");
+			responseValue=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID)			
+						.then(worker=>{
+							return "worker "+worker.friendlyName+" updated to: "+worker.activityName;
+						})
+						.catch(err=>{
+							console.log("/sms error: "+err);
+						});
 	}
 	console.log('response value: '+responseValue);
 	response.message(responseValue);
@@ -144,6 +140,11 @@ app.get('/conferenceEvents',function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	event=req.query.StatusCallbackEvent;
 	console.log("conference event: "+event);
+	console.log("now listing conference participants' callSids:");
+	conference.getParticipants(req.query.conferenceSid,function(participant){
+		console.log(participant.callSid);
+	});
+	
 	var responseValue;
 	switch(event){
 		case "conference-start":
@@ -151,7 +152,7 @@ app.get('/conferenceEvents',function(req,res){
 			break;
 		case "participant-leave":
 			console.log("now ending conference...");
-			conference.endConference(req.query.ConferenceSid,parameters.taskSid);
+			conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid);
 			break;
 		default:
 			responseValue="";
