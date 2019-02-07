@@ -35,7 +35,7 @@ class Worker{
 		return database.getWorkerSid(contact_uri)
 				.then(workerSid=>{
 					console.log("workerSid is "+workerSid);
-					this.workspace.workers(workerSid)
+					worker=await this.workspace.workers(workerSid)
 						.update({
 							activitySid:activitySid
 						})
@@ -44,6 +44,7 @@ class Worker{
 							return worker;
 						})
 						.catch(err=>console.log("updateWorker error: "+err));
+					return worker;
 				});
 	}
 	
