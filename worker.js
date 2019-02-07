@@ -35,7 +35,7 @@ class Worker{
 		return await database.getWorkerSid(contact_uri)
 				.then(workerSid=>{
 					console.log("workerSid is "+workerSid);
-					worker=updateWorkerFromWorkerSid(workerSid,activitySid);
+					worker=this.updateWorkerFromWorkerSid(workerSid,activitySid);
 					return worker;
 				});
 	}
