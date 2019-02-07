@@ -44,7 +44,7 @@ app.post('/sms',async function(req,res){
 			console.log("on request made");
 			responseValue=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID)			
 							.then(worker=>{
-								return "worker "+worker.friendlyName+" updated to: "+worker.activityName;
+								return "/sms: worker "+worker.friendlyName+" updated to: "+worker.activityName;
 							})
 							.catch(err=>{
 								console.log("/sms error: "+err);
@@ -61,10 +61,10 @@ app.post('/sms',async function(req,res){
 			
 			break;
 		default:
-			console.log("sms: default, setting worker to offline");
+			console.log("/sms: default, setting worker to offline");
 			responseValue=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID)			
 						.then(worker=>{
-							return "worker "+worker.friendlyName+" updated to: "+worker.activityName;
+							return "/sms: worker "+worker.friendlyName+" updated to: "+worker.activityName;
 						})
 						.catch(err=>{
 							console.log("/sms error: "+err);

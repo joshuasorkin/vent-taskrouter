@@ -32,25 +32,25 @@ class Worker{
 	
 	
 	async updateWorker(contact_uri,activitySid){
-		return await database.getWorkerSid(contact_uri)
-				.then(workerSid=>{
-					console.log("updateWorker: workerSid is "+workerSid);
-					worker=this.updateWorkerFromWorkerSid(workerSid,activitySid);
-					console.log("updateWorker: worker's friendlyName is "+worker.friendlyName);
-					return worker;
-				});
+		workerSid=await database.getWorkerSid(contact_uri)
+		console.log("updateWorker: workerSid is "+workerSid);
+		worker=this.updateWorkerFromSid(workerSid,activitySid);
+		console.log("updateWorker: worker's friendlyName is "+worker.friendlyName);
+		return worker;
 	}
 
-	async updateWorkerFromWorkerSid(workerSid,activitySid){
-		return await this.workspace.workers(workerSid)
-					.update({
-						activitySid:activitySid
-					})
-					.then(worker=>{
-						console.log("updateWorkerFromWorkerSid: worker has been updated to activity: "+worker.activityName);
-						return worker;
-					})
-					.catch(err=>console.log("updateWorkerFromWorkerSid error: "+err));
+	async updateWorkerFromSid(workerSid,activitySid){
+		try{
+			worker=await this.workspace.workers(workerSid)
+						.update({
+							activitySid:activitySid
+						});
+			console.log("updateWorkerFromSid: worker has been updated to activity: "+worker.activityName);
+			return worker;
+		}
+		catch(err){
+			console.log("updateWorkerFromSid error: "+err);
+		}
 
 	}
 	
