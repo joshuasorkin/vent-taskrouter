@@ -31,21 +31,27 @@ class Worker{
 	}
 	
 	
-	updateWorker(contact_uri,activitySid){
-		return database.getWorkerSid(contact_uri)
+	async updateWorker(contact_uri,activitySid){
+		return await database.getWorkerSid(contact_uri)
 				.then(workerSid=>{
 					console.log("workerSid is "+workerSid);
-					worker=await this.workspace.workers(workerSid)
-						.update({
-							activitySid:activitySid
-						})
-						.then(worker=>{
-							console.log("worker has been updated to activity: "+worker.activityName);
-							return worker;
-						})
-						.catch(err=>console.log("updateWorker error: "+err));
+					worker=updateWorkerFromWorkerSid(workerSid,activitySid);
 					return worker;
 				});
+	}
+
+	async updateWorkerFromWorkerSid(workerSid,activitySid){
+		worker=await this.workspace.workers(workerSid)
+					.update({
+						activitySid:activitySid
+					})
+					.then(worker=>{
+						console.log("worker has been updated to activity: "+worker.activityName);
+						return worker;
+					})
+					.catch(err=>console.log("updateWorker error: "+err));
+		return worker;
+
 	}
 	
 }
