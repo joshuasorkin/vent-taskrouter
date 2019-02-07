@@ -40,6 +40,7 @@ class Worker{
 	}
 
 	async updateWorkerFromSid(workerSid,activitySid){
+		var worker;
 		try{
 			worker=await this.workspace.workers(workerSid)
 						.update({
@@ -50,6 +51,9 @@ class Worker{
 		}
 		catch(err){
 			console.log("updateWorkerFromSid error: "+err);
+		}
+		finally{
+			return worker;
 		}
 
 	}

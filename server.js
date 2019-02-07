@@ -62,13 +62,15 @@ app.post('/sms',async function(req,res){
 			break;
 		default:
 			console.log("/sms: default, setting worker to offline");
-			responseValue=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID)			
-						.then(worker=>{
-							return "/sms: worker "+worker.friendlyName+" updated to: "+worker.activityName;
-						})
-						.catch(err=>{
-							console.log("/sms error: "+err);
-						});
+			//should refactor this to its own function, as it's good to do that with
+			//a try-catch block
+			try{
+				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID);
+				responseValue="/sms: worker "+worker.friendlyName+" updated to: "+worker.activityName;
+			}
+			catch(err){
+				console.log("/sms error: "+err);
+			}
 	}
 	console.log('response value: '+responseValue);
 	response.message(responseValue);
