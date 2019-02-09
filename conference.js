@@ -97,7 +97,7 @@ class Conference{
 				reason:'conference ended'
 			})
 			.then(task=>{
-				endConference(task,conferenceSid,conferenceEnd_endPoint);
+				this.endConference(task,conferenceSid,conferenceEnd_endPoint);
 			})
 			.catch(err=>console.log("conference task update error: "+err));
 	}
