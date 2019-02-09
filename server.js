@@ -57,6 +57,11 @@ app.post('/sms',async function(req,res){
 			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
 				
 				responseValue=await worker.create(bodyArray[2],bodyArray[3]);
+				//todo: this is a hack until I can figure out what the problem
+				//is with the return value from worker.create
+				if (responseValue==",1"){
+					responseValue="Worker "+bodyArray[3]+" successfully created";
+				}
 			}
 			else{
 				responseValue="incorrect admin password";
@@ -164,13 +169,14 @@ app.get('/conferenceEvents',function(req,res){
 		console.log(participant.callSid);
 	});
 	
-	var responseValue;
+	var responseValue="";
 	switch(event){
 		case "conference-start":
 			initialMinutes=5;
 			conferenceSid=req.query.ConferenceSid;
 			conference.announce(conferenceSid,initialMinutes);
 			conference.setTimedAnnounce(initialMinutes,initialMinutes/2,conferenceSid);
+			conference.setTimedEndConference(initialMinutes,conferenceSid);
 			if (initialMinutes>3){
 				conference.setTimedAnnounce(initialMinutes,initialMinutes-1,conferenceSid);
 			}
@@ -179,13 +185,23 @@ app.get('/conferenceEvents',function(req,res){
 			console.log("now ending conference...");
 			conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid,'conferenceAnnounceEnd_participantLeave');
 			break;
+		case "conference-end":
+			var response=new VoiceResponse();
+			response.say('The other participant has left the conference.  Thank you for participating.  Good-bye!');
+			response.hangup();
+			responseValue=response.toString();
 		default:
 			responseValue="";
 
 	}
 
 	res.type('application/json');
-	res.status(200).send();
+	if (responseValue==""){
+		res.status(200).send();
+	}
+	else{
+		res.send(responseValue);
+	}
 });
 
 app.get('/updateCallToConference',function(req,res){
