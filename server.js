@@ -90,6 +90,12 @@ app.post('/conferenceAnnounceEnd_participantLeave',function(req,res){
 	res.send(response.toString());
 });
 
+app.post('/conferenceEnd_participantLeave',function(req,res){
+	const response=new VoiceResponse();
+	response.say('The other participant has left the conference.  Thank you for participating.  Good-bye!');
+	res.send(response.toString());
+});
+
 app.get('/conferenceAnnounceTime',function(req,res){
 	const response=new VoiceResponse();
 	parameters=urlSerializer.deserialize(req);
