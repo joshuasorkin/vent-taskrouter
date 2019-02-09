@@ -42,13 +42,16 @@ app.post('/sms',async function(req,res){
 	switch (bodyArray[0].toLowerCase()){
 		case "on":
 			console.log("on request made");
-			responseValue=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID)			
-							.then(worker=>{
-								return "/sms: worker "+worker.friendlyName+" updated to: "+worker.activityName;
-							})
-							.catch(err=>{
-								console.log("/sms error: "+err);
-							});
+			//todo: this try-catch is duplicate of the default,
+			//both need to be refactored into single function
+			try{
+				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID);
+				responseValue="/sms: worker "+worker.friendlyName+" updated to: "+worker.activityName;
+				console.log(responseValue);
+			}
+			catch(err){;
+				console.log("/sms error: "+err);
+			}
 			break;
 		case "add":
 			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
