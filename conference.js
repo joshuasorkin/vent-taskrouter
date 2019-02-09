@@ -39,13 +39,12 @@ class Conference{
 	}
 
 	announce(conferenceSid,timeRemaining){
-		var that=this;
 		var parameters={
 			timeRemaining:timeRemaining
 		}
-		var url=that.urlSerializer.serialize('conferenceAnnounceTime',parameters);
+		var url=this.urlSerializer.serialize('conferenceAnnounceTime',parameters);
 		console.log("conference.announce url: "+url);
-		that.client.conferences(conferenceSid)
+		this.client.conferences(conferenceSid)
 			.update({
 				announceUrl:url,
 				announceMethod:'GET'
@@ -54,9 +53,8 @@ class Conference{
 	}
 
 	setTimedAnnounce(initialMinutes,minutesToElapse,conferenceSid){
-		var that=this;
 		var minutesRemaining=initialMinutes-minutesToElapse;
-		setTimeout(that.announce,minutesToElapse*60000,minutesRemaining);
+		setTimeout(this.announce.bind(this),minutesToElapse*60000,minutesRemaining);
 	}
 
 	endConference(task,conferenceSid){
