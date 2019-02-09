@@ -83,7 +83,7 @@ app.post('/sms',async function(req,res){
 });
 
 
-app.post('/conferenceAnnounceEnd',function(req,res){
+app.post('/conferenceAnnounceEnd_participantLeave',function(req,res){
 	const response=new VoiceResponse();
 	console.log("running conferenceAnnounceEnd");
 	response.say('The other participant has left the conference.  Thank you for participating.  Now ending conference.');
@@ -157,11 +157,14 @@ app.get('/conferenceEvents',function(req,res){
 			initialMinutes=5;
 			conferenceSid=req.query.ConferenceSid;
 			conference.announce(conferenceSid,initialMinutes);
-			conference.setTimedAnnounce(initialMinutes,0.25,conferenceSid);
+			conference.setTimedAnnounce(initialMinutes,initialMinutes/2,conferenceSid);
+			if (initialMinutes>3){
+				conference.setTimedAnnounce(initialMinutes,initialMinutes-1,conferenceSid);
+			}
 			break;
 		case "participant-leave":
 			console.log("now ending conference...");
-			conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid);
+			conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid,'conferenceAnnounceEnd_participantLeave');
 			break;
 		default:
 			responseValue="";

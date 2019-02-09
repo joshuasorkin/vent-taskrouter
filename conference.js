@@ -55,12 +55,24 @@ class Conference{
 
 	setTimedAnnounce(initialMinutes,minutesToElapse,conferenceSid){
 		var minutesRemaining=initialMinutes-minutesToElapse;
-		setTimeout(this.announce.bind(this),minutesToElapse*60000,minutesRemaining);
+		console.log("setTimedAnnounce: minutesRemaining: "+minutesRemaining);
+		setTimeout(this.announce.bind(this),minutesToElapse*60000,conferenceSid,minutesRemaining);
 	}
 
-	endConference(task,conferenceSid){
+	setTimedEndConference(initialMinutes,conferenceSid,taskSid){
+
+	}
+
+	endConferenceTimeUp(task,conferenceSid){
+		this.client.conferences(conferenceSid)
+		.update({
+			status:'completed'
+		});
+	}
+
+	endConference(task,conferenceSid,conferenceEnd_endPoint){
 		console.log("task sid: "+task.sid);
-		var announceUrl=process.env.APP_BASE_URL+'/conferenceAnnounceEnd';
+		var announceUrl=process.env.APP_BASE_URL+'/'+conferenceEnd_endPoint;
 		console.log("conference end announceUrl: "+announceUrl);
 		this.client.conferences(conferenceSid)
 		.update({
@@ -77,7 +89,7 @@ class Conference{
 		.catch(err=>console.log("conference update error: "+err));
 	}
 
-	endConferenceTask(conferenceSid,taskSid){
+	endConferenceTask(conferenceSid,taskSid,conferenceEnd_endpoint){
 		console.log("conference: running endConference");
 		this.workspace.tasks(taskSid)
 			.update({
@@ -85,7 +97,7 @@ class Conference{
 				reason:'conference ended'
 			})
 			.then(task=>{
-				endConference(task,conferenceSid);
+				endConference(task,conferenceSid,conferenceEnd_endPoint);
 			})
 			.catch(err=>console.log("conference task update error: "+err));
 	}
