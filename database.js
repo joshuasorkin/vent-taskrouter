@@ -5,28 +5,12 @@ const sequelize=new Sequelize(process.env.database,process.env.username,process.
 	dialect:'postgres'
 });
 
-/*
-var Agent=sequelize.define('agent',{},{
-	freezeTableName:true,
-	tableName: 'agent'
-});
-
-updateValues={available:false};
-Agent.update(updateValues,{where:{phonenumber:'+18005551212'}}).then(result=>{console.log(result)});
-*/
-
-
-
 class Database{
 	
 	createWorker(worker){
-		return new Promise(function(resolve,reject){
-			const attributes=JSON.parse(worker.attributes);
-			const contact_uri=attributes.contact_uri;
-			sequelize.query("insert into worker (contact_uri,sid) values ('"+contact_uri+"','"+worker.sid+"')")
-			.then(result=>{resolve(result)})
-			.catch(err=>reject(err));
-		});
+		const attributes=JSON.parse(worker.attributes);
+		const contact_uri=attributes.contact_uri;
+		return sequelize.query("insert into worker (contact_uri,sid) values ('"+contact_uri+"','"+worker.sid+"')");
 	}
 	
 	//following select query on Worker table, returns a promise as follows:
