@@ -42,7 +42,7 @@ class Conference{
 		var parameters={
 			timeRemaining:timeRemaining
 		}
-		var url=this.urlSerializer.serialize('conferenceAnnounceTime',parameters);
+		var url=this.urlSerializer.serialize('conferenceAnnounceTime',parameters).bind(this);
 		console.log("conference.announce url: "+url);
 		this.client.conferences(conferenceSid)
 			.update({
