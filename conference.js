@@ -63,7 +63,7 @@ class Conference{
 		setTimeout(this.endConferenceTimeUp.bind(this),initialMinutes*60000,conferenceSid);
 	}
 
-	endConferenceTimeUp(task,conferenceSid){
+	endConferenceTimeUp(conferenceSid){
 		this.client.conferences(conferenceSid)
 		.update({
 			status:'completed'
