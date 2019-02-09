@@ -105,6 +105,13 @@ app.get('/conferenceAnnounceTime',function(req,res){
 	res.send(response.toString());
 });
 
+app.post('/conferenceEnd_timesUp',function(req,res){
+	const response=new VoiceResponse();
+	response.say("Time's up!  Thank you for participating.  Good-bye!");
+	response.hangup();
+	res.send(response.toString());
+});
+
 app.post('/enqueue_call',function(req,res){
 	const response=new VoiceResponse();
 	const enqueue=response.enqueue({
