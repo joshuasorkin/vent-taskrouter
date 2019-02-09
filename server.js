@@ -67,8 +67,9 @@ app.post('/sms',async function(req,res){
 			try{
 				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID);
 				responseValue="/sms: worker "+worker.friendlyName+" updated to: "+worker.activityName;
+				console.log(responseValue);
 			}
-			catch(err){
+			catch(err){;
 				console.log("/sms error: "+err);
 			}
 	}
@@ -150,7 +151,9 @@ app.get('/conferenceEvents',function(req,res){
 	var responseValue;
 	switch(event){
 		case "conference-start":
-			conference.announce(req.query.ConferenceSid,5);
+			initialMinutes=5;
+			conference.announce(req.query.ConferenceSid,initialMinutes);
+			conference.setTimedAnnounce(initialMinutes,1,req.query.conferenceSid);
 			break;
 		case "participant-leave":
 			console.log("now ending conference...");

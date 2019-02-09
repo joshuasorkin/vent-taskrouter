@@ -52,6 +52,11 @@ class Conference{
 			.then(conference=>console.log(conference.friendlyName));
 	}
 
+	setTimedAnnounce(initialMinutes,minutesToElapse,conferenceSid){
+		var minutesRemaining=initialMinutes-minutesToElapse;
+		setTimeout(this.announce,minutesToElapse*60000,minutesRemaining);
+	}
+
 	endConference(task,conferenceSid){
 		console.log("task sid: "+task.sid);
 		var announceUrl=process.env.APP_BASE_URL+'/conferenceAnnounceEnd';

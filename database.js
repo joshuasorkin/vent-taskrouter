@@ -32,20 +32,19 @@ class Database{
 	//following select query on Worker table, returns a promise as follows:
 	//callerPhoneNumber found: caller's data row
 	//callerPhoneNumber not found: null
-	getWorkerSid(contact_uri){
-		return new Promise(function(resolve,reject){
-			sequelize.query("select * from worker where contact_uri='"+contact_uri+"'",
-			{ type: sequelize.QueryTypes.SELECT})
-			.then(result=>{
-				if(result.length==0){
-					resolve(null);
-				}
-				else{
-					resolve(result[0].sid);
-				}
-			})
-			.catch(err=>reject(err));
-		});
+	async getWorkerSid(contact_uri){
+		workerRow=await getRowFromWorkerTable(contact_uri);
+		if (workerRow.length==0){
+			return null;
+		}
+		else{
+			return workerRow[0].sid;
+		}
+	}
+
+	getRowFromWorkerTable(contact_uri){
+		return sequelize.query("select * from worker where contact_uri='"+contact_uri+"'",
+		{ type: sequelize.QueryTypes.SELECT});
 	}
 	
 	

@@ -32,9 +32,10 @@ class Worker{
 	
 	
 	async updateWorker(contact_uri,activitySid){
+		console.log("updateWorker: getting workerSid from database");
 		workerSid=await database.getWorkerSid(contact_uri)
 		console.log("updateWorker: workerSid is "+workerSid);
-		worker=this.updateWorkerFromSid(workerSid,activitySid);
+		worker=await this.updateWorkerFromSid(workerSid,activitySid);
 		console.log("updateWorker: worker's friendlyName is "+worker.friendlyName);
 		return worker;
 	}
