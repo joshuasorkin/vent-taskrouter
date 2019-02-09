@@ -33,7 +33,7 @@ class Database{
 	//callerPhoneNumber found: caller's data row
 	//callerPhoneNumber not found: null
 	async getWorkerSid(contact_uri){
-		workerRow=await getRowFromWorkerTable(contact_uri);
+		workerRow=await this.getRowFromWorkerTable(contact_uri);
 		if (workerRow.length==0){
 			return null;
 		}
