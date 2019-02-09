@@ -46,7 +46,7 @@ app.post('/sms',async function(req,res){
 			//both need to be refactored into single function
 			try{
 				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID);
-				responseValue="/sms: worker "+worker.friendlyName+" updated to: "+worker.activityName;
+				responseValue=worker.friendlyName+" is active, receiving calls.";
 				console.log(responseValue);
 			}
 			catch(err){;
@@ -69,7 +69,7 @@ app.post('/sms',async function(req,res){
 			//a try-catch block
 			try{
 				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID);
-				responseValue="/sms: worker "+worker.friendlyName+" updated to: "+worker.activityName;
+				responseValue=worker.friendlyName+" is inactive, not receiving calls";
 				console.log(responseValue);
 			}
 			catch(err){;
