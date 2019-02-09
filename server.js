@@ -152,8 +152,9 @@ app.get('/conferenceEvents',function(req,res){
 	switch(event){
 		case "conference-start":
 			initialMinutes=5;
-			conference.announce(req.query.ConferenceSid,initialMinutes);
-			conference.setTimedAnnounce(initialMinutes,1,req.query.conferenceSid);
+			conferenceSid=req.query.ConferenceSid;
+			conference.announce(conferenceSid,initialMinutes);
+			conference.setTimedAnnounce(initialMinutes,0.25,conferenceSid);
 			break;
 		case "participant-leave":
 			console.log("now ending conference...");
