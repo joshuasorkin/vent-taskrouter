@@ -59,7 +59,7 @@ class Conference{
 		setTimeout(this.announce.bind(this),minutesToElapse*60000,conferenceSid,minutesRemaining);
 	}
 
-	setTimedEndConference(initialMinutes,conferenceSid,taskSid){
+	setTimedEndConference(initialMinutes,conferenceSid){
 		setTimeout(this.endConferenceTimeUp.bind(this),initialMinutes*60000,conferenceSid);
 	}
 

@@ -172,7 +172,7 @@ app.get('/conferenceEvents',function(req,res){
 	var responseValue="";
 	switch(event){
 		case "conference-start":
-			initialMinutes=5;
+			initialMinutes=0.5;
 			conferenceSid=req.query.ConferenceSid;
 			conference.announce(conferenceSid,initialMinutes);
 			conference.setTimedAnnounce(initialMinutes,initialMinutes/2,conferenceSid);
@@ -200,6 +200,7 @@ app.get('/conferenceEvents',function(req,res){
 		res.status(200).send();
 	}
 	else{
+		console.log("conferenceEvents: sending responseValue");
 		res.send(responseValue);
 	}
 });
