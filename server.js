@@ -31,6 +31,12 @@ function exitErrorHandler(error) {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.get('/testHeroku',function(req,res){
+	var response=new VoiceResponse();
+	response.say("Heroku");
+	res.send(response.toString());
+});
+
 app.post('/sms',async function(req,res){
 	var body=req.body.Body;
 	console.log(body);

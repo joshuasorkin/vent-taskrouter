@@ -1,0 +1,27 @@
+{
+  "name": "vent-taskrouter",
+  "version": "1.0.0",
+  "description": "vent prototype implemented using taskrouter",
+  "main": "server.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshuasorkin/vent-taskrouter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joshuasorkin/vent-taskrouter/issues"
+  },
+  "homepage": "https://github.com/joshuasorkin/vent-taskrouter#readme",
+  "dependencies": {
+    "querystring": "^0.2.0",
+    "sequelize": "^4.42.0"
+  }
+}
