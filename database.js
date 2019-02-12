@@ -2,7 +2,10 @@ require('env2')('.env');
 const Sequelize = require('sequelize');
 
 const sequelize=new Sequelize(process.env.database,process.env.username,process.env.password,{
-	dialect:'postgres'
+	dialect:'postgres',
+	dialectOptions:{
+		ssl:true
+	}
 });
 
 class Database{
