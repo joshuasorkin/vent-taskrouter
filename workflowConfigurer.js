@@ -1,6 +1,7 @@
 require('env2')('.env');
 
 const queueSid=process.env.TWILIO_TASKQUEUE_SID;
+const automaticQueueSid=process.env.TWILIO_TASKQUEUE_AUTOMATIC_SID;
 console.log("queuesid:"+queueSid);
 class WorkflowConfigurer{	
 	configurationJSON(){
@@ -13,7 +14,11 @@ class WorkflowConfigurer{
 						"targets":[
 							{
 								"queue":queueSid,
-								"expression":"task.caller!=worker.contact_uri"
+								"expression":"task.caller!=worker.contact_uri",
+								"skip_if": "workers.available == 0"
+							},
+							{
+								"queue":automaticQueueSid
 							}
 						]
 						

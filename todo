@@ -1,5 +1,9 @@
 high: needed for first prototype release
 
+(high) server questions:
+where does console.log() from anything other than app.listen() get sent?  goes to twilio i guess?
+how do I add an alias?  can I write to .bashrc?
+
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
 (high) when one participant leaves, remaining participant is routed to twiml:
@@ -38,4 +42,3 @@ and have workflow order by this number
 (medium) use md5 hash to check password, no plaintext
 
 (low) check if caller is in list of users
-

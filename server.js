@@ -313,27 +313,45 @@ app.post('/assignment', function (req, res) {
 	WorkerAttributes=JSON.parse(req.body.WorkerAttributes);
 	contact_uri=WorkerAttributes.contact_uri;
 	workerSid=req.body.WorkerSid;
+	taskQueueSid=req.body.TaskQueueSid;
 	console.log("contact_uri: "+contact_uri);
 	parameters={
 		taskSid:taskSid,
 		reservationSid:reservationSid,
 		callSid:callSid,
-		workerSid:workerSid
+		workerSid:workerSid,
+		taskQueueSid:taskQueueSid
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 	
-	var call=client.calls.create({
-		url:url,
-		to: contact_uri,
-		from: process.env.TWILIO_PHONE_NUMBER,
-		method: 'GET'
-		
-	}).then(call=>console.log("createCallToHost: logging return value of client calls create, 'to' value "+call.to));
-	
+	switch(taskQueueSid){
+		case process.env.TWILIO_TASKQUEUE_SID:
+			var call=client.calls.create({
+				url:url,
+				to: contact_uri,
+				from: process.env.TWILIO_PHONE_NUMBER,
+				method: 'GET'
+				
+			}).then(call=>console.log("createCallToHost: logging return value of client calls create, 'to' value "+call.to));
+			break;
+		case process.env.TWILIO_TASKQUEUE_AUTOMATIC_SID:
+			client.calls(callSid)
+			.update({method: 'POST', url: process.env.APP_BASE_URL+'/automatic'})
+      		.then(call => console.log(call.to));
+			
+			break;
+	}
 	
 	res.type('application/json');
     res.status(200).send({error:'an error occurred in sending response to assignment callback'});
- });
+});
+
+app.post('/automatic',function(req,res){
+	var response=new VoiceResponse();
+	response.say("We're sorry, there is no one available to take your call.  Good-bye!");
+	response.hangup();
+	res.send(response.toString());
+});
 
 app.post('/workspaceEvent',function(req,res){
 	eventType=req.body.EventType;
@@ -368,28 +386,5 @@ app.listen(http_port,()=>{
 				.then(workflow=>console.log("returned from configureWorkflow"))
 				.done();
 	
-	/*
-	clientWorkspace.workflows(workflowSid)
-					.update({
-						assignmentCallbackUrl:process.env.APP_BASE_URL+'/assignment',
-						
-					})
-                 .then(workflow => console.log(workflow.configuration))
-                 .done();
-	*/
-
-	
-	/*
-	workspace.setup().then(function (data) {
-		app.set('workerInfo', data[0]);
-		app.set('workspaceInfo', data[1]);
-		//workflowSid=app.get('workspaceInfo').workflowSid;
-		console.log(data)
-		console.log('Application configured!');
-		console.log('Call your Twilio number at: ' + process.env.TWILIO_PHONE_NUMBER);
-		console.log('main workflow sid: '+app.get('workspaceInfo').workflowSid);
-	})
-	.catch(err=>{console.log("error occurred: "+err)});
-	*/
 });
 
