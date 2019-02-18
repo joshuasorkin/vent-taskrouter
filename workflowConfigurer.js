@@ -16,9 +16,6 @@ class WorkflowConfigurer{
 								"queue":queueSid,
 								"expression":"task.caller!=worker.contact_uri",
 								"skip_if": "workers.available == 0"
-							},
-							{
-								"queue":automaticQueueSid
 							}
 						]
 						
