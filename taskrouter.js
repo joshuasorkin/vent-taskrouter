@@ -54,12 +54,10 @@ class Taskrouter{
 				});
 	}
 
-	taskIsCanceled(taskSid){
-		this.workspace.tasks(taskSid).fetch()
-		.then(task=>{
-			console.log("taskIsActive: task status: "+task.assignmentStatus)
-			return (task.assignmentStatus=='canceled');
-		});
+	async taskIsCanceled(taskSid){
+		var task=await this.workspace.tasks(taskSid).fetch()
+		console.log("taskIsCanceled: task status: "+task.assignmentStatus)
+		return (task.assignmentStatus=='canceled');
 	}
 	
 }
