@@ -155,6 +155,7 @@ app.get('/agent_answer',async function(req,res){
 	console.log("url: "+url);
 	const response=new VoiceResponse();
 	taskIsCanceled=await taskrouter.taskIsCanceled(parameters.taskSid);
+	console.log("agent_answer: taskIsCanceled = "+taskIsCanceled);
 	if (taskIsCanceled){
 		response.say("The caller disconnected already.  Sorry to bother you.  Good-bye.");
 		response.hangup();
