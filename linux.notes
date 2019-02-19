@@ -1,0 +1,8 @@
+#to recover from crash:
+#get the process ids
+ps aux | grep node
+#end jobs by process ids
+kill -9 pid
+
+#to tail log:
+tail -f /var/log/nginx/error.log

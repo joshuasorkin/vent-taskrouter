@@ -147,14 +147,15 @@ app.post('/wait',function(req,res){
 });
 
 
-app.get('/agent_answer',function(req,res){
+app.get('/agent_answer',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	console.log("endpoint: agent_answer");
 	url=urlSerializer.serialize('agent_answer_process',parameters);
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	console.log("url: "+url);
 	const response=new VoiceResponse();
-	if (taskrouter.taskIsCanceled(parameters.taskSid)){
+	taskIsCanceled=await taskrouter.taskIsCanceled(parameters.taskSid);
+	if (taskIsCanceled){
 		response.say("The caller disconnected already.  Sorry to bother you.  Good-bye.");
 		response.hangup();
 	}
