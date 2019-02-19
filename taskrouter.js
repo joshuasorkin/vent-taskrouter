@@ -53,6 +53,14 @@ class Taskrouter{
 					});
 				});
 	}
+
+	taskIsCanceled(taskSid){
+		this.workspace.tasks(taskSid).fetch()
+		.then(task=>{
+			console.log("taskIsActive: task status: "+task.assignmentStatus)
+			return (task.assignmentStatus=='canceled');
+		});
+	}
 	
 }
 

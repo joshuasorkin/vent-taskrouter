@@ -223,77 +223,56 @@ app.get('/agent_answer_process',function(req,res){
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	conferenceUpdateUrl=urlSerializer.serialize('updateCallToConference',parameters);
 	var response=new VoiceResponse();
-	switch(req.query.Digits){
-		case '1':
-			//prepare twiml to put agent into conference
-			response=conference.generateConference(parameters,'Thank you.  Now connecting you to caller.');
-			
-			console.log("worker accepted call");
-			//put caller into conference
-			client.calls(parameters.callSid)
-					.update({
-						url:conferenceUpdateUrl,
-						method:'GET'
-					})
-					.then(call=>{
-						clientWorkspace
-							.tasks(parameters.taskSid)
-							.reservations(parameters.reservationSid)
-							.update({
-								reservationStatus:'accepted'
-							})
-							.then(reservation=>{
-								console.log("reservation status: "+reservation.reservationStatus);
-								console.log("worker name: "+reservation.workerName);
-							})
-					})
-			/*
-			clientWorkspace
-				.tasks(parameters.taskSid)
-				.reservations(parameters.reservationSid)
-				.update({
-					instruction:'conference',
-					from:process.env.TWILIO_PHONE_NUMBER,
-					conferenceStatusCallback:process.env.APP_BASE_URL+'/conferenceEvents',
-					conferenceStatusCallbackEvent:[
-						'start',
-						'end',
-						'join',
-						'leave',
-						'mute',
-						'hold'
-				]})
-				.then((reservation) => {
-					console.log(reservation.reservationStatus);
-					console.log(reservation.workerName);
-				});
-			*/
-			/*
-			const dial=response.dial();
-			const queue=dial.queue({
-				reservationSid:parameters.reservationSid
-			});
-			*/
-			break;
-		case '2':
-			response.say('Sorry that you\'re not available.  Goodbye!');
-			response.hangup();
-			console.log("worker rejected call");
-			clientWorkspace
-							//.tasks(parameters.taskSid)
-							.workers(parameters.workerSid)
-							.reservations(parameters.reservationSid)
-							.update({
-								reservationStatus:'rejected'
-							})
-							.then(reservation=>{
-								console.log("reservation status: "+reservation.reservationStatus);
-								console.log("worker name: "+reservation.workerName);
-							});
-			break;
-		default:
-			response.say('I didn\'t understand your response.');
-			response.redirect({method:'GET'},redirectUrl);
+	if (taskrouter.taskIsCanceled(parameters.taskSid)){
+		response.say("The caller disconnected already.  Sorry to bother you.  Good-bye.");
+		response.hangup();
+	}
+	else{
+		switch(req.query.Digits){
+			case '1':
+				//prepare twiml to put agent into conference
+				response=conference.generateConference(parameters,'Thank you.  Now connecting you to caller.');
+				
+				console.log("worker accepted call");
+				//put caller into conference
+				client.calls(parameters.callSid)
+						.update({
+							url:conferenceUpdateUrl,
+							method:'GET'
+						})
+						.then(call=>{
+							clientWorkspace
+								.tasks(parameters.taskSid)
+								.reservations(parameters.reservationSid)
+								.update({
+									reservationStatus:'accepted'
+								})
+								.then(reservation=>{
+									console.log("reservation status: "+reservation.reservationStatus);
+									console.log("worker name: "+reservation.workerName);
+								})
+						});
+				break;
+			case '2':
+				response.say('Sorry that you\'re not available.  Goodbye!');
+				response.hangup();
+				console.log("worker rejected call");
+				clientWorkspace
+								//.tasks(parameters.taskSid)
+								.workers(parameters.workerSid)
+								.reservations(parameters.reservationSid)
+								.update({
+									reservationStatus:'rejected'
+								})
+								.then(reservation=>{
+									console.log("reservation status: "+reservation.reservationStatus);
+									console.log("worker name: "+reservation.workerName);
+								});
+				break;
+			default:
+				response.say('I didn\'t understand your response.');
+				response.redirect({method:'GET'},redirectUrl);
+		}
 	}
 	res.send(response.toString());
 });
