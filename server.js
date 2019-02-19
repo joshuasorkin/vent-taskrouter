@@ -154,15 +154,21 @@ app.get('/agent_answer',function(req,res){
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	console.log("url: "+url);
 	const response=new VoiceResponse();
-	response.say('You have a call from Vent.  Press 1 to accept, or 2 to refuse.');
-	const gather=response.gather({
-		numDigits:1,
-		action:url,
-		method:'GET'
-	});
-	//response.redirect({method:'GET'},redirectUrl);
-	response.say('I didn\'t get any input from you.  Goodbye!');
-	response.hangup();
+	if (taskrouter.taskIsCanceled(parameters.taskSid)){
+		response.say("The caller disconnected already.  Sorry to bother you.  Good-bye.");
+		response.hangup();
+	}
+	else{
+		response.say('You have a call from Vent.  Press 1 to accept, or 2 to refuse.');
+		const gather=response.gather({
+			numDigits:1,
+			action:url,
+			method:'GET'
+		});
+		//response.redirect({method:'GET'},redirectUrl);
+		response.say('I didn\'t get any input from you.  Goodbye!');
+		response.hangup();
+	}
 	res.send(response.toString());
 });
 
@@ -223,56 +229,50 @@ app.get('/agent_answer_process',function(req,res){
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	conferenceUpdateUrl=urlSerializer.serialize('updateCallToConference',parameters);
 	var response=new VoiceResponse();
-	if (taskrouter.taskIsCanceled(parameters.taskSid)){
-		response.say("The caller disconnected already.  Sorry to bother you.  Good-bye.");
-		response.hangup();
-	}
-	else{
-		switch(req.query.Digits){
-			case '1':
-				//prepare twiml to put agent into conference
-				response=conference.generateConference(parameters,'Thank you.  Now connecting you to caller.');
-				
-				console.log("worker accepted call");
-				//put caller into conference
-				client.calls(parameters.callSid)
-						.update({
-							url:conferenceUpdateUrl,
-							method:'GET'
-						})
-						.then(call=>{
-							clientWorkspace
-								.tasks(parameters.taskSid)
-								.reservations(parameters.reservationSid)
-								.update({
-									reservationStatus:'accepted'
-								})
-								.then(reservation=>{
-									console.log("reservation status: "+reservation.reservationStatus);
-									console.log("worker name: "+reservation.workerName);
-								})
-						});
-				break;
-			case '2':
-				response.say('Sorry that you\'re not available.  Goodbye!');
-				response.hangup();
-				console.log("worker rejected call");
-				clientWorkspace
-								//.tasks(parameters.taskSid)
-								.workers(parameters.workerSid)
-								.reservations(parameters.reservationSid)
-								.update({
-									reservationStatus:'rejected'
-								})
-								.then(reservation=>{
-									console.log("reservation status: "+reservation.reservationStatus);
-									console.log("worker name: "+reservation.workerName);
-								});
-				break;
-			default:
-				response.say('I didn\'t understand your response.');
-				response.redirect({method:'GET'},redirectUrl);
-		}
+	switch(req.query.Digits){
+		case '1':
+			//prepare twiml to put agent into conference
+			response=conference.generateConference(parameters,'Thank you.  Now connecting you to caller.');
+			
+			console.log("worker accepted call");
+			//put caller into conference
+			client.calls(parameters.callSid)
+					.update({
+						url:conferenceUpdateUrl,
+						method:'GET'
+					})
+					.then(call=>{
+						clientWorkspace
+							.tasks(parameters.taskSid)
+							.reservations(parameters.reservationSid)
+							.update({
+								reservationStatus:'accepted'
+							})
+							.then(reservation=>{
+								console.log("reservation status: "+reservation.reservationStatus);
+								console.log("worker name: "+reservation.workerName);
+							})
+					});
+			break;
+		case '2':
+			response.say('Sorry that you\'re not available.  Goodbye!');
+			response.hangup();
+			console.log("worker rejected call");
+			clientWorkspace
+							//.tasks(parameters.taskSid)
+							.workers(parameters.workerSid)
+							.reservations(parameters.reservationSid)
+							.update({
+								reservationStatus:'rejected'
+							})
+							.then(reservation=>{
+								console.log("reservation status: "+reservation.reservationStatus);
+								console.log("worker name: "+reservation.workerName);
+							});
+			break;
+		default:
+			response.say('I didn\'t understand your response.');
+			response.redirect({method:'GET'},redirectUrl);
 	}
 	res.send(response.toString());
 });
