@@ -154,6 +154,7 @@ app.get('/agent_answer',async function(req,res){
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	console.log("url: "+url);
 	const response=new VoiceResponse();
+	//check if inbound caller has hung up in the meantime by checking if task is canceled
 	taskIsCanceled=await taskrouter.taskIsCanceled(parameters.taskSid);
 	console.log("agent_answer: taskIsCanceled = "+taskIsCanceled);
 	if (taskIsCanceled){
@@ -169,6 +170,7 @@ app.get('/agent_answer',async function(req,res){
 		});
 		//response.redirect({method:'GET'},redirectUrl);
 		response.say('I didn\'t get any input from you.  Goodbye!');
+		taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
 		response.hangup();
 	}
 	res.send(response.toString());

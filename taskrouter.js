@@ -55,9 +55,23 @@ class Taskrouter{
 	}
 
 	async taskIsCanceled(taskSid){
-		var task=await this.workspace.tasks(taskSid).fetch()
-		console.log("taskIsCanceled: task status: "+task.assignmentStatus)
+		var task=await this.workspace.tasks(taskSid).fetch();
+		console.log("taskIsCanceled: task status: "+task.assignmentStatus);
 		return (task.assignmentStatus=='canceled');
+	}
+
+	rejectReservation(workerSid,reservationSid){
+		console.log("worker rejected call");
+		this.workspace
+						.workers(workerSid)
+						.reservations(reservationSid)
+						.update({
+							reservationStatus:'rejected'
+						})
+						.then(reservation=>{
+							console.log("reservation status: "+reservation.reservationStatus);
+							console.log("worker name: "+reservation.workerName);
+						});
 	}
 	
 }
