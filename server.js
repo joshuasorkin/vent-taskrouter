@@ -147,16 +147,32 @@ app.post('/wait',function(req,res){
 });
 
 
+//this endpoint to be reached if the agent does not provide IVR response
+//to the options presented by /agent_answer
+//either because they hung up or waited too long
+app.get('/agent_answer_hangup',function(req,res){
+	parameters=urlSerializer.deserialize(req);
+	const response=new VoiceResponse();
+	response.say('I didn\'t get any input from you.  Goodbye!');
+	response.hangup();
+	taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
+	res.send(response.toString());
+});
+
+//this endpoint to be reached if agent answers outbound call initiated by /assignment
 app.get('/agent_answer',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	console.log("endpoint: agent_answer");
 	url=urlSerializer.serialize('agent_answer_process',parameters);
-	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
-	console.log("url: "+url);
+	redirectUrl=urlSerializer.serialize('agent_answer_hangup',parameters);
+	console.log("agent_answer url: "+url);
 	const response=new VoiceResponse();
 	//check if inbound caller has hung up in the meantime by checking if task is canceled
 	taskIsCanceled=await taskrouter.taskIsCanceled(parameters.taskSid);
 	console.log("agent_answer: taskIsCanceled = "+taskIsCanceled);
+	//disconnect if caller disconnected.  no need to cancel reservation
+	//as is done at agent_answer_hangup because this is already handled by taskrouter
+	//in response to inbound caller's hangup
 	if (taskIsCanceled){
 		response.say("The caller disconnected already.  Sorry to bother you.  Good-bye.");
 		response.hangup();
@@ -168,10 +184,7 @@ app.get('/agent_answer',async function(req,res){
 			action:url,
 			method:'GET'
 		});
-		//response.redirect({method:'GET'},redirectUrl);
-		response.say('I didn\'t get any input from you.  Goodbye!');
-		taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
-		response.hangup();
+		response.redirect({method:'GET'},redirectUrl);
 	}
 	res.send(response.toString());
 });
