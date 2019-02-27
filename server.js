@@ -17,10 +17,12 @@ const Taskrouter=require('./taskrouter');
 const UrlSerializer=require('./urlSerializer');
 const Conference=require('./conference');
 const Worker=require('./worker');
+const TwimlBuilder=require('./twimlBuilder');
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
 var conference;
 var worker;
+var twimlBuilder=new TwimlBuilder();
 
 function exitErrorHandler(error) {
   console.error('An error occurred:');
@@ -141,7 +143,8 @@ app.post('/enqueue_call',function(req,res){
 
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
-	response.say('Please wait while I find a receiver.');
+	twimlBuilder.say(response,'Please wait while I find a receiver.');
+	//response.say('Please wait while I find a receiver.');
 	response.play(process.env.WAIT_URL);
 	res.send(response.toString());
 });

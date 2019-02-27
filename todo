@@ -1,7 +1,6 @@
 high: needed for first prototype release
 
 (high) server questions:
-where does console.log() from anything other than app.listen() get sent?  goes to twilio i guess?
 how do I add an alias?  can I write to .bashrc?
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
@@ -31,6 +30,13 @@ worker is admin with correct password)
 (high) worker.create needs to return correct value
 
 (high) get app hosted on Heroku and verify sustained uptime
+
+(high) document all configuration:
+--toroid.org git hook
+--server port listener setup
+--local git configuration
+--twilio configuration
+
 
 (medium) change voice
 
