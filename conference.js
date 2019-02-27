@@ -53,6 +53,9 @@ class Conference{
 			.then(conference=>console.log(conference.friendlyName));
 	}
 
+	//for setTimedAnnounce and setTimedEndConference,
+	//.bind(this) is used because the callback will be run outside the scope of conference
+	//class' "this" and need to attach this in-scope value to the callback
 	setTimedAnnounce(initialMinutes,minutesToElapse,conferenceSid){
 		var minutesRemaining=initialMinutes-minutesToElapse;
 		console.log("setTimedAnnounce: minutesRemaining: "+minutesRemaining);

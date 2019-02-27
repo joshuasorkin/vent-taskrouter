@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/testHeroku',function(req,res){
 	var response=new VoiceResponse();
-	response.say("Heroku");
+	twimlBuilder.say(response,"Heroku");
 	res.send(response.toString());
 });
 
@@ -99,13 +99,13 @@ app.post('/sms',async function(req,res){
 app.post('/conferenceAnnounceEnd_participantLeave',function(req,res){
 	const response=new VoiceResponse();
 	console.log("running conferenceAnnounceEnd");
-	response.say('The other participant has left the conference.  Thank you for participating.  Now ending conference.');
+	twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Now ending conference.');
 	res.send(response.toString());
 });
 
 app.post('/conferenceEnd_participantLeave',function(req,res){
 	const response=new VoiceResponse();
-	response.say('The other participant has left the conference.  Thank you for participating.  Good-bye!');
+	twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Good-bye!');
 	res.send(response.toString());
 });
 
@@ -120,13 +120,13 @@ app.get('/conferenceAnnounceTime',function(req,res){
 	else{
 		unit="minutes";
 	}
-	response.say('You have '+timeRemaining+' '+unit+' remaining.');
+	twimlBuilder.say(response,'You have '+timeRemaining+' '+unit+' remaining.');
 	res.send(response.toString());
 });
 
 app.post('/conferenceEnd_timesUp',function(req,res){
 	const response=new VoiceResponse();
-	response.say("Time's up!  Thank you for participating.  Good-bye!");
+	twimlBuilder.say(response,"Time's up!  Thank you for participating.  Good-bye!");
 	response.hangup();
 	res.send(response.toString());
 });
@@ -144,7 +144,7 @@ app.post('/enqueue_call',function(req,res){
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
 	twimlBuilder.say(response,'Please wait while I find a receiver.');
-	//response.say('Please wait while I find a receiver.');
+	//twimlBuilder.say(response,'Please wait while I find a receiver.');
 	response.play(process.env.WAIT_URL);
 	res.send(response.toString());
 });
@@ -156,7 +156,7 @@ app.post('/wait',function(req,res){
 app.get('/agent_answer_hangup',function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	const response=new VoiceResponse();
-	response.say('I didn\'t get any input from you.  Goodbye!');
+	twimlBuilder.say(response,'I didn\'t get any input from you.  Goodbye!');
 	response.hangup();
 	taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
 	res.send(response.toString());
@@ -177,11 +177,11 @@ app.get('/agent_answer',async function(req,res){
 	//as is done at agent_answer_hangup because this is already handled by taskrouter
 	//in response to inbound caller's hangup
 	if (taskIsCanceled){
-		response.say("The caller disconnected already.  Sorry to bother you.  Good-bye.");
+		twimlBuilder.say(response,"The caller disconnected already.  Sorry to bother you.  Good-bye.");
 		response.hangup();
 	}
 	else{
-		response.say('You have a call from Vent.  Press 1 to accept, or 2 to refuse.');
+		twimlBuilder.say(response,'You have a call from Vent.  Press 1 to accept, or 2 to refuse.');
 		const gather=response.gather({
 			numDigits:1,
 			action:url,
@@ -219,7 +219,7 @@ app.get('/conferenceEvents',function(req,res){
 			break;
 		case "conference-end":
 			var response=new VoiceResponse();
-			response.say('The other participant has left the conference.  Thank you for participating.  Good-bye!');
+			twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Good-bye!');
 			response.hangup();
 			responseValue=response.toString();
 		default:
@@ -275,7 +275,7 @@ app.get('/agent_answer_process',function(req,res){
 					});
 			break;
 		case '2':
-			response.say('Sorry that you\'re not available.  Goodbye!');
+			twimlBuilder.say(response,'Sorry that you\'re not available.  Goodbye!');
 			response.hangup();
 			console.log("worker rejected call");
 			clientWorkspace
@@ -291,7 +291,7 @@ app.get('/agent_answer_process',function(req,res){
 							});
 			break;
 		default:
-			response.say('I didn\'t understand your response.');
+			twimlBuilder.say(response,'I didn\'t understand your response.');
 			response.redirect({method:'GET'},redirectUrl);
 	}
 	res.send(response.toString());
@@ -347,7 +347,7 @@ app.post('/assignment', function (req, res) {
 
 app.post('/automatic',function(req,res){
 	var response=new VoiceResponse();
-	response.say("We're sorry, there is no one available to take your call.  Good-bye!");
+	twimlBuilder.say(response,"We're sorry, there is no one available to take your call.  Good-bye!");
 	response.hangup();
 	res.send(response.toString());
 });
