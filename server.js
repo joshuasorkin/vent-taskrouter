@@ -355,9 +355,10 @@ app.post('/automatic',function(req,res){
 app.post('/workspaceEvent',function(req,res){
 	eventType=req.body.EventType;
 	eventDescription=req.body.EventDescription;
+	eventDate=req.body.EventDate;
 	resourceType=req.body.ResourceType;
 	resourceSid=req.body.ResourceSid;
-	console.log("Event Details:\n"+eventType+"\n"+eventDescription+"\n"+resourceType+"\n"+resourceSid);
+	console.log("Event Details:\n"+eventType+"\n"+eventDescription+"\n"+eventDate+"\n"+resourceType+"\n"+resourceSid);
 	res.type('application/json');
 	res.status(204).send({error:'error occurred in processing workspace event callback'});
 });
