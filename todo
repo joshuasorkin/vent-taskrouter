@@ -1,9 +1,6 @@
 high: needed for first prototype release
 
-(high) server questions:
-how do I add an alias?  can I write to .bashrc?
 
-(high) when worker answers, sometimes the beginning of the say() is cut off
 
 (high) when one participant leaves, remaining participant is routed to twiml:
 say("the other participant has left the conference.  Thank you, good-bye.")
@@ -37,9 +34,13 @@ worker is admin with correct password)
 --local git configuration
 --twilio configuration
 
-(medium) set up IVR to get time request
+(high) when worker answers, sometimes the beginning of the say() is cut off
 
-(medium) change voice
+(medium) server questions:
+how do I add an alias?  can I write to .bashrc?
+
+(medium) set up IVR to get time request
+use task attribute to store time
 
 (medium) fix error when it tries to complete an already completed task
 
