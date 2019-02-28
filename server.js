@@ -144,7 +144,6 @@ app.post('/enqueue_call',function(req,res){
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
 	twimlBuilder.say(response,'Please wait while I find a receiver.');
-	//twimlBuilder.say(response,'Please wait while I find a receiver.');
 	response.play(process.env.WAIT_URL);
 	res.send(response.toString());
 });
@@ -352,19 +351,14 @@ app.get('/automatic',function(req,res){
 	twimlBuilder.say(response,"We're sorry, there is no one available to take your call.  Good-bye!");
 	response.hangup();
 
-	//consider reservation completed once automatic response finishes
-	//todo: this completion function call is copied from agent_answer_process, so
-	//should get refactored to a Reservation class that
-	//handles reservation status updates
+	//consider task completed once automatic response finishes
 	clientWorkspace
-							.workers(parameters.workerSid)
-							.reservations(parameters.reservationSid)
+							.tasks(parameters.taskSid)
 							.update({
-								reservationStatus:'completed'
+								assignmentStatus:'completed'
 							})
-							.then(reservation=>{
-								console.log("reservation status: "+reservation.reservationStatus);
-								console.log("worker name: "+reservation.workerName);
+							.then(task=>{
+								console.log("task status: "+task.assignmentStatus);
 							});
 
 	res.send(response.toString());
