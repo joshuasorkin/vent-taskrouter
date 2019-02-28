@@ -334,8 +334,9 @@ app.post('/assignment', function (req, res) {
 			}).then(call=>console.log("createCallToHost: logging return value of client calls create, 'to' value "+call.to));
 			break;
 		case process.env.TWILIO_TASKQUEUE_AUTOMATIC_SID:
+			automaticUrl=urlSerializer.serialize('automatic',parameters);
 			client.calls(callSid)
-			.update({method: 'POST', url: process.env.APP_BASE_URL+'/automatic'})
+			.update({method: 'GET', url: automaticUrl})
       		.then(call => console.log(call.to));
 			
 			break;
@@ -345,10 +346,27 @@ app.post('/assignment', function (req, res) {
     res.status(200).send({error:'an error occurred in sending response to assignment callback'});
 });
 
-app.post('/automatic',function(req,res){
+app.get('/automatic',function(req,res){
+	parameters=urlSerializer.deserialize(req);
 	var response=new VoiceResponse();
 	twimlBuilder.say(response,"We're sorry, there is no one available to take your call.  Good-bye!");
 	response.hangup();
+
+	//consider reservation completed once automatic response finishes
+	//todo: this completion function call is copied from agent_answer_process, so
+	//should get refactored to a Reservation class that
+	//handles reservation status updates
+	clientWorkspace
+							.workers(parameters.workerSid)
+							.reservations(parameters.reservationSid)
+							.update({
+								reservationStatus:'completed'
+							})
+							.then(reservation=>{
+								console.log("reservation status: "+reservation.reservationStatus);
+								console.log("worker name: "+reservation.workerName);
+							});
+
 	res.send(response.toString());
 });
 
