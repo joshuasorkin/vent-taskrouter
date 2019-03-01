@@ -14,7 +14,7 @@ class Conference{
 	generateConference(parameters,initialSay){
 		var response=new VoiceResponse();
 		if (initialSay!=null){
-			twimlBuilder.say(response,initialSay);
+			this.twimlBuilder.say(response,initialSay);
 		}
 		const dial=response.dial();
 		var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters,'parameters');
@@ -93,7 +93,7 @@ class Conference{
 		.catch(err=>console.log("conference update error: "+err));
 	}
 
-	endConferenceTask(conferenceSid,taskSid,conferenceEnd_endpoint){
+	endConferenceTask(taskSid){
 		console.log("conference: running endConferenceTask");
 		this.workspace.tasks(taskSid)
 			.update({
