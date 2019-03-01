@@ -1,5 +1,6 @@
 const UrlSerializer=require('./urlSerializer');
 const VoiceResponse=require('twilio').twiml.VoiceResponse;
+const TwimlBuilder=require('./twimlBuilder');
 require('env2')('.env');
 
 class Conference{
@@ -8,11 +9,12 @@ class Conference{
 		this.client=client;
 		this.workspace=workspace;
 		this.urlSerializer=new UrlSerializer();
+		this.twimlBuilder=new TwimlBuilder();
 	}
 	generateConference(parameters,initialSay){
 		var response=new VoiceResponse();
 		if (initialSay!=null){
-			response.say(initialSay);
+			twimlBuilder.say(response,initialSay);
 		}
 		const dial=response.dial();
 		var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters,'parameters');
@@ -73,8 +75,7 @@ class Conference{
 		});
 	}
 
-	endConference(task,conferenceSid,conferenceEnd_endPoint){
-		console.log("task sid: "+task.sid);
+	endConference(conferenceSid,conferenceEnd_endPoint){
 		var announceUrl=process.env.APP_BASE_URL+'/'+conferenceEnd_endPoint;
 		console.log("conference end announceUrl: "+announceUrl);
 		this.client.conferences(conferenceSid)
@@ -93,14 +94,15 @@ class Conference{
 	}
 
 	endConferenceTask(conferenceSid,taskSid,conferenceEnd_endpoint){
-		console.log("conference: running endConference");
+		console.log("conference: running endConferenceTask");
 		this.workspace.tasks(taskSid)
 			.update({
 				assignmentStatus:'completed',
 				reason:'conference ended'
 			})
 			.then(task=>{
-				this.endConference(task,conferenceSid,conferenceEnd_endpoint);
+				//this.endConference(task,conferenceSid,conferenceEnd_endpoint);
+				console.log("endConferenceTask: task status "+task.assignmentStatus);
 			})
 			.catch(err=>console.log("conference task update error: "+err));
 	}

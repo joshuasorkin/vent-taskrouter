@@ -214,13 +214,12 @@ app.get('/conferenceEvents',function(req,res){
 			break;
 		case "participant-leave":
 			console.log("now ending conference...");
-			conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid,'conferenceAnnounceEnd_participantLeave');
+			conference.endConference(req.query.ConferenceSid,'conferenceAnnounceEnd_participantLeave');
+			//conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid,'conferenceAnnounceEnd_participantLeave');
 			break;
 		case "conference-end":
-			var response=new VoiceResponse();
-			twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Good-bye!');
-			response.hangup();
-			responseValue=response.toString();
+			conference.endConferenceTask(parameters.taskSid);
+			responseValue="";
 		default:
 			responseValue="";
 
