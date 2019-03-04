@@ -8,6 +8,7 @@ class WorkflowConfigurer{
 		var config={
 			"task_routing":{
 				"filters":[
+					{
 
 						"filter_friendly_name":"don't call self",
 						"expression":"1==1",
