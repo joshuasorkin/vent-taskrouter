@@ -191,14 +191,14 @@ app.get('/agent_answer',async function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/conferenceEvents',function(req,res){
+app.get('/conferenceEvents',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	event=req.query.StatusCallbackEvent;
 	console.log("conference event: "+event);
 	console.log("now listing conference participants' callSids:");
-	conference.getParticipants(req.query.conferenceSid,function(participant){
-		console.log(participant.callSid);
-	});
+	var participants=conference.getParticipants(req.query.conferenceSid);
+	var participantsJSON=participants.json();
+	console.log("/conference events: participants json: "+participantsJSON);
 	
 	var responseValue="";
 	switch(event){
