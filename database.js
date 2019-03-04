@@ -34,7 +34,7 @@ class Database{
 		{ type: sequelize.QueryTypes.SELECT});
 	}
 	
-	
+	                                                           
 }
 
 module.exports=Database;

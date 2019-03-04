@@ -84,10 +84,12 @@ class Conference{
 		})
 		.then(conference=>{
 			console.log("conference name: "+conference.friendlyName);
+			/*
 			this.client.conferences(conference.sid)
 			.update({
 				status:'completed'
 			});
+			*/
 		})
 		.catch(err=>console.log("conference update error: "+err));
 	}

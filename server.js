@@ -98,10 +98,11 @@ app.post('/sms',async function(req,res){
 
 app.post('/conferenceAnnounceEnd_participantLeave',function(req,res){
 	const response=new VoiceResponse();
-	console.log("running conferenceAnnounceEnd");
+	console.log("/conferenceAnnounceEnd_participantLeave: running conferenceAnnounceEnd");
 	twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Now ending conference.');
 	res.send(response.toString());
 });
+
 
 app.post('/conferenceEnd_participantLeave',function(req,res){
 	const response=new VoiceResponse();
@@ -194,11 +195,11 @@ app.get('/agent_answer',async function(req,res){
 app.get('/conferenceEvents',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	event=req.query.StatusCallbackEvent;
-	console.log("conference event: "+event);
-	console.log("now listing conference participants' callSids:");
-	var participants=conference.getParticipants(req.query.conferenceSid);
+	console.log("/conferenceEvents: conference event: "+event);
+	console.log("/conferenceEvents: now listing conference participants' callSids:");
+	var participants=await conference.getParticipants(req.query.conferenceSid);
 	//var participantsJSON=participants.json();
-	console.log("/conference events: participants: "+participants.toString());
+	console.log("/conferenceEvents: participants: "+participants);
 	
 	var responseValue="";
 	switch(event){
@@ -213,7 +214,7 @@ app.get('/conferenceEvents',async function(req,res){
 			}
 			break;
 		case "participant-leave":
-			console.log("now ending conference...");
+			console.log("/conferenceEvents: now ending conference...");
 			conference.endConference(req.query.ConferenceSid,'conferenceAnnounceEnd_participantLeave');
 			//conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid,'conferenceAnnounceEnd_participantLeave');
 			break;
