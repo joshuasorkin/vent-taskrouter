@@ -34,10 +34,9 @@ class Conference{
 		return response;	
 	}
 
-	async getParticipants(conferenceSid){
+	getParticipants(conferenceSid){
 		return this.client.conferences(conferenceSid)
-		.participants
-		.fetch();
+		.participants;
 	}
 
 	announce(conferenceSid,timeRemaining){
