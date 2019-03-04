@@ -197,8 +197,8 @@ app.get('/conferenceEvents',async function(req,res){
 	console.log("conference event: "+event);
 	console.log("now listing conference participants' callSids:");
 	var participants=conference.getParticipants(req.query.conferenceSid);
-	var participantsJSON=participants.json();
-	console.log("/conference events: participants json: "+participantsJSON);
+	//var participantsJSON=participants.json();
+	console.log("/conference events: participants: "+participants.toString());
 	
 	var responseValue="";
 	switch(event){
