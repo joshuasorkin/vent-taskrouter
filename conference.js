@@ -17,7 +17,7 @@ class Conference{
 			this.twimlBuilder.say(response,initialSay);
 		}
 		const dial=response.dial();
-		var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters,'parameters');
+		var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters);
 		//var conferenceCallbackUrl=process.env.APP_BASE_URL+'/conferenceEvents';
 		console.log("conferenceGenerator's conferenceCallbackUrl: "+conferenceCallbackUrl);
 		dial.conference({
@@ -74,25 +74,26 @@ class Conference{
 		});
 	}
 
-	endConference(conferenceSid,conferenceEnd_endPoint){
-		var announceUrl=process.env.APP_BASE_URL+'/'+conferenceEnd_endPoint;
+	endConferenceAnnounce(parameters,conferenceEnd_endPoint){
+		var conferenceSid=parameters.conferenceSid;
+		var announceUrl=urlSerializer.serialize(conferenceEnd_endPoint,parameters);
 		console.log("conference end announceUrl: "+announceUrl);
+		
 		this.client.conferences(conferenceSid)
 		.update({
 			announceUrl:announceUrl,
-			announceMethod:'POST'
-		})
-		.then(conference=>{
-			console.log("conference name: "+conference.friendlyName);
-			/*
-			this.client.conferences(conference.sid)
-			.update({
-				status:'completed'
-			});
-			*/
-		})
-		.catch(err=>console.log("conference update error: "+err));
+			announceMethod:'GET'
+		});
 	}
+
+	endConference_update(conferenceSid){
+		this.client.conferences(conferenceSid)
+		.update({
+			status:'completed'
+		});
+	}
+
+
 
 	endConferenceTask(taskSid){
 		console.log("conference: running endConferenceTask");

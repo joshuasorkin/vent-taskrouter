@@ -96,17 +96,24 @@ app.post('/sms',async function(req,res){
 });
 
 
-app.post('/conferenceAnnounceEnd_participantLeave',function(req,res){
+app.get('/conferenceAnnounceEnd_participantLeave',function(req,res){
+	var parameters=urlSerializer.deserialize(req);
+	url=urlSerializer.serialize('endConference_update',parameters);
 	const response=new VoiceResponse();
 	console.log("/conferenceAnnounceEnd_participantLeave: running conferenceAnnounceEnd");
 	twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Now ending conference.');
+	response.redirect({
+		method:'GET'
+	},url);
 	res.send(response.toString());
 });
 
-
-app.post('/conferenceEnd_participantLeave',function(req,res){
+app.get('/endConference_update',function(req,res){
+	var parameters=urlSerializer.deserialize(req);
+	var conferenceSid=parameters.reservationSid;
+	conference.endConference_update(conferenceSid);
 	const response=new VoiceResponse();
-	twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Good-bye!');
+	response.say("conference has ended.");
 	res.send(response.toString());
 });
 
@@ -214,8 +221,8 @@ app.get('/conferenceEvents',async function(req,res){
 			}
 			break;
 		case "participant-leave":
-			console.log("/conferenceEvents: now ending conference...");
-			conference.endConference(req.query.ConferenceSid,'conferenceAnnounceEnd_participantLeave');
+			console.log("/conferenceEvents: now ending conference, starting with endConferenceAnnounce...");
+			conference.endConferenceAnnounce(parameters,'conferenceAnnounceEnd_participantLeave');
 			//conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid,'conferenceAnnounceEnd_participantLeave');
 			break;
 		case "conference-end":
