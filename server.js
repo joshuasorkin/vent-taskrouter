@@ -102,9 +102,11 @@ app.get('/conferenceAnnounceEnd_participantLeave',function(req,res){
 	const response=new VoiceResponse();
 	console.log("/conferenceAnnounceEnd_participantLeave: running conferenceAnnounceEnd");
 	twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Now ending conference.');
+	/*
 	response.redirect({
 		method:'GET'
 	},url);
+	*/
 	res.send(response.toString());
 });
 
