@@ -75,11 +75,10 @@ class Conference{
 	}
 
 	endConferenceAnnounce(parameters,conferenceEnd_endPoint){
-		var conferenceSid=parameters.reservationSid;
 		var announceUrl=this.urlSerializer.serialize(conferenceEnd_endPoint,parameters);
 		console.log("conference end announceUrl: "+announceUrl);
 		
-		this.client.conferences(conferenceSid)
+		this.client.conferences(parameters.conferenceSid)
 		.update({
 			announceUrl:announceUrl,
 			announceMethod:'GET'

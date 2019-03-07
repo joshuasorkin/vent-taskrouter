@@ -105,11 +105,9 @@ app.get('/conferenceAnnounceEnd_participantLeave',function(req,res){
 	const response=new VoiceResponse();
 	console.log("/conferenceAnnounceEnd_participantLeave: running conferenceAnnounceEnd");
 	twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Now ending conference.');
-	/*
 	response.redirect({
 		method:'GET'
 	},url);
-	*/
 	res.send(response.toString());
 });
 
@@ -207,11 +205,10 @@ app.get('/agent_answer',async function(req,res){
 app.get('/conferenceEvents',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	event=req.query.StatusCallbackEvent;
-	reqConferenceSid=req.query.ConferenceSid;
-	console.log("/conferenceEvents: conference sid: "+reqConferenceSid);
+	conferenceSid=req.query.ConferenceSid;
 	console.log("/conferenceEvents: conference event: "+event);
 	console.log("/conferenceEvents: now listing conference participants' callSids:");
-	var participants=await conference.getParticipants(req.query.conferenceSid);
+	var participants=await conference.getParticipants(conferenceSid);
 	//var participantsJSON=participants.json();
 	console.log("/conferenceEvents: participants: "+participants);
 	
@@ -219,7 +216,6 @@ app.get('/conferenceEvents',async function(req,res){
 	switch(event){
 		case "conference-start":
 			initialMinutes=0.5;
-			conferenceSid=req.query.ConferenceSid;
 			conference.announce(conferenceSid,initialMinutes);
 			conference.setTimedAnnounce(initialMinutes,initialMinutes/2,conferenceSid);
 			conference.setTimedEndConference(initialMinutes,conferenceSid);
@@ -229,6 +225,7 @@ app.get('/conferenceEvents',async function(req,res){
 			break;
 		case "participant-leave":
 			console.log("/conferenceEvents: now ending conference, starting with endConferenceAnnounce...");
+			parameters.conferenceSid=conferenceSid;
 			conference.endConferenceAnnounce(parameters,'conferenceAnnounceEnd_participantLeave');
 			//conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid,'conferenceAnnounceEnd_participantLeave');
 			break;
