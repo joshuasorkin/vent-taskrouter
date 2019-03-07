@@ -83,7 +83,8 @@ class Conference{
 		.update({
 			announceUrl:announceUrl,
 			announceMethod:'GET'
-		});
+		})
+		.catch(err=>console.log("endConferenceAnnounce: error updating: "+err));
 	}
 
 	endConference_update(conferenceSid){
