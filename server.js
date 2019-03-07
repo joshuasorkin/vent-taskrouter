@@ -207,6 +207,8 @@ app.get('/agent_answer',async function(req,res){
 app.get('/conferenceEvents',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	event=req.query.StatusCallbackEvent;
+	reqConferenceSid=req.query.ConferenceSid;
+	console.log("/conferenceEvents: conference sid: "+reqConferenceSid);
 	console.log("/conferenceEvents: conference event: "+event);
 	console.log("/conferenceEvents: now listing conference participants' callSids:");
 	var participants=await conference.getParticipants(req.query.conferenceSid);
