@@ -24,7 +24,7 @@ var conference;
 var worker;
 var twimlBuilder=new TwimlBuilder();
 var router=express.Router();
-router.use('/other_route',require('./other_route').router);
+app.use('/other_route',require('./other_route').router);
 
 
 function exitErrorHandler(error) {
