@@ -87,10 +87,12 @@ class Conference{
 	}
 
 	endConference_update(conferenceSid){
+		console.log("endConference_update: about to update conference to completed");
 		this.client.conferences(conferenceSid)
 		.update({
 			status:'completed'
-		});
+		})
+		.catch(err=>console.log("endConference_update: error: "+err));
 	}
 
 

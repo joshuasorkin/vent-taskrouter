@@ -113,10 +113,9 @@ app.get('/conferenceAnnounceEnd_participantLeave',function(req,res){
 
 app.get('/endConference_update',function(req,res){
 	var parameters=urlSerializer.deserialize(req);
-	var conferenceSid=parameters.reservationSid;
+	var conferenceSid=parameters.conferenceSid;
 	conference.endConference_update(conferenceSid);
 	const response=new VoiceResponse();
-	response.hangup();
 	res.send(response.toString());
 });
 
