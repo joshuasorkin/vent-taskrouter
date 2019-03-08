@@ -377,7 +377,7 @@ app.get('/automatic',function(req,res){
 							.then(task=>{
 								console.log("task status: "+task.assignmentStatus);
 							})
-							.catch(err=>console.log("/automatic: update task to completed: error: "+err);
+							.catch(err=>console.log("/automatic: update task to completed: error: "+err));
 
 	res.send(response.toString());
 });
