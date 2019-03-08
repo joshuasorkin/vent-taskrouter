@@ -1,7 +1,5 @@
 high: needed for first prototype release
 
-
-
 (high) when one participant leaves, remaining participant is routed to twiml:
 say("the other participant has left the conference.  Thank you, good-bye.")
 hangup()

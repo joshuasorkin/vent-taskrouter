@@ -116,7 +116,7 @@ app.get('/endConference_update',function(req,res){
 	var conferenceSid=parameters.reservationSid;
 	conference.endConference_update(conferenceSid);
 	const response=new VoiceResponse();
-	response.say("conference has ended.");
+	response.hangup();
 	res.send(response.toString());
 });
 
