@@ -355,11 +355,18 @@ app.post('/assignment', function (req, res) {
     res.status(200).send({error:'an error occurred in sending response to assignment callback'});
 });
 
+app.get('/endCall_automatic',function(req,res){
+	var response=new VoiceResponse();
+	response.hangup();
+	res.send(response.toString());
+});
+
 app.get('/automatic',function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	var response=new VoiceResponse();
+	var url=urlSerializer.serialize('endCall_automatic',parameters);
 	twimlBuilder.say(response,"We're sorry, there is no one available to take your call.  Good-bye!");
-	response.hangup();
+	response.redirect({method:'GET'},url);
 
 	//consider task completed once automatic response finishes
 	clientWorkspace
@@ -369,7 +376,8 @@ app.get('/automatic',function(req,res){
 							})
 							.then(task=>{
 								console.log("task status: "+task.assignmentStatus);
-							});
+							})
+							.catch(err=>console.log("/automatic: update task to completed: error: "+err);
 
 	res.send(response.toString());
 });
@@ -381,6 +389,7 @@ app.post('/workspaceEvent',function(req,res){
 	resourceType=req.body.ResourceType;
 	resourceSid=req.body.ResourceSid;
 	console.log("Event Details:\n"+eventType+"\n"+eventDescription+"\n"+eventDate+"\n"+resourceType+"\n"+resourceSid);
+
 	res.type('application/json');
 	res.status(204).send({error:'error occurred in processing workspace event callback'});
 });
