@@ -138,6 +138,17 @@ app.post('/conferenceEnd_timesUp',function(req,res){
 	const response=new VoiceResponse();
 	twimlBuilder.say(response,"Time's up!  Thank you for participating.  Good-bye!");
 	response.hangup();
+
+	clientWorkspace
+	.tasks(parameters.taskSid)
+	.update({
+		assignmentStatus:'completed'
+	})
+	.then(task=>{
+		console.log("task status: "+task.assignmentStatus);
+	})
+	.catch(err=>console.log("/conferenceEnd_timesUp: update task to completed: error: "+err));
+
 	res.send(response.toString());
 });
 
