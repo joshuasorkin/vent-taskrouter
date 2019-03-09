@@ -63,11 +63,12 @@ class Conference{
 		setTimeout(this.announce.bind(this),minutesToElapse*60000,conferenceSid,minutesRemaining);
 	}
 
-	setTimedEndConference(initialMinutes,conferenceSid){
-		setTimeout(this.endConferenceTimeUp.bind(this),initialMinutes*60000,conferenceSid);
+	setTimedEndConference(initialMinutes,parameters){
+		setTimeout(this.endConferenceAnnounce.bind(this),initialMinutes*60000,parameters,"conferenceAnnounceEnd_timeUp");
 	}
 
 	endConferenceTimeUp(conferenceSid){
+		
 		this.client.conferences(conferenceSid)
 		.update({
 			status:'completed'

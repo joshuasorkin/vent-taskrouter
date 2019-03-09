@@ -111,6 +111,23 @@ app.get('/conferenceAnnounceEnd_participantLeave',function(req,res){
 	res.send(response.toString());
 });
 
+//todo: refactor this, both of the conferenceAnnounceEnd should be the same function
+//with different say() text passed in
+app.get('/conferenceAnnounceEnd_timeUp',function(req,res){
+	var parameters=urlSerializer.deserialize(req);
+	url=urlSerializer.serialize('endConference_update',parameters);
+	const response=new VoiceResponse();
+	console.log("/conferenceAnnounceEnd_participantLeave: running conferenceAnnounceEnd");
+	twimlBuilder.say(response,'Time\'s up.  Thank you for participating.  Now ending conference.');
+	response.redirect({
+		method:'GET'
+	},url);
+	res.send(response.toString());
+});
+
+
+
+
 app.get('/endConference_update',function(req,res){
 	var parameters=urlSerializer.deserialize(req);
 	var conferenceSid=parameters.conferenceSid;
@@ -219,23 +236,22 @@ app.get('/conferenceEvents',async function(req,res){
 	console.log("/conferenceEvents: conference event: "+event);
 	console.log("/conferenceEvents: now listing conference participants' callSids:");
 	var participants=await conference.getParticipants(conferenceSid);
-	//var participantsJSON=participants.json();
 	console.log("/conferenceEvents: participants: "+participants);
-	
+	parameters.conferenceSid=conferenceSid;
 	var responseValue="";
 	switch(event){
 		case "conference-start":
 			initialMinutes=0.5;
 			conference.announce(conferenceSid,initialMinutes);
 			conference.setTimedAnnounce(initialMinutes,initialMinutes/2,conferenceSid);
-			conference.setTimedEndConference(initialMinutes,conferenceSid);
+			conference.setTimedEndConference(initialMinutes,parameters);
 			if (initialMinutes>3){
 				conference.setTimedAnnounce(initialMinutes,initialMinutes-1,conferenceSid);
 			}
 			break;
 		case "participant-leave":
 			console.log("/conferenceEvents: now ending conference, starting with endConferenceAnnounce...");
-			parameters.conferenceSid=conferenceSid;
+			
 			conference.endConferenceAnnounce(parameters,'conferenceAnnounceEnd_participantLeave');
 			//conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid,'conferenceAnnounceEnd_participantLeave');
 			break;
