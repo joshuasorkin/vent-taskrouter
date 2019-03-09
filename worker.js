@@ -19,7 +19,7 @@ class Worker{
 					})
 					.catch(err=>{
 						console.log(err);
-						return "Error: "+err.message;
+						return "Worker create error: "+err.message;
 					});
 	}
 	
