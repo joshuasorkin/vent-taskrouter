@@ -213,8 +213,21 @@ app.get('/agent_answer_hangup',function(req,res){
 	const response=new VoiceResponse();
 	twimlBuilder.say(response,'I didn\'t get any input from you.  Goodbye!');
 	response.hangup();
-	taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
-	var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+	//var rejectResult=await taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
+	//var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+	clientWorkspace
+							//.tasks(parameters.taskSid)
+							.workers(parameters.workerSid)
+							.reservations(parameters.reservationSid)
+							.update({
+								reservationStatus:'rejected'
+							})
+							.then(reservation=>{
+								console.log("reservation status: "+reservation.reservationStatus);
+								console.log("worker name: "+reservation.workerName);
+								var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+							});
+
 	res.send(response.toString());
 });
 
