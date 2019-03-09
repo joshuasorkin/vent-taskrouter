@@ -181,6 +181,8 @@ app.post('/enqueue_call',function(req,res){
 	const fromNumber=req.body.From;
 	contact_uriExists=worker.contact_uriExists(fromNumber);
 	const response=new VoiceResponse();
+	twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
+														+"have reviewed reliability and security limitations.");
 	if(contact_uriExists){
 		const enqueue=response.enqueue({
 			//workflowSid:app.get('workspaceInfo').workflowSid,
@@ -189,7 +191,7 @@ app.post('/enqueue_call',function(req,res){
 		});
 	}
 	else{
-		twimlBuilder.say(response,"Your number was not found in the system.  Good-bye.");
+		twimlBuilder.say(response,"You are not recognized as an authorized user.  Good-bye.");
 		response.hangup();
 	}
 	res.send(response.toString());
