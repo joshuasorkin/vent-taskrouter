@@ -178,12 +178,20 @@ app.post('/conferenceEnd_timesUp',function(req,res){
 });
 
 app.post('/enqueue_call',function(req,res){
+	const fromNumber=req.body.From;
+	contact_uriExists=worker.contact_uriExists(fromNumber);
 	const response=new VoiceResponse();
-	const enqueue=response.enqueue({
-		//workflowSid:app.get('workspaceInfo').workflowSid,
-		workflowSid:workflowSid,
-		waitUrl:'/wait'
-	});
+	if(contact_uriExists){
+		const enqueue=response.enqueue({
+			//workflowSid:app.get('workspaceInfo').workflowSid,
+			workflowSid:workflowSid,
+			waitUrl:'/wait'
+		});
+	}
+	else{
+		twimlBuilder.say(response,"Your number was not found in the system.  Good-bye.");
+		response.hangup();
+	}
 	res.send(response.toString());
 });
 
