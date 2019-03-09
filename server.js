@@ -208,7 +208,7 @@ app.post('/wait',function(req,res){
 //this endpoint to be reached if the agent does not provide IVR response
 //to the options presented by /agent_answer
 //either because they hung up or waited too long
-app.get('/agent_answer_hangup',async function(req,res){
+app.get('/agent_answer_hangup',function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	const response=new VoiceResponse();
 	twimlBuilder.say(response,'I didn\'t get any input from you.  Goodbye!');
@@ -225,7 +225,7 @@ app.get('/agent_answer_hangup',async function(req,res){
 							.then(reservation=>{
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
-								var updateResult=await worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+								var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
 							});
 
 	res.send(response.toString());
