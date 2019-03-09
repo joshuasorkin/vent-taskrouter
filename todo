@@ -1,15 +1,5 @@
 high: needed for first prototype release
 
-
-(high) if no worker available, route caller to twilio:
-say("sorry, all listeners are unavailable at this time.  Thank you, good-bye.")
-then complete task
-
-(high) when all time elapses, redirect both conference participants to twiml:
-say("time's up.  Thank you, good-bye.")
-hangup()
-make sure that task has completed
-
 (high) verify that add a new worker is functioning correctly
 
 (high) match constraints from worker database table with Taskrouter worker list:
@@ -51,3 +41,12 @@ and have workflow order by this number
 (high) when one participant leaves, remaining participant is routed to twiml:
 say("the other participant has left the conference.  Thank you, good-bye.")
 hangup()
+
+(high) if no worker available, route caller to twilio:
+say("sorry, all listeners are unavailable at this time.  Thank you, good-bye.")
+then complete task
+
+(high) when all time elapses, redirect both conference participants to twiml:
+say("time's up.  Thank you, good-bye.")
+hangup()
+make sure that task has completed

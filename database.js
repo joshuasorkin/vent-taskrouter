@@ -13,6 +13,7 @@ class Database{
 	createWorker(worker){
 		const attributes=JSON.parse(worker.attributes);
 		const contact_uri=attributes.contact_uri;
+		console.log("createWorker: now attempting sequelize insert worker");
 		return sequelize.query("insert into worker (contact_uri,sid) values ('"+contact_uri+"','"+worker.sid+"')");
 	}
 	
