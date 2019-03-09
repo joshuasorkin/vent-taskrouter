@@ -308,7 +308,7 @@ app.get('/agent_answer_process',function(req,res){
 
 
 // POST /call/assignment
-app.post('/assignment', function (req, res) {
+app.post('/assignment', async function (req, res) {
 	console.log("task attributes: "+req.body.TaskAttributes);
 	console.log("worker attributes: "+req.body.WorkerAttributes);
 	console.log("reservation sid: "+req.body.ReservationSid);
@@ -345,20 +345,20 @@ app.post('/assignment', function (req, res) {
 		case process.env.TWILIO_TASKQUEUE_AUTOMATIC_SID:
 			clientWorkspace
 			.tasks(parameters.taskSid)
+			.reservations(parameters.reservationSid)
 			.update({
-				assignmentStatus:'completed'
+				reservationStatus:'accepted'
 			})
-			.then(task=>{
-				console.log("task status: "+task.assignmentStatus);
+			.then(reservation=>{
+				console.log("reservation status: "+reservation.reservationStatus);
+				console.log("worker name: "+reservation.workerName);
 				automaticUrl=urlSerializer.serialize('automatic',parameters);
 				client.calls(callSid)
 				.update({method: 'GET', url: automaticUrl})
 				.then(call => console.log("/assignment: updating call to automatic response: "+call.from))
 				.catch(err=>console.log("/assignment: error updating call to automatic response: "+err));
 			})
-			.catch(err=>console.log("/automatic: update task to completed: error: "+err));
-			
-			
+			.catch(err=>console.log("/assignment: error accepting reservation: "+err));
 			break;
 	}
 	
@@ -380,7 +380,7 @@ app.get('/automatic',function(req,res){
 	response.hangup();
 	//response.redirect({method:'GET'},url);
 
-	/*
+	
 
 	//consider task completed once automatic response finishes
 	clientWorkspace
@@ -393,7 +393,7 @@ app.get('/automatic',function(req,res){
 							})
 							.catch(err=>console.log("/automatic: update task to completed: error: "+err));
 
-	*/
+	
 	res.send(response.toString());
 });
 
