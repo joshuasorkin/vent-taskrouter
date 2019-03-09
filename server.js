@@ -215,6 +215,7 @@ app.get('/agent_answer_hangup',function(req,res){
 	response.hangup();
 	//var rejectResult=await taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
 	//var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+	console.log("/agent_answer_hangup: now updating reservation to rejected");
 	clientWorkspace
 							//.tasks(parameters.taskSid)
 							.workers(parameters.workerSid)
@@ -226,7 +227,8 @@ app.get('/agent_answer_hangup',function(req,res){
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
 								var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
-							});
+							})
+							.catch(err=>console.log("/agent_answer_hangup: error rejecting reservation: "+err));
 
 	res.send(response.toString());
 });
