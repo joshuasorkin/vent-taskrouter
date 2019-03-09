@@ -66,12 +66,20 @@ app.post('/sms',async function(req,res){
 			break;
 		case "add":
 			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
-				
-				responseValue=await worker.create(bodyArray[2],bodyArray[3]);
-				//todo: this is a hack until I can figure out what the problem
-				//is with the return value from worker.create
-				if (responseValue==",1"){
-					responseValue="Worker "+bodyArray[3]+" successfully created";
+				contact_uri=bodyArray[2];
+				friendlyName=bodyArray[3];
+				workerExists=await worker.contact_uriExists();
+				if (workerExists){
+						responseValue="worker with contact_uri "+contact_uri+" already exists";
+				}
+				else{
+
+					responseValue=await worker.createWorker(contact_uri,friendlyName);
+					//todo: this is a hack until I can figure out what the problem
+					//is with the return value from worker.create
+					if (responseValue==",1"){
+						responseValue="Worker "+bodyArray[3]+" successfully created";
+					}
 				}
 			}
 			else{

@@ -7,7 +7,7 @@ class Worker{
 		this.workspace=workspace;
 	}
 	
-	create(contact_uri,friendlyName){
+	createWorker(contact_uri,friendlyName){
 		return this.workspace.workers
 					.create({attributes: JSON.stringify({
 						languages: 'en',
@@ -57,6 +57,11 @@ class Worker{
 			return worker;
 		}
 
+	}
+
+	async contact_uriExists(contact_uri){
+		var workerSid=await database.getWorkerSid(contact_uri);
+		return (workerSid!=null);
 	}
 	
 }

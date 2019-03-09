@@ -1,6 +1,6 @@
 high: needed for first prototype release
 
-(high) verify that add a new worker is functioning correctly
+
 
 (high) match constraints from worker database table with Taskrouter worker list:
 unique contact_uri
@@ -20,6 +20,8 @@ worker is admin with correct password)
 --twilio configuration
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
+
+(medium) include password for git push to server
 
 (medium) server questions:
 how do I add an alias?  can I write to .bashrc?
@@ -50,3 +52,5 @@ then complete task
 say("time's up.  Thank you, good-bye.")
 hangup()
 make sure that task has completed
+
+(high) verify that add a new worker is functioning correctly
