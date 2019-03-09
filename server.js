@@ -214,6 +214,7 @@ app.get('/agent_answer_hangup',function(req,res){
 	twimlBuilder.say(response,'I didn\'t get any input from you.  Goodbye!');
 	response.hangup();
 	taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
+	var updateResult=worker.updateWorker(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
 	res.send(response.toString());
 });
 
@@ -342,6 +343,7 @@ app.get('/agent_answer_process',function(req,res){
 							.then(reservation=>{
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
+								var updateResult=worker.updateWorker(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
 							});
 			break;
 		default:
