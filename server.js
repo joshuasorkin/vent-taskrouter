@@ -68,8 +68,8 @@ app.post('/sms',async function(req,res){
 			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
 				contact_uri=bodyArray[2];
 				friendlyName=bodyArray[3];
-				workerExists=await worker.contact_uriExists();
-				if (workerExists){
+				contact_uriExists=await worker.contact_uriExists(contact_uri);
+				if (contact_uriExists){
 						responseValue="worker with contact_uri "+contact_uri+" already exists";
 				}
 				else{
