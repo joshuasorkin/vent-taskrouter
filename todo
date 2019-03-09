@@ -1,12 +1,9 @@
 high: needed for first prototype release
 
-(high) when one participant leaves, remaining participant is routed to twiml:
-say("the other participant has left the conference.  Thank you, good-bye.")
-hangup()
 
 (high) if no worker available, route caller to twilio:
 say("sorry, all listeners are unavailable at this time.  Thank you, good-bye.")
-hangup()
+then complete task
 
 (high) when all time elapses, redirect both conference participants to twiml:
 say("time's up.  Thank you, good-bye.")
@@ -48,3 +45,9 @@ and have workflow order by this number
 (medium) use md5 hash to check password, no plaintext
 
 (low) check if caller is in list of users
+
+---done---
+
+(high) when one participant leaves, remaining participant is routed to twiml:
+say("the other participant has left the conference.  Thank you, good-bye.")
+hangup()

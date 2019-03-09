@@ -343,10 +343,21 @@ app.post('/assignment', function (req, res) {
 			}).then(call=>console.log("createCallToHost: logging return value of client calls create, 'to' value "+call.to));
 			break;
 		case process.env.TWILIO_TASKQUEUE_AUTOMATIC_SID:
-			automaticUrl=urlSerializer.serialize('automatic',parameters);
-			client.calls(callSid)
-			.update({method: 'GET', url: automaticUrl})
-      		.then(call => console.log(call.to));
+			clientWorkspace
+			.tasks(parameters.taskSid)
+			.update({
+				assignmentStatus:'completed'
+			})
+			.then(task=>{
+				console.log("task status: "+task.assignmentStatus);
+				automaticUrl=urlSerializer.serialize('automatic',parameters);
+				client.calls(callSid)
+				.update({method: 'GET', url: automaticUrl})
+				.then(call => console.log("/assignment: updating call to automatic response: "+call.from))
+				.catch(err=>console.log("/assignment: error updating call to automatic response: "+err));
+			})
+			.catch(err=>console.log("/automatic: update task to completed: error: "+err));
+			
 			
 			break;
 	}
@@ -366,7 +377,10 @@ app.get('/automatic',function(req,res){
 	var response=new VoiceResponse();
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
 	twimlBuilder.say(response,"We're sorry, there is no one available to take your call.  Good-bye!");
-	response.redirect({method:'GET'},url);
+	response.hangup();
+	//response.redirect({method:'GET'},url);
+
+	/*
 
 	//consider task completed once automatic response finishes
 	clientWorkspace
@@ -379,6 +393,7 @@ app.get('/automatic',function(req,res){
 							})
 							.catch(err=>console.log("/automatic: update task to completed: error: "+err));
 
+	*/
 	res.send(response.toString());
 });
 
