@@ -60,18 +60,20 @@ class Taskrouter{
 		return (task.assignmentStatus=='canceled');
 	}
 
-	rejectReservation(workerSid,reservationSid){
+	async rejectReservation(workerSid,reservationSid){
 		console.log("worker rejected call");
-		this.workspace
+		return this.workspace
 						.workers(workerSid)
 						.reservations(reservationSid)
 						.update({
 							reservationStatus:'rejected'
-						})
+						});
+						/*
 						.then(reservation=>{
 							console.log("reservation status: "+reservation.reservationStatus);
 							console.log("worker name: "+reservation.workerName);
-						});
+						})
+						*/
 	}
 	
 }
