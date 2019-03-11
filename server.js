@@ -394,6 +394,10 @@ app.post('/assignment', async function (req, res) {
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 	
+	var task=await clientWorkspace.tasks(taskSid);
+	console.log("/assignment: task rejected workers: "+task.rejectedWorkers);
+
+
 	switch(taskQueueSid){
 		case process.env.TWILIO_TASKQUEUE_SID:
 			var call=client.calls.create({
