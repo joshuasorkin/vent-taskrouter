@@ -181,8 +181,8 @@ app.post('/enqueue_call',function(req,res){
 	const fromNumber=req.body.From;
 	contact_uriExists=worker.contact_uriExists(fromNumber);
 	const response=new VoiceResponse();
-	twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
-														+"have reviewed reliability and security limitations.");
+	//twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
+	//													+"have reviewed reliability and security limitations.");
 	if(contact_uriExists){
 		const enqueue=response.enqueue({
 			//workflowSid:app.get('workspaceInfo').workflowSid,
@@ -395,7 +395,7 @@ app.post('/assignment', async function (req, res) {
 	url=urlSerializer.serialize('agent_answer',parameters);	
 	
 	var task=await clientWorkspace.tasks(taskSid);
-	console.log("/assignment: task details: "+JSON.stringify(task));
+	console.log("/assignment: task details: "+task);
 
 
 	switch(taskQueueSid){
