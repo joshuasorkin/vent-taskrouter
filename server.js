@@ -473,14 +473,10 @@ app.post('/workspaceEvent',function(req,res){
 	switch (eventType){
 		case "reservation.rejected":
 			console.log("/workspaceEvent: reservation rejected, worker will be set offline");
-			console.log(JSON.stringify(req.body));
-			
-			/*
-			worker=req.body.Worker;
-			workerSid=worker.sid;
+			//console.log(JSON.stringify(req.body));
+			workerSid=req.body.WorkerSid;
 			console.log("/workspaceEvent: workerSid "+workerSid+" now being set to offline");
 			worker.updateWorkerFromSid(workerSid,process.env.TWILIO_OFFLINE_SID);
-			*/
 			break;
 	}
 
