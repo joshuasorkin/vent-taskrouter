@@ -201,7 +201,7 @@ app.post('/enqueue_call',function(req,res){
 
 app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
-	var word=wait.randomWord(3);
+	var word=wait.randomSentence(5,5);
 	twimlBuilder.say(response,word);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());

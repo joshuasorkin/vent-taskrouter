@@ -12,6 +12,13 @@ class Wait{
         return arr[Math.floor(Math.random()*arr.length)];
     }
 
+    randomNaturalNumber(max){
+        if(max<1){
+            throw "randomNaturalNumber error: max "+max+" is less than 1"; 
+        }
+        return Math.floor(Math.random()*max)+1;
+    }
+
     randomPhoneme(){
         var randomConsonant=this.randomElement(this.consonant);
         var randomVowel=this.randomElement(this.vowel);
@@ -19,13 +26,24 @@ class Wait{
         return output;
     }
 
-    randomWord(phonemeCount){
+    randomWord(maxPhonemeCount){
         var word="";
         var x;
+        var phonemeCount=randomNaturalNumber(maxPhonemeCount);
         for (x=1;x<=phonemeCount;x++){
             word+=this.randomPhoneme();
         }
         return word;
+    }
+
+    randomSentence(maxPhonemeCount,maxWordCount){
+        var sentence="";
+        var x;
+        var wordCount=randomNaturalNumber(maxWordCount);
+        for (x=1;x<=wordCount;x++){
+            sentence+=randomWord(maxPhonemeCount)+" ";
+        }
+        return sentence;
     }
 
 }
