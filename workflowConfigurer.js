@@ -17,7 +17,7 @@ class WorkflowConfigurer{
 								"queue":queueSid,
 								//"expression":"(task.caller!=worker.contact_uri) and (worker.sid NOT IN task.rejectedWorkers)",
 								"expression":"task.caller!=worker.contact_uri",
-								"skip_if": "workers.available == 0"
+								"skip_if": "(workers.available == 0) or (worker.sid IN task.rejectedWorkers)"
 							},
 							{
 								"queue":automaticQueueSid
