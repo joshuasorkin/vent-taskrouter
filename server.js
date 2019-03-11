@@ -395,7 +395,7 @@ app.post('/assignment', async function (req, res) {
 	url=urlSerializer.serialize('agent_answer',parameters);	
 	
 	var task=await clientWorkspace.tasks(taskSid);
-	console.log("/assignment: task rejected workers: "+task.rejectedWorkers);
+	console.log("/assignment: task details: "+JSON.stringify(task));
 
 
 	switch(taskQueueSid){
