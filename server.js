@@ -18,12 +18,14 @@ const UrlSerializer=require('./urlSerializer');
 const Conference=require('./conference');
 const Worker=require('./worker');
 const TwimlBuilder=require('./twimlBuilder');
+const Wait=require('./wait');
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
 var conference;
 var worker;
 var twimlBuilder=new TwimlBuilder();
 var router=express.Router();
+var wait=new Wait();
 app.use('/other_route',require('./other_route').router);
 
 
@@ -197,10 +199,19 @@ app.post('/enqueue_call',function(req,res){
 	res.send(response.toString());
 });
 
+app.post('/randomWordLoop',function(req,res){
+	const response=new VoiceResponse();
+	var word=wait.randomWord(3);
+	twimlBuilder.say(response,word);
+	response.redirect('/randomWordLoop');
+	res.send(response.toString());
+})
+
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
 	twimlBuilder.say(response,'Please wait while I find a receiver.');
-	response.play(process.env.WAIT_URL);
+	//response.play(process.env.WAIT_URL);
+	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 });
 
