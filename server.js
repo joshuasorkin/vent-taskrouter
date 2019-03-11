@@ -393,10 +393,6 @@ app.post('/assignment', async function (req, res) {
 		taskQueueSid:taskQueueSid
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
-	
-	var task=await clientWorkspace.tasks(taskSid);
-	console.log("/assignment: task details: "+task);
-
 
 	switch(taskQueueSid){
 		case process.env.TWILIO_TASKQUEUE_SID:
@@ -463,7 +459,7 @@ app.get('/automatic',function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/workspaceEvent',function(req,res){
+app.post('/workspaceEvent',async function(req,res){
 	eventType=req.body.EventType;
 	eventDescription=req.body.EventDescription;
 	eventDate=req.body.EventDate;
@@ -476,7 +472,7 @@ app.post('/workspaceEvent',function(req,res){
 			//console.log(JSON.stringify(req.body));
 			workerSid=req.body.WorkerSid;
 			console.log("/workspaceEvent: workerSid "+workerSid+" now being set to offline");
-			worker.updateWorkerFromSid(workerSid,process.env.TWILIO_OFFLINE_SID);
+			var updateResult=await worker.updateWorkerFromSid(workerSid,process.env.TWILIO_OFFLINE_SID);
 			break;
 	}
 
