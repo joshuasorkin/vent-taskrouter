@@ -470,6 +470,15 @@ app.post('/workspaceEvent',function(req,res){
 	resourceType=req.body.ResourceType;
 	resourceSid=req.body.ResourceSid;
 	console.log("Event Details:\n"+eventType+"\n"+eventDescription+"\n"+eventDate+"\n"+resourceType+"\n"+resourceSid);
+	switch (eventType){
+		case "reservation.rejected":
+			console.log("/workspaceEvent: reservation rejected, worker will be set offline");
+			worker=req.body.Worker;
+			workerSid=worker.sid;
+			console.log("/workspaceEvent: workerSid "+workerSid+" now being set to offline");
+			worker.updateWorkerFromSid(workerSid,process.env.TWILIO_OFFLINE_SID);
+			break;
+	}
 
 	res.type('application/json');
 	res.status(204).send({error:'error occurred in processing workspace event callback'});
