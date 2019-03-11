@@ -29,7 +29,7 @@ class Wait{
     randomWord(maxPhonemeCount){
         var word="";
         var x;
-        var phonemeCount=randomNaturalNumber(maxPhonemeCount);
+        var phonemeCount=this.randomNaturalNumber(maxPhonemeCount);
         for (x=1;x<=phonemeCount;x++){
             word+=this.randomPhoneme();
         }
@@ -39,9 +39,9 @@ class Wait{
     randomSentence(maxPhonemeCount,maxWordCount){
         var sentence="";
         var x;
-        var wordCount=randomNaturalNumber(maxWordCount);
+        var wordCount=this.randomNaturalNumber(maxWordCount);
         for (x=1;x<=wordCount;x++){
-            sentence+=randomWord(maxPhonemeCount)+" ";
+            sentence+=this.randomWord(maxPhonemeCount)+" ";
         }
         return sentence;
     }

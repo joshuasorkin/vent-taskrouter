@@ -2,4 +2,4 @@ const Wait=require('./wait');
 
 var wait=new Wait();
 
-console.log("random word: "+wait.randomWord(3));
+console.log("random word: "+wait.randomSentence(5,5));
