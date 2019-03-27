@@ -26,6 +26,8 @@ var worker;
 var twimlBuilder=new TwimlBuilder();
 var router=express.Router();
 var wait=new Wait();
+var minMinutes=1;
+var maxMinutes=10;
 app.use('/other_route',require('./other_route').router);
 
 
@@ -179,18 +181,65 @@ app.post('/conferenceEnd_timesUp',function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/enqueue_call',function(req,res){
+app.post('/gatherConferenceMinutes',function(req,res){
+	const response=new VoiceResponse();
+	const gather=response.gather({
+		input:'dtmf',
+		timeout:3,
+		action:'/processGatherConferenceMinutes'
+	});
+	twimlBuilder.say(gather,'Enter the number of minutes you would like for your conference, from '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
+	twimlBuilder.say(response,"I didn't receive any input.  Good-bye.");
+	res.send(response.toString());
+});
+
+app.post('/processGatherConferenceMinutes',function(req,res){
+	const digits=req.body.Digits;
+	const response=new VoiceResponse();
+	var digitsInt;
+	var valid=true;
+	if (digits.includes("*")){
+		valid=false;
+	}
+	else{
+		digitsInt=parseInt(digits);
+		if (isNaN(digitsInt)){
+			valid=false;
+		}
+		else if((digitsInt<minMinutes)||(digitsInt>maxMinutes)){
+			valid=false;
+		}
+		else{
+			valid=true;
+		}
+	}
+
+
+	if (!valid){
+		twimlBuilder.say(response,"Not a valid number of minutes.");
+		response.redirect('/gatherConferenceMinutes');
+	}
+	else{
+		const taskJSON={
+			minutes:digitsInt
+		}
+		response.enqueue({
+			workflowSid:workflowSid,
+			waitUrl:'/wait'
+		})
+		.task({},JSON.stringify(taskJSON));
+	}
+	res.send(response.toString());
+});
+
+app.post('/voice',function(req,res){
 	const fromNumber=req.body.From;
 	contact_uriExists=worker.contact_uriExists(fromNumber);
 	const response=new VoiceResponse();
 	//twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
 	//													+"have reviewed reliability and security limitations.");
 	if(contact_uriExists){
-		const enqueue=response.enqueue({
-			//workflowSid:app.get('workspaceInfo').workflowSid,
-			workflowSid:workflowSid,
-			waitUrl:'/wait'
-		});
+		response.redirect('/gatherConferenceMinutes');
 	}
 	else{
 		twimlBuilder.say(response,"You are not recognized as an authorized user.  Good-bye.");
@@ -247,6 +296,7 @@ app.get('/agent_answer_hangup',function(req,res){
 //this endpoint to be reached if agent answers outbound call initiated by /assignment
 app.get('/agent_answer',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
+	const minutes=parameters.minutes;
 	console.log("endpoint: agent_answer");
 	url=urlSerializer.serialize('agent_answer_process',parameters);
 	redirectUrl=urlSerializer.serialize('agent_answer_hangup',parameters);
@@ -263,7 +313,7 @@ app.get('/agent_answer',async function(req,res){
 		response.hangup();
 	}
 	else{
-		twimlBuilder.say(response,'You have a call from Vent.  Press 1 to accept, or 2 to refuse.');
+		twimlBuilder.say(response,'You have a call from Vent, requested length '+minutes+'minutes.  Press 1 to accept, or 2 to refuse.');
 		const gather=response.gather({
 			numDigits:1,
 			action:url,
@@ -286,7 +336,7 @@ app.get('/conferenceEvents',async function(req,res){
 	var responseValue="";
 	switch(event){
 		case "conference-start":
-			initialMinutes=0.5;
+			initialMinutes=parameters.minutes;
 			conference.announce(conferenceSid,initialMinutes);
 			conference.setTimedAnnounce(initialMinutes,initialMinutes/2,conferenceSid);
 			conference.setTimedEndConference(initialMinutes,parameters);
@@ -389,6 +439,7 @@ app.post('/assignment', async function (req, res) {
 	console.log("task sid: "+taskSid);
 	TaskAttributes=JSON.parse(req.body.TaskAttributes);
 	callSid=TaskAttributes.call_sid;
+	minutes=TaskAttributes.minutes;
 	console.log("call sid: "+callSid);
 	reservationSid=req.body.ReservationSid;
 	WorkerAttributes=JSON.parse(req.body.WorkerAttributes);
@@ -401,7 +452,8 @@ app.post('/assignment', async function (req, res) {
 		reservationSid:reservationSid,
 		callSid:callSid,
 		workerSid:workerSid,
-		taskQueueSid:taskQueueSid
+		taskQueueSid:taskQueueSid,
+		minutes:minutes
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 
@@ -413,7 +465,7 @@ app.post('/assignment', async function (req, res) {
 				from: process.env.TWILIO_PHONE_NUMBER,
 				method: 'GET'
 				
-			}).then(call=>console.log("createCallToHost: logging return value of client calls create, 'to' value "+call.to));
+			}).then(call=>console.log("/assignment: logging return value of client calls create, 'to' value "+call.to));
 			break;
 		case process.env.TWILIO_TASKQUEUE_AUTOMATIC_SID:
 			clientWorkspace
@@ -499,7 +551,7 @@ app.listen(http_port,()=>{
 	client.incomingPhoneNumbers(process.env.TWILIO_PHONE_NUMBER_SID)
 		.update({
 			smsUrl:baseUrl+"/sms",
-			voiceUrl:baseUrl+"/enqueue_call"
+			voiceUrl:baseUrl+"/voice"
 		})
 		.then(incoming_phone_number=>console.log(incoming_phone_number.friendlyName))
 		.done();
