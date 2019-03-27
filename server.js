@@ -252,13 +252,14 @@ app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
 	var word=wait.randomSentence(5,5);
 	twimlBuilder.say(response,word);
+	twimlBuilder.say(response,word);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 })
 
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
-	twimlBuilder.say(response,'Please wait while I find a receiver.');
+	twimlBuilder.say(response,'Please wait while I find a receiver.  In the meantime I will entertain you with randomized speech.');
 	//response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
