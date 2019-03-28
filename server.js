@@ -29,6 +29,7 @@ var router=express.Router();
 var wait=new Wait();
 var minMinutes=1;
 var maxMinutes=10;
+var objectUpdater=new ObjectUpdater();
 app.use('/other_route',require('./other_route').router);
 
 
@@ -277,6 +278,11 @@ app.get('/agent_answer_hangup',function(req,res){
 	response.hangup();
 	//var rejectResult=await taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
 	//var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+	console.log("/agent_answer_hangup: now adding worker's sid to rejected workers");
+	clientWorkspace
+	.tasks(parameters.taskSid)
+
+	
 	console.log("/agent_answer_hangup: now updating reservation to rejected");
 	clientWorkspace
 							//.tasks(parameters.taskSid)
@@ -455,7 +461,8 @@ app.post('/assignment', async function (req, res) {
 		callSid:callSid,
 		workerSid:workerSid,
 		taskQueueSid:taskQueueSid,
-		minutes:minutes
+		minutes:minutes,
+		taskAttributes:req.body.TaskAttributes
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 
