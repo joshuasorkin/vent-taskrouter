@@ -14,11 +14,12 @@ pushOrCreate(taskAttributes,"workers","xx8238429");
 pushOrCreate(taskAttributes,"workers","aa238232");
 console.log(JSON.stringify(taskAttributes));
 */
+var taskAttributes={"abc":"123","xyz":"hello"};
 
 const pushOrCreate = (key, { [key]:arr = [], ...o }, v) =>
   ({ ...o, [key]: [...arr, v] })
 
-console.log(pushOrCreate('foo', {}, 1))
+console.log(pushOrCreate('foo', taskAttributes, 1))
 // { foo: [ 1 ] }
 
 console.log(pushOrCreate('foo', {foo: [1]}, 2))

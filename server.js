@@ -223,10 +223,12 @@ app.post('/processGatherConferenceMinutes',function(req,res){
 	}
 	else{
 		const taskJSON={
-			minutes:digitsInt
+			minutes:digitsInt,
+			rejectedWorkers:[]
 		}
 		response.enqueue({
 			workflowSid:workflowSid,
+
 			waitUrl:'/wait'
 		})
 		.task({},JSON.stringify(taskJSON));
@@ -279,24 +281,36 @@ app.get('/agent_answer_hangup',function(req,res){
 	//var rejectResult=await taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
 	//var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
 	console.log("/agent_answer_hangup: now adding worker's sid to rejected workers");
+	var taskAttributes=JSON.parse(parameters.taskAttributes);
+	taskAttributes["rejectedWorkers"].push(parameters.workerSid);
 	clientWorkspace
 	.tasks(parameters.taskSid)
+	.update({
+		attributes:taskAttributes
+	})
+	.then(task=>{
+
+		console.log("/agent_answer_hangup: now updating reservation to rejected");
+		clientWorkspace
+								.workers(parameters.workerSid)
+								.reservations(parameters.reservationSid)
+								.update({
+									reservationStatus:'rejected'
+								})
+								.then(reservation=>{
+									console.log("reservation status: "+reservation.reservationStatus);
+									console.log("worker name: "+reservation.workerName);
+									var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+								})
+								.catch(err=>console.log("/agent_answer_hangup: error rejecting reservation: "+err));
+
+
+
+	})
+	.catch(err=>console.log("/agent_answer_hangup: error updating task attributes: "+err));
 
 	
-	console.log("/agent_answer_hangup: now updating reservation to rejected");
-	clientWorkspace
-							//.tasks(parameters.taskSid)
-							.workers(parameters.workerSid)
-							.reservations(parameters.reservationSid)
-							.update({
-								reservationStatus:'rejected'
-							})
-							.then(reservation=>{
-								console.log("reservation status: "+reservation.reservationStatus);
-								console.log("worker name: "+reservation.workerName);
-								var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
-							})
-							.catch(err=>console.log("/agent_answer_hangup: error rejecting reservation: "+err));
+	
 
 	res.send(response.toString());
 });
