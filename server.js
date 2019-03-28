@@ -286,7 +286,7 @@ app.get('/agent_answer_hangup',function(req,res){
 	clientWorkspace
 	.tasks(parameters.taskSid)
 	.update({
-		attributes:taskAttributes
+		attributes:JSON.stringify(taskAttributes)
 	})
 	.then(task=>{
 
