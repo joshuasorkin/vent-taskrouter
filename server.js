@@ -19,6 +19,7 @@ const Conference=require('./conference');
 const Worker=require('./worker');
 const TwimlBuilder=require('./twimlBuilder');
 const Wait=require('./wait');
+const ObjectUpdater=require('./objectUpdater');
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
 var conference;
