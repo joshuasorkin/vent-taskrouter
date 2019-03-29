@@ -393,7 +393,9 @@ app.get('/conferenceEvents',async function(req,res){
 
 app.get('/updateCallToConference',function(req,res){
 	parameters=urlSerializer.deserialize(req);
+	console.log("/updateCallToConference: about to generate conference transfer twiml");
 	var response=conference.generateConference(parameters,null);
+	console.log("/updateCallToConference: conference transfer twiml: "+response.toString());
 	res.send(response.toString());
 });
 
