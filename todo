@@ -1,15 +1,11 @@
 high: needed for first prototype release
 
+(high) if some workers are not Offline, but they are busy with other tasks, the workflow should treat them
+as unavailable
 
+(high) how to move on to next queue after all workers in queue reject call?
 
-(high) match constraints from worker database table with Taskrouter worker list:
-unique contact_uri
-
-(high) validation error when worker insert fails should be more descriptive:
-"Worker with this contact_uri already exists" (since assumption is anyone inserting
-worker is admin with correct password)
-
-(high) worker.create needs to return correct value
+(high) ability to create "do not connect" list for each user
 
 (high) get app hosted on Heroku and verify sustained uptime
 
@@ -54,3 +50,12 @@ hangup()
 make sure that task has completed
 
 (high) verify that add a new worker is functioning correctly
+
+(high) match constraints from worker database table with Taskrouter worker list:
+unique contact_uri
+
+(high) validation error when worker insert fails should be more descriptive:
+"Worker with this contact_uri already exists" (since assumption is anyone inserting
+worker is admin with correct password)
+
+(high) worker.create needs to return correct value

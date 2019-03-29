@@ -280,34 +280,20 @@ app.get('/agent_answer_hangup',function(req,res){
 	response.hangup();
 	//var rejectResult=await taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
 	//var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
-	console.log("/agent_answer_hangup: now adding worker's sid to rejected workers");
-	var taskAttributes=JSON.parse(parameters.taskAttributes);
-	taskAttributes["rejectedWorkers"].push(parameters.workerSid);
+	console.log("/agent_answer_hangup: now updating reservation to rejected");
 	clientWorkspace
-	.tasks(parameters.taskSid)
-	.update({
-		attributes:JSON.stringify(taskAttributes)
-	})
-	.then(task=>{
+							.workers(parameters.workerSid)
+							.reservations(parameters.reservationSid)
+							.update({
+								reservationStatus:'rejected'
+							})
+							.then(reservation=>{
+								console.log("reservation status: "+reservation.reservationStatus);
+								console.log("worker name: "+reservation.workerName);
+								var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+							})
+							.catch(err=>console.log("/agent_answer_hangup: error rejecting reservation: "+err));
 
-		console.log("/agent_answer_hangup: now updating reservation to rejected");
-		clientWorkspace
-								.workers(parameters.workerSid)
-								.reservations(parameters.reservationSid)
-								.update({
-									reservationStatus:'rejected'
-								})
-								.then(reservation=>{
-									console.log("reservation status: "+reservation.reservationStatus);
-									console.log("worker name: "+reservation.workerName);
-									var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
-								})
-								.catch(err=>console.log("/agent_answer_hangup: error rejecting reservation: "+err));
-
-
-
-	})
-	.catch(err=>console.log("/agent_answer_hangup: error updating task attributes: "+err));
 
 	
 	
@@ -490,8 +476,7 @@ app.post('/assignment', async function (req, res) {
 		callSid:callSid,
 		workerSid:workerSid,
 		taskQueueSid:taskQueueSid,
-		minutes:minutes,
-		taskAttributes:req.body.TaskAttributes
+		minutes:minutes
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 

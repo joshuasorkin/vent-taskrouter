@@ -18,8 +18,6 @@ class Conference{
 		}
 		const dial=response.dial();
 
-		//todo:temporarily removing taskAttributes to see if long url is the problem
-		parameters.taskAttributes={};
 		var conferenceCallbackUrl=this.urlSerializer.serialize('conferenceEvents',parameters);
 		//var conferenceCallbackUrl=process.env.APP_BASE_URL+'/conferenceEvents';
 		console.log("conferenceGenerator's conferenceCallbackUrl: "+conferenceCallbackUrl);
