@@ -347,6 +347,14 @@ app.get('/agent_answer',async function(req,res){
 	res.send(response.toString());
 });
 
+app.post('/incomingCallEvents',function(req,res){
+	event=req.body.StatusCallbackEvent;
+	console.log("/incomingCallEvents:");
+	console.log(JSON.stringify(req.body));
+});
+
+
+
 app.get('/conferenceEvents',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	event=req.query.StatusCallbackEvent;
@@ -582,7 +590,8 @@ app.listen(http_port,()=>{
 	client.incomingPhoneNumbers(process.env.TWILIO_PHONE_NUMBER_SID)
 		.update({
 			smsUrl:baseUrl+"/sms",
-			voiceUrl:baseUrl+"/voice"
+			voiceUrl:baseUrl+"/voice",
+			statusCallback:baseUrl+"/incomingCallEvents"
 		})
 		.then(incoming_phone_number=>console.log(incoming_phone_number.friendlyName))
 		.done();
