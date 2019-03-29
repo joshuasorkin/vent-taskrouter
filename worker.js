@@ -45,7 +45,8 @@ class Worker{
 		try{
 			worker=await this.workspace.workers(workerSid)
 						.update({
-							activitySid:activitySid
+							activitySid:activitySid,
+							rejectPendingReservations:true
 						});
 			console.log("updateWorkerFromSid: worker has been updated to activity: "+worker.activityName);
 			return worker;
