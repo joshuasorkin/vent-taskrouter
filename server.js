@@ -322,7 +322,8 @@ app.get('/agent_answer',async function(req,res){
 	console.log("endpoint: agent_answer");
 	url=urlSerializer.serialize('agent_answer_process',parameters);
 	redirectUrl=urlSerializer.serialize('agent_answer_hangup',parameters);
-	console.log("agent_answer url: "+url);
+	console.log("/agent_answer url: "+url);
+	console.log("/agent_answer redirectUrl: "+redirectUrl)
 	const response=new VoiceResponse();
 	//check if inbound caller has hung up in the meantime by checking if task is canceled
 	taskIsCanceled=await taskrouter.taskIsCanceled(parameters.taskSid);
@@ -415,6 +416,7 @@ app.get('/agent_answer_process',function(req,res){
 						method:'GET'
 					})
 					.then(call=>{
+						console.log("/agent_answer_process: inbound call has been updated to conference, now updating reservation to 'accepted'");
 						clientWorkspace
 							.tasks(parameters.taskSid)
 							.reservations(parameters.reservationSid)
@@ -422,10 +424,13 @@ app.get('/agent_answer_process',function(req,res){
 								reservationStatus:'accepted'
 							})
 							.then(reservation=>{
+								console.log("/agent_answer_process: reservation updated to 'accepted'");
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
 							})
-					});
+							.catch(err=>console.log("/agent_answer_process: error updating reservation to 'accepted': "+err));
+					})
+					.catch(err=>console.log("/agent_answer_process: error updating inbound call to conference: "+err));
 			break;
 		case '2':
 			twimlBuilder.say(response,'Sorry that you\'re not available.  Goodbye!');
@@ -515,6 +520,7 @@ app.post('/assignment', async function (req, res) {
 });
 
 app.get('/endCall_automatic',function(req,res){
+	console.log("/endCall_automatic: now hanging up");
 	var response=new VoiceResponse();
 	response.hangup();
 	res.send(response.toString());
