@@ -47,7 +47,8 @@ class Worker{
 						.update({
 							activitySid:activitySid,
 							rejectPendingReservations:true
-						});
+						})
+						.catch(err=>console.log("updateWorkerFromSid: error updating worker activity: "+err));
 			console.log("updateWorkerFromSid: worker has been updated to activity: "+worker.activityName);
 			return worker;
 		}
