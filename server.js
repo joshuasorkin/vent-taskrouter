@@ -256,13 +256,13 @@ app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
 	digits='1234567890';
 	var word=wait.randomSentence(5,5);
-	response.play({
-		digits:digits
-	});
+	//response.play({
+	//	digits:digits
+	//});
 	twimlBuilder.say(response,word);
-	response.play({
-		digits:digits
-	});
+	//response.play({
+	//	digits:digits
+	//});
 	twimlBuilder.say(response,word);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
