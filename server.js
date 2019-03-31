@@ -76,7 +76,7 @@ app.post('/sms',async function(req,res){
 				friendlyName=bodyArray[3];
 				contact_uriExists=await worker.contact_uriExists(contact_uri);
 				if (contact_uriExists){
-						responseValue="worker with contact_uri "+contact_uri+" already exists";
+						responseValue="Worker with contact_uri "+contact_uri+" already exists.";
 				}
 				else{
 
@@ -84,12 +84,12 @@ app.post('/sms',async function(req,res){
 					//todo: this is a hack until I can figure out what the problem
 					//is with the return value from worker.create
 					if (responseValue==",1"){
-						responseValue="Worker "+bodyArray[3]+" successfully created";
+						responseValue="Worker "+bodyArray[3]+" successfully created.";
 					}
 				}
 			}
 			else{
-				responseValue="incorrect admin password";
+				responseValue="You entered an incorrect admin password.";
 			}
 			
 			break;
@@ -99,7 +99,7 @@ app.post('/sms',async function(req,res){
 			//a try-catch block
 			try{
 				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID);
-				responseValue=worker.friendlyName+" is inactive, not receiving calls";
+				responseValue=worker.friendlyName+" is inactive; you are not receiving calls.";
 				console.log(responseValue);
 			}
 			catch(err){;
@@ -118,7 +118,7 @@ app.get('/conferenceAnnounceEnd_participantLeave',function(req,res){
 	url=urlSerializer.serialize('endConference_update',parameters);
 	const response=new VoiceResponse();
 	console.log("/conferenceAnnounceEnd_participantLeave: running conferenceAnnounceEnd");
-	twimlBuilder.say(response,'The other participant has left the conference.  Thank you for participating.  Now ending conference.');
+	twimlBuilder.say(response,'Your conversation partner has departed.  Thanks for participating.  I\'ll end the conference now.');
 	response.redirect({
 		method:'GET'
 	},url);
@@ -132,7 +132,7 @@ app.get('/conferenceAnnounceEnd_timeUp',function(req,res){
 	url=urlSerializer.serialize('endConference_update',parameters);
 	const response=new VoiceResponse();
 	console.log("/conferenceAnnounceEnd_participantLeave: running conferenceAnnounceEnd");
-	twimlBuilder.say(response,'Time\'s up.  Thank you for participating.  Now ending conference.');
+	twimlBuilder.say(response,'Time\'s up.  Thanks for participating.  I\'ll end the conference now.');
 	response.redirect({
 		method:'GET'
 	},url);
@@ -167,7 +167,7 @@ app.get('/conferenceAnnounceTime',function(req,res){
 
 app.post('/conferenceEnd_timesUp',function(req,res){
 	const response=new VoiceResponse();
-	twimlBuilder.say(response,"Time's up!  Thank you for participating.  Good-bye!");
+	twimlBuilder.say(response,"Time's up!  Thanks for participating.  Good-bye!");
 	response.hangup();
 
 	clientWorkspace
@@ -187,10 +187,10 @@ app.post('/gatherConferenceMinutes',function(req,res){
 	const response=new VoiceResponse();
 	const gather=response.gather({
 		input:'dtmf',
-		timeout:3,
+		timeout:5,
 		action:'/processGatherConferenceMinutes'
 	});
-	twimlBuilder.say(gather,'Enter the number of minutes you would like for your conference, from '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
+	twimlBuilder.say(gather,'How many minutes of conversation would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
 	twimlBuilder.say(response,"I didn't receive any input.  Good-bye.");
 	res.send(response.toString());
 });
@@ -254,8 +254,15 @@ app.post('/voice',function(req,res){
 
 app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
+	digits='1234567890';
 	var word=wait.randomSentence(5,5);
+	response.play({
+		digits:digits
+	});
 	twimlBuilder.say(response,word);
+	response.play({
+		digits:digits
+	});
 	twimlBuilder.say(response,word);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
