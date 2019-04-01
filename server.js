@@ -328,15 +328,16 @@ app.get('/agent_answer',async function(req,res){
 	//as is done at agent_answer_hangup because this is already handled by taskrouter
 	//in response to inbound caller's hangup
 	if (taskIsCanceled){
-		twimlBuilder.say(response,"The caller disconnected already.  Sorry to bother you.  Good-bye.");
+		twimlBuilder.say(response,"The caller disconnected already.  I'm sorry for the interruption.  Good-bye.");
 		response.hangup();
 	}
 	else{
-		twimlBuilder.say(response,'You have a call from Vent, requested length '+minutes+'minutes.  Press 1 to accept, or 2 to refuse.');
+		twimlBuilder.say(response,'Hello, thanks for answering.  You have a call from Vent, requested length '+minutes+'minutes.  Press 1 to accept, or 2 to refuse.');
 		const gather=response.gather({
 			numDigits:1,
 			action:url,
-			method:'GET'
+			method:'GET',
+			timeout:5
 		});
 		response.redirect({method:'GET'},redirectUrl);
 	}
@@ -412,7 +413,7 @@ app.get('/agent_answer_process',function(req,res){
 	switch(req.query.Digits){
 		case '1':
 			//prepare twiml to put agent into conference
-			response=conference.generateConference(parameters,'Thank you.  Now connecting you to caller.');
+			response=conference.generateConference(parameters,'Thank you.  You will now be connected to the caller.');
 			
 			console.log("worker accepted call");
 			//put caller into conference
@@ -439,7 +440,7 @@ app.get('/agent_answer_process',function(req,res){
 					.catch(err=>console.log("/agent_answer_process: error updating inbound call to conference: "+err));
 			break;
 		case '2':
-			twimlBuilder.say(response,'Sorry that you\'re not available.  Goodbye!');
+			twimlBuilder.say(response,'Thanks for letting me know that you\'re not available.  Goodbye!');
 			response.hangup();
 			console.log("worker rejected call");
 			clientWorkspace
@@ -456,7 +457,7 @@ app.get('/agent_answer_process',function(req,res){
 							});
 			break;
 		default:
-			twimlBuilder.say(response,'I didn\'t understand your response.');
+			twimlBuilder.say(response,'I\'m sorry, I didn\'t understand your response.');
 			response.redirect({method:'GET'},redirectUrl);
 	}
 	res.send(response.toString());
@@ -535,7 +536,7 @@ app.get('/automatic',function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	var response=new VoiceResponse();
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
-	twimlBuilder.say(response,"We're sorry, there is no one available to take your call.  Good-bye!");
+	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  Good-bye!");
 	response.hangup();
 	//response.redirect({method:'GET'},url);
 

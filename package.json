@@ -11,10 +11,10 @@
     "env2": "^2.2.2",
     "express": "^4.16.4",
     "http": "0.0.0",
-    "pg": "^7.8.0",
+    "pg": "^7.9.0",
     "querystring": "^0.2.0",
-    "sequelize": "^4.42.0",
-    "twilio": "^3.28.0"
+    "sequelize": "^4.43.1",
+    "twilio": "^3.30.0"
   },
   "devDependencies": {},
   "scripts": {
