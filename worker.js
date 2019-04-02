@@ -31,22 +31,22 @@ class Worker{
 	}
 	
 	
-	async updateWorker(contact_uri,activitySid){
+	async updateWorker(contact_uri,activitySid,rejectPendingReservations){
 		console.log("updateWorker: getting workerSid from database");
 		var workerSid=await database.getWorkerSid(contact_uri)
 		console.log("updateWorker: workerSid is "+workerSid);
-		var worker=await this.updateWorkerFromSid(workerSid,activitySid);
+		var worker=await this.updateWorkerFromSid(workerSid,activitySid,rejectPendingReservations);
 		console.log("updateWorker: worker's friendlyName is "+worker.friendlyName);
 		return worker;
 	}
 
-	async updateWorkerFromSid(workerSid,activitySid){
+	async updateWorkerFromSid(workerSid,activitySid,rejectPendingReservations){
 		var worker;
 		try{
 			worker=await this.workspace.workers(workerSid)
 						.update({
 							activitySid:activitySid,
-							rejectPendingReservations:true
+							rejectPendingReservations:rejectPendingReservations
 						})
 						.catch(err=>console.log("updateWorkerFromSid: error updating worker activity: "+err));
 			console.log("updateWorkerFromSid: worker has been updated to activity: "+worker.activityName);

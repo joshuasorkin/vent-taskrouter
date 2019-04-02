@@ -1,9 +1,8 @@
 high: needed for first prototype release
 
+(high) 
 (high) if some workers are not Offline, but they are busy with other tasks, the workflow should treat them
 as unavailable
-
-(high) how to move on to next queue after all workers in queue reject call?
 
 (high) ability to create "do not connect" list for each user
 
@@ -17,13 +16,18 @@ as unavailable
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
+(medium) if no one is available, give user gather() option to continue interacting,
+e.g. by recording a message
+
+(medium) time economy:
+-earning
+-giving
+-using
+
 (medium) include password for git push to server
 
 (medium) server questions:
 how do I add an alias?  can I write to .bashrc?
-
-(medium) set up IVR to get time request
-use task attribute to store time
 
 (medium) fix error when it tries to complete an already completed task
 
@@ -32,7 +36,6 @@ and have workflow order by this number
 
 (medium) use md5 hash to check password, no plaintext
 
-(low) check if caller is in list of users
 
 ---done---
 
@@ -59,3 +62,10 @@ unique contact_uri
 worker is admin with correct password)
 
 (high) worker.create needs to return correct value
+
+(medium) set up IVR to get time request
+use task attribute to store time
+
+(low) check if caller is in list of users
+
+(high) how to move on to next queue after all workers in queue reject call?

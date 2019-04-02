@@ -62,11 +62,11 @@ app.post('/sms',async function(req,res){
 			//todo: this try-catch is duplicate of the default,
 			//both need to be refactored into single function
 			try{
-				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID);
+				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID,false);
 				responseValue=worker.friendlyName+" is active, receiving calls.";
 				console.log(responseValue);
 			}
-			catch(err){;
+			catch(err){
 				console.log("/sms error: "+err);
 			}
 			break;
@@ -98,11 +98,11 @@ app.post('/sms',async function(req,res){
 			//should refactor this to its own function, as it's good to do that with
 			//a try-catch block
 			try{
-				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID);
+				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID,false);
 				responseValue=worker.friendlyName+" is inactive; you are not receiving calls.";
 				console.log(responseValue);
 			}
-			catch(err){;
+			catch(err){
 				console.log("/sms error: "+err);
 			}
 	}
@@ -165,6 +165,8 @@ app.get('/conferenceAnnounceTime',function(req,res){
 	res.send(response.toString());
 });
 
+
+//does this actually get called anywhere?
 app.post('/conferenceEnd_timesUp',function(req,res){
 	const response=new VoiceResponse();
 	twimlBuilder.say(response,"Time's up!  Thanks for participating.  Good-bye!");
@@ -182,6 +184,8 @@ app.post('/conferenceEnd_timesUp',function(req,res){
 
 	res.send(response.toString());
 });
+
+
 
 app.post('/gatherConferenceMinutes',function(req,res){
 	const response=new VoiceResponse();
@@ -288,7 +292,7 @@ app.get('/agent_answer_hangup',function(req,res){
 	//var rejectResult=await taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
 	//var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
 	console.log("/agent_answer_hangup: now updating worker to offline, should automatically reject pending reservation");
-	var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+	var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
 
 	/*
 	clientWorkspace
@@ -453,7 +457,7 @@ app.get('/agent_answer_process',function(req,res){
 							.then(reservation=>{
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
-								var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+								var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
 							});
 			break;
 		default:
@@ -570,7 +574,7 @@ app.post('/workspaceEvent',async function(req,res){
 			//console.log(JSON.stringify(req.body));
 			workerSid=req.body.WorkerSid;
 			console.log("/workspaceEvent: workerSid "+workerSid+" now being set to offline");
-			var updateResult=await worker.updateWorkerFromSid(workerSid,process.env.TWILIO_OFFLINE_SID);
+			var updateResult=await worker.updateWorkerFromSid(workerSid,process.env.TWILIO_OFFLINE_SID,true);
 			break;
 	}
 
