@@ -66,7 +66,7 @@ app.post('/sms',async function(req,res){
 					console.log("Worker is null, what's going on?");
 				}
 				workerEntity=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID,false);
-				responseValue=workerEntity.friendlyName+" is active, receiving calls.";
+				responseValue=workerEntity.friendlyName+", you are now active, receiving calls.";
 				console.log(responseValue);
 			}
 			catch(err){
@@ -103,7 +103,7 @@ app.post('/sms',async function(req,res){
 			//a try-catch block
 			try{
 				workerEntity=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID,false);
-				responseValue=workerEntity.friendlyName+" is inactive; you are not receiving calls.";
+				responseValue=workerEntity.friendlyName+", you are inactive, not receiving calls.";
 				console.log(responseValue);
 			}
 			catch(err){

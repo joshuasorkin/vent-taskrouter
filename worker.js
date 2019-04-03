@@ -6,10 +6,6 @@ class Worker{
 	constructor(workspace){
 		this.workspace=workspace;
 	}
-	
-	someValue(){
-		return "xyz";
-	}
 
 	createWorker(contact_uri,friendlyName){
 		return this.workspace.workers

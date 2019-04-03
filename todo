@@ -6,12 +6,6 @@ how to treat user when no one is available
 
 (high) get domain so test users can see whether server is up
 
-(high) 
-why is sms response message persisting?
-
-(high)
-worker.updateWorker is not a function
-
 (high) if some workers are not Offline, but they are busy with other tasks, the workflow should treat them
 as unavailable
 
@@ -88,3 +82,9 @@ use task attribute to store time
 (low) check if caller is in list of users
 
 (high) how to move on to next queue after all workers in queue reject call?
+
+(high) 
+why is sms response message persisting?
+
+(high)
+worker.updateWorker is not a function
