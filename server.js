@@ -62,6 +62,9 @@ app.post('/sms',async function(req,res){
 			//todo: this try-catch is duplicate of the default,
 			//both need to be refactored into single function
 			try{
+				if(worker==null){
+					console.log("Worker is null, what's going on?");
+				}
 				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID,false);
 				responseValue=worker.friendlyName+" is active, receiving calls.";
 				console.log(responseValue);

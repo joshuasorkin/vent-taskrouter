@@ -1,8 +1,25 @@
 high: needed for first prototype release
 
+(high)
+how to treat user when no one is available
+-send notification when users are back on the system
+
+(high)
+give people each other's numbers if they both opt in?
+or let them continue longer?
+
 (high) 
+why is sms response message persisting?
+
+(high)
+worker.updateWorker is not a function
+
 (high) if some workers are not Offline, but they are busy with other tasks, the workflow should treat them
 as unavailable
+
+(high) deal with space parsing in sms commands
+-spaces between items
+-how to have a space in username?
 
 (high) ability to create "do not connect" list for each user
 
