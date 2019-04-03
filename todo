@@ -4,9 +4,8 @@ high: needed for first prototype release
 how to treat user when no one is available
 -send notification when users are back on the system
 
-(high)
-give people each other's numbers if they both opt in?
-or let them continue longer?
+(high) get domain so test users can see whether server is up
+
 
 (high) 
 why is sms response message persisting?
@@ -32,6 +31,10 @@ as unavailable
 --twilio configuration
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
+
+(medium)
+give people each other's numbers if they both opt in?
+or let them continue longer?
 
 (medium) if no one is available, give user gather() option to continue interacting,
 e.g. by recording a message

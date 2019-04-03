@@ -71,6 +71,7 @@ app.post('/sms',async function(req,res){
 			}
 			catch(err){
 				console.log("/sms error: "+err);
+				responseValue=err;
 			}
 			break;
 		case "add":
@@ -107,6 +108,7 @@ app.post('/sms',async function(req,res){
 			}
 			catch(err){
 				console.log("/sms error: "+err);
+				responseValue=err;
 			}
 	}
 	console.log('response value: '+responseValue);
