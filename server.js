@@ -65,8 +65,8 @@ app.post('/sms',async function(req,res){
 				if(worker==null){
 					console.log("Worker is null, what's going on?");
 				}
-				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID,false);
-				responseValue=worker.friendlyName+" is active, receiving calls.";
+				workerEntity=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID,false);
+				responseValue=workerEntity.friendlyName+" is active, receiving calls.";
 				console.log(responseValue);
 			}
 			catch(err){
@@ -102,8 +102,8 @@ app.post('/sms',async function(req,res){
 			//should refactor this to its own function, as it's good to do that with
 			//a try-catch block
 			try{
-				worker=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID,false);
-				responseValue=worker.friendlyName+" is inactive; you are not receiving calls.";
+				workerEntity=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID,false);
+				responseValue=workerEntity.friendlyName+" is inactive; you are not receiving calls.";
 				console.log(responseValue);
 			}
 			catch(err){
