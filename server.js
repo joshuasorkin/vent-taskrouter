@@ -248,6 +248,7 @@ app.post('/processGatherConferenceMinutes',function(req,res){
 app.post('/voice',function(req,res){
 	const fromNumber=req.body.From;
 	contact_uriExists=worker.contact_uriExists(fromNumber);
+	workerEntity=worker.updateWorker(fromNumber,process.env.TWILIO_BUSY_SID,false);
 	const response=new VoiceResponse();
 	//twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
 	//													+"have reviewed reliability and security limitations.");
