@@ -102,6 +102,7 @@ app.post('/sms',async function(req,res){
 			newFriendlyName=bodyArray[1];
 			var workerEntity=await worker.updateWorkerName(req.body.From,newFriendlyName);
 			responseValue="Your new name is "+workerEntity.friendlyName+".";
+			break;
 
 		default:
 			console.log("/sms: default, setting worker to offline");
