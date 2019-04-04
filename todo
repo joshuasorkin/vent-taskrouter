@@ -1,6 +1,9 @@
 high: needed for first prototype release
 
 (high)
+user send sms 'on' is broken
+
+(high)
 how to treat user when no one is available
 -send notification when users are back on the system
 

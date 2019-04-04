@@ -443,6 +443,7 @@ app.get('/agent_answer_process',function(req,res){
 								console.log("/agent_answer_process: reservation updated to 'accepted'");
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
+								workerEntity=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_BUSY_SID,false);
 							})
 							.catch(err=>console.log("/agent_answer_process: error updating reservation to 'accepted': "+err));
 					})
