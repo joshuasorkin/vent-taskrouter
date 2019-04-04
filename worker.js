@@ -35,7 +35,7 @@ class Worker{
 		console.log("updateWorkerActivity: getting workerSid from database");
 		var workerSid=await database.getWorkerSid(contact_uri);
 		console.log("updateWorkerActivity: workerSid is "+workerSid);
-		var workerEntity=await this.updateWorkerFromSid(workerSid,activitySid,rejectPendingReservations);
+		var workerEntity=await this.updateWorkerActivityFromSid(workerSid,activitySid,rejectPendingReservations);
 		console.log("updateWorkerActivity: worker's friendlyName is "+workerEntity.friendlyName);
 		return workerEntity;
 	}
