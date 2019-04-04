@@ -51,6 +51,7 @@ app.get('/testHeroku',function(req,res){
 app.post('/sms',async function(req,res){
 	var body=req.body.Body;
 	console.log(body);
+	body = body.replace(/\s\s+/g, ' ');
 	bodyArray=body.split(" ");
 	var responseBody;
 	var activitySid=process.env.TWILIO_OFFLINE_SID;
@@ -65,7 +66,7 @@ app.post('/sms',async function(req,res){
 				if(worker==null){
 					console.log("Worker is null, what's going on?");
 				}
-				workerEntity=await worker.updateWorker(req.body.From,process.env.TWILIO_IDLE_SID,false);
+				workerEntity=await worker.updateWorkerActivity(req.body.From,process.env.TWILIO_IDLE_SID,false);
 				responseValue=workerEntity.friendlyName+", you are now active, receiving calls.";
 				console.log(responseValue);
 			}
@@ -97,12 +98,17 @@ app.post('/sms',async function(req,res){
 			}
 			
 			break;
+		case "changename":
+			newFriendlyName=bodyArray[1];
+			var workerEntity=await worker.updateWorkerName(req.body.From,newFriendlyName);
+			responseValue="Your new name is "+workerEntity.friendlyName+".";
+
 		default:
 			console.log("/sms: default, setting worker to offline");
 			//should refactor this to its own function, as it's good to do that with
 			//a try-catch block
 			try{
-				workerEntity=await worker.updateWorker(req.body.From,process.env.TWILIO_OFFLINE_SID,false);
+				workerEntity=await worker.updateWorkerActivity(req.body.From,process.env.TWILIO_OFFLINE_SID,false);
 				responseValue=workerEntity.friendlyName+", you are inactive, not receiving calls.";
 				console.log(responseValue);
 			}
@@ -123,7 +129,7 @@ app.get('/conferenceAnnounceEnd_participantLeave',function(req,res){
 	url=urlSerializer.serialize('endConference_update',parameters);
 	const response=new VoiceResponse();
 	console.log("/conferenceAnnounceEnd_participantLeave: running conferenceAnnounceEnd");
-	twimlBuilder.say(response,'Your conversation partner has departed.  Thanks for participating.  I\'ll end the conference now.');
+	twimlBuilder.say(response,'Your conversation partner has exited.  Thanks for participating.  I\'ll end the conference now.');
 	response.redirect({
 		method:'GET'
 	},url);
@@ -248,7 +254,7 @@ app.post('/processGatherConferenceMinutes',function(req,res){
 app.post('/voice',function(req,res){
 	const fromNumber=req.body.From;
 	contact_uriExists=worker.contact_uriExists(fromNumber);
-	workerEntity=worker.updateWorker(fromNumber,process.env.TWILIO_BUSY_SID,false);
+	workerEntity=worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
 	const response=new VoiceResponse();
 	//twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
 	//													+"have reviewed reliability and security limitations.");
@@ -298,7 +304,7 @@ app.get('/agent_answer_hangup',function(req,res){
 	//var rejectResult=await taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
 	//var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
 	console.log("/agent_answer_hangup: now updating worker to offline, should automatically reject pending reservation");
-	var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
+	var updateResult=worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
 
 	/*
 	clientWorkspace
@@ -444,7 +450,7 @@ app.get('/agent_answer_process',function(req,res){
 								console.log("/agent_answer_process: reservation updated to 'accepted'");
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
-								workerEntity=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_BUSY_SID,false);
+								workerEntity=worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_BUSY_SID,false);
 							})
 							.catch(err=>console.log("/agent_answer_process: error updating reservation to 'accepted': "+err));
 					})
@@ -464,7 +470,7 @@ app.get('/agent_answer_process',function(req,res){
 							.then(reservation=>{
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
-								var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
+								var updateResult=worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
 							});
 			break;
 		default:
@@ -581,7 +587,7 @@ app.post('/workspaceEvent',async function(req,res){
 			//console.log(JSON.stringify(req.body));
 			workerSid=req.body.WorkerSid;
 			console.log("/workspaceEvent: workerSid "+workerSid+" now being set to offline");
-			var updateResult=await worker.updateWorkerFromSid(workerSid,process.env.TWILIO_OFFLINE_SID,true);
+			var updateResult=await worker.updateWorkerActivityFromSid(workerSid,process.env.TWILIO_OFFLINE_SID,true);
 			break;
 	}
 
