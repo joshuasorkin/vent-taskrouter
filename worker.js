@@ -54,6 +54,13 @@ class Worker{
 
 	}
 
+	async updateWorkerAddAttribute(workerSid,attributeName,attributeValue){
+		var workerEntity=await this.workspace.workers
+								.each(worker=>{
+									console.log("friendlyName: "+worker.friendlyName);
+								});
+	}
+
 	async updateWorkerActivityFromSid(workerSid,activitySid,rejectPendingReservations){
 		var workerEntity;
 		try{

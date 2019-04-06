@@ -1,7 +1,8 @@
 high: needed for first prototype release
 
 (high)
-user send sms 'on' is broken
+send confirmation message to number when user is created
+
 
 (high)
 how to treat user when no one is available
@@ -9,16 +10,13 @@ how to treat user when no one is available
 
 (high) get domain so test users can see whether server is up
 
-(high) if some workers are not Offline, but they are busy with other tasks, the workflow should treat them
-as unavailable
-
 (high) deal with space parsing in sms commands
 -spaces between items
 -how to have a space in username?
 
 (high) ability to create "do not connect" list for each user
 
-(high) get app hosted on Heroku and verify sustained uptime
+(high) verify sustained uptime 24 hr+
 
 (high) document all configuration:
 --toroid.org git hook
@@ -91,3 +89,6 @@ why is sms response message persisting?
 
 (high)
 worker.updateWorker is not a function
+
+(high) if some workers are not Offline, but they are busy with other tasks, the workflow should treat them
+as unavailable
