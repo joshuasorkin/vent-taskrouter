@@ -61,6 +61,7 @@ app.post('/sms',async function(req,res){
 	var activitySid=process.env.TWILIO_OFFLINE_SID;
 	const response=new MessagingResponse();
 	contact_uriExists=worker.contact_uriExists(fromNumber);
+	console.log("/sms: contact_uriExists: "+contact_uriExists);
 	if (!contact_uriExists){
 		response.message("You are not recognized as an authorized user.  Please register with an administrator and try again.");	
 		res.writeHead(200, {'Content-Type': 'text/xml'});
