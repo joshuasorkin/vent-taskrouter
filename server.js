@@ -272,18 +272,19 @@ app.post('/processGatherConferenceMinutes',function(req,res){
 
 app.post('/voice',async function(req,res){
 	const fromNumber=req.body.From;
-	contact_uriExists=await worker.contact_uriExists(fromNumber);
-	workerEntity=worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
 	const response=new VoiceResponse();
-	//twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
-	//													+"have reviewed reliability and security limitations.");
+	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	if(contact_uriExists){
+		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
 		response.redirect('/gatherConferenceMinutes');
 	}
 	else{
 		twimlBuilder.say(response,"You are not recognized as an authorized user.  Good-bye.");
 		response.hangup();
 	}
+	//twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
+	//													+"have reviewed reliability and security limitations.");
+	
 	res.send(response.toString());
 });
 
