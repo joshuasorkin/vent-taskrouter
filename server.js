@@ -51,11 +51,23 @@ app.get('/testHeroku',function(req,res){
 app.post('/sms',async function(req,res){
 	var body=req.body.Body;
 	console.log(body);
+	//replace multiple spaces with single space
 	body = body.replace(/\s\s+/g, ' ');
+	fromNumber=req.body.From;
+	
+
 	bodyArray=body.split(" ");
 	var responseBody;
 	var activitySid=process.env.TWILIO_OFFLINE_SID;
 	const response=new MessagingResponse();
+	contact_uriExists=worker.contact_uriExists(fromNumber);
+	if (!contact_uriExists){
+		response.message("You are not recognized as an authorized user.  Please register with an administrator and try again.");	
+		res.writeHead(200, {'Content-Type': 'text/xml'});
+		res.end(response.toString());
+		return;
+	}
+	
 	var promise;
 	switch (bodyArray[0].toLowerCase()){
 		case "on":
