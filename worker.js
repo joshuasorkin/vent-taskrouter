@@ -87,7 +87,7 @@ class Worker{
 
 	}
 
-	async contact_uriExists(contact_uri){
+	contact_uriExists(contact_uri){
 		var workerSid=await database.getWorkerSid(contact_uri);
 		console.log("contact_uriExists: workerSid "+workerSid);
 		console.log("workerSid!=null: "+(workerSid!=null));
