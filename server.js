@@ -111,9 +111,14 @@ app.post('/sms',async function(req,res){
 			
 			break;
 		case "changename":
-			newFriendlyName=bodyArray[1];
-			var workerEntity=await worker.updateWorkerName(req.body.From,newFriendlyName);
-			responseValue="Your new name is "+workerEntity.friendlyName+".";
+			try{
+				newFriendlyName=bodyArray[1];
+				var workerEntity=await worker.updateWorkerName(req.body.From,newFriendlyName);
+				responseValue="Your new name is "+workerEntity.friendlyName+".";
+			}
+			catch(err){
+				responseValue=err;
+			}
 			break;
 
 		default:

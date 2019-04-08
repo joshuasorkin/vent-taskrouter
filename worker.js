@@ -43,6 +43,11 @@ class Worker{
 	async updateWorkerName(contact_uri,newName){
 		console.log("updateWorkerName: getting workerSid from database");
 		var workerSid=await database.getWorkerSid(contact_uri);
+		if (workerSid==null){
+			throw("updateWorkerName: error: workerSid not found for "+contact_uri);
+		}
+
+
 		console.log("updateWorkerName: workerSid is "+workerSid);
 		var workerEntity=await this.workspace.workers(workerSid)
 						.update({
