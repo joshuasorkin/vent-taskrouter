@@ -60,7 +60,7 @@ app.post('/sms',async function(req,res){
 	var responseBody;
 	var activitySid=process.env.TWILIO_OFFLINE_SID;
 	const response=new MessagingResponse();
-	contact_uriExists=worker.contact_uriExists(fromNumber);
+	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	console.log("/sms: contact_uriExists: "+contact_uriExists);
 	if (!contact_uriExists){
 		response.message("You are not recognized as an authorized user.  Please register with an administrator and try again.");	
@@ -92,7 +92,7 @@ app.post('/sms',async function(req,res){
 			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
 				contact_uri=bodyArray[2];
 				friendlyName=bodyArray[3];
-				contact_uriExists=worker.contact_uriExists(contact_uri);
+				contact_uriExists=await worker.contact_uriExists(contact_uri);
 				if (contact_uriExists){
 						responseValue="Worker with contact_uri "+contact_uri+" already exists.";
 				}
@@ -270,9 +270,9 @@ app.post('/processGatherConferenceMinutes',function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/voice',function(req,res){
+app.post('/voice',async function(req,res){
 	const fromNumber=req.body.From;
-	contact_uriExists=worker.contact_uriExists(fromNumber);
+	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	workerEntity=worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
 	const response=new VoiceResponse();
 	//twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
