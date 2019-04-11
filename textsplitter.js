@@ -3,22 +3,26 @@ var fs=require('fs');
 class Textsplitter{
     getTextFromFile(filename){
         
-        fs.readFile(filename,function(err,buf){
+        fs.readFile(filename,"utf-8",function(err,buf){
             if(err){
-                console.log(err);
+                return null;
             }
             else{
-                console.log(buf);
+                return buf;
             }
-        })
-        /*
-        fs.readFile(filename)
-        .then(buf=>{
-            console.log(buf);
-            return buf;
-        })
-        .catch(err=>console.log("getTextFromFile: error: "+err));
-        */
+        });
+    }
+
+    async splitTextFromFile(filename){
+        var filetext=await this.getTextFromFile(filename);
+        console.log(filetext);
+        if (filetext==null){
+            return null;
+        }
+        else{
+            var filetextArray=filetext.replace(/([.?!])\s*(?=[A-Z])/g, "$1|").split("|");
+            return filetextArray;
+        }
     }
 
 }

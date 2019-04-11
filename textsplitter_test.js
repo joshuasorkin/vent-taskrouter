@@ -2,4 +2,5 @@ const Textsplitter=require('./textsplitter');
 
 var textsplitter=new Textsplitter();
 
-textsplitter.getTextFromFile("./critiqueofpurereason.txt");
+var textArray=textsplitter.splitTextFromFile("critiqueofpurereason.txt");
+console.log(JSON.stringify(textArray));
