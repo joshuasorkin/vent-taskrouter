@@ -10,6 +10,7 @@
     "body-parser": "^1.18.3",
     "env2": "^2.2.2",
     "express": "^4.16.4",
+    "fs": "0.0.1-security",
     "http": "0.0.0",
     "pg": "^7.9.0",
     "querystring": "^0.2.0",

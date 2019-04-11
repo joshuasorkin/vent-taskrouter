@@ -1,10 +1,6 @@
 high: needed for first prototype release
 
-(high)
-is enqueue starting call after wait loop or immediately
 
-(high)
-is worker receiving second call?
 
 (high)
 change random speech to random selection from text corpus
@@ -109,3 +105,11 @@ worker.updateWorker is not a function
 
 (high) if some workers are not Offline, but they are busy with other tasks, the workflow should treat them
 as unavailable
+
+(high)
+is enqueue starting call after wait loop or immediately
+-seems like it's starting after message informing user of wait loop
+
+(high)
+is worker receiving second call?
+-doesn't seem to be, not sure why was seeing that in previous test
