@@ -1,6 +1,11 @@
 const Textsplitter=require('./textsplitter');
 
-var textsplitter=new Textsplitter();
+async function test(){
+    var textsplitter=new Textsplitter();
+    var textArray=await textsplitter.splitTextFromFile("critiqueofpurereason.txt");
+    var sentence=textsplitter.randomSentenceFromFiletextArray();
+    console.log(sentence);
+}
 
-var textArray=textsplitter.splitTextFromFile("critiqueofpurereason.txt");
-console.log(JSON.stringify(textArray));
+test();
+//console.log(JSON.stringify(textArray));

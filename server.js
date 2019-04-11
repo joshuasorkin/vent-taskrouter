@@ -20,6 +20,8 @@ const Worker=require('./worker');
 const TwimlBuilder=require('./twimlBuilder');
 const Wait=require('./wait');
 const ObjectUpdater=require('./objectUpdater');
+const Textsplitter=require('./textsplitter');
+var textsplitter=new Textsplitter();
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
 var conference;
@@ -290,8 +292,9 @@ app.post('/voice',async function(req,res){
 
 app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
-	digits='1234567890';
+	//digits='1234567890';
 	var word=wait.randomSentence(5,5);
+	var word=textsplitter.randomSentenceFromFiletextArray();
 	//response.play({
 	//	digits:digits
 	//});
@@ -638,6 +641,7 @@ app.listen(http_port,()=>{
 	taskrouter.configureWorkflow()
 				.then(workflow=>console.log("returned from configureWorkflow"))
 				.done();
+	textsplitter.splitTextFromFile("critiqueofpurereason.txt");
 	
 });
 
