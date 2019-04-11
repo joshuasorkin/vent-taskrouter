@@ -1,6 +1,9 @@
 high: needed for first prototype release
 
 (high)
+is enqueue starting call after wait loop or immediately
+
+(high)
 is worker receiving second call?
 
 (high)
@@ -35,6 +38,8 @@ how to treat user when no one is available
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
+(medium)
+save state so that when/if server reboots, can immediately pick up without 
 (medium)
 change voice to something warmer
 
