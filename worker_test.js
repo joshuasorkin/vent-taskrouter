@@ -8,6 +8,8 @@ const client=require('twilio')(accountSid,authToken);
 
 clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 var workerObj=new Worker(clientWorkspace);
+workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
+
 
 //worker.addAllWorkersToDatabase();
-workerObj.updateWorkerAddAttribute(null,null,null);
+//workerObj.updateWorkerAddAttribute(null,null,null);

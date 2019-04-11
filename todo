@@ -1,8 +1,16 @@
 high: needed for first prototype release
 
 (high)
-send confirmation message to number when user is created
+is worker receiving second call?
 
+(high)
+change random speech to random selection from text corpus
+
+(high)
+implement 'update' operation to update phone number in both Twilio and server database
+
+(high)
+send confirmation message to number when user is created
 
 (high)
 how to treat user when no one is available
@@ -12,6 +20,7 @@ how to treat user when no one is available
 
 (high) deal with space parsing in sms commands
 -spaces between items
+-too many items in sms command
 -how to have a space in username?
 
 (high) ability to create "do not connect" list for each user
@@ -25,6 +34,9 @@ how to treat user when no one is available
 --twilio configuration
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
+
+(medium)
+change voice to something warmer
 
 (medium)
 give people each other's numbers if they both opt in?

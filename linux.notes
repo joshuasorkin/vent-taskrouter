@@ -6,3 +6,17 @@ kill -9 pid
 
 #to tail log:
 tail -f /var/log/nginx/error.log
+
+#to run systemd service:
+systemctl --user start vent
+
+#to see service log
+journalctl --user -f
+
+#stop service
+systemctl --user stop vent
+
+#restart
+systemctl --user restart vent
+
+

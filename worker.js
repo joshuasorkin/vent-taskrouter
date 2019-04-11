@@ -59,6 +59,17 @@ class Worker{
 
 	}
 
+
+	async updateWorkerNameFromSid(workerSid,newName){
+		var workerEntity=await this.workspace.workers(workerSid)
+						.update({
+							friendlyName:newName
+						})
+						.catch(err=>console.log("updateWorkerNameFromSid: error: "+err));
+		console.log("updateWorkerNameFromSid: worker's new friendlyName is "+workerEntity.friendlyName);
+		return workerEntity;
+	}
+
 	async updateWorkerAddAttribute(workerSid,attributeName,attributeValue){
 		var workerEntity=await this.workspace.workers
 								.each(worker=>{
