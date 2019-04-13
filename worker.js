@@ -104,15 +104,18 @@ class Worker{
 		if (workerSid==null){
 			throw("updateContact_uri: error: workerSid not found for "+contact_uri);
 		}
-
-
 		console.log("updateContact_uri: workerSid is "+workerSid);
+		var dbResult=await database.updateWorkerContact_uri(oldContact_uri,newContact_uri);
+		
+		
 		var workerEntity=await this.workspace.workers(workerSid)
 						.update({
-							friendlyName:newName
+							attributes:JSON.stringify({
+								contact_uri:newContact_uri
+							})
 						})
 						.catch(err=>console.log("updateContact_uri: error: "+err));
-		console.log("updateContact_uri: worker's new friendlyName is "+workerEntity.friendlyName);
+		console.log("updateContact_uri: worker's new contact_uri is "+workerEntity.attributes.contact_uri);
 		return workerEntity;
 		
 
