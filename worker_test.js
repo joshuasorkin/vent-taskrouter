@@ -8,8 +8,10 @@ const client=require('twilio')(accountSid,authToken);
 
 clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 var workerObj=new Worker(clientWorkspace);
-workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
 
+//workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
+var result=workerObj.updateContact_uri("+15105753138","+15105753138");
+console.log("result: "+result);
 
 //worker.addAllWorkersToDatabase();
 //workerObj.updateWorkerAddAttribute(null,null,null);
