@@ -52,8 +52,15 @@ class Database{
 		{ type: sequelize.QueryTypes.SELECT});
 	}
 
-	updateWorkerContact_uri(oldContact_uri,newContact_uri){
-		return sequelize.query("update worker set contact_uri='"+newContact_uri+"' where contact_uri='"+oldContact_uri+"'");
+	async updateWorkerContact_uri(oldContact_uri,newContact_uri){
+		var result= await sequelize.query("update worker set contact_uri='"+newContact_uri+"' where contact_uri='"+oldContact_uri+"'");
+		if (result[1].rowCount==0){
+			throw("updateWorkerContact_uri: error: no row updated");
+		}
+		else
+		{
+			return true;
+		}
 	}
 	
 	                                                           

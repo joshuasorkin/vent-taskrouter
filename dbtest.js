@@ -12,10 +12,9 @@ db.getWorkerSid(worker.contact_uri)
 .then(result=>console.log(result));
 */
 
-db.updateWorkerContact_uri("+15105753138","+15105753139")
+db.updateWorkerContact_uri("+15105753139","+15105753138")
 .then(result=>{
 	console.log(result);
-	console.log("result rows: "+result[1].rowCount);
 });
 
 /*
