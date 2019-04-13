@@ -1,10 +1,5 @@
 high: needed for first prototype release
 
-
-
-(high)
-change random speech to random selection from text corpus
-
 (high)
 implement 'update' operation to update phone number in both Twilio and server database
 
@@ -23,8 +18,6 @@ how to treat user when no one is available
 -how to have a space in username?
 
 (high) ability to create "do not connect" list for each user
-
-(high) verify sustained uptime 24 hr+
 
 (high) document all configuration:
 --toroid.org git hook
@@ -113,3 +106,8 @@ is enqueue starting call after wait loop or immediately
 (high)
 is worker receiving second call?
 -doesn't seem to be, not sure why was seeing that in previous test
+
+(high)
+change random speech to random selection from text corpus
+
+(high) verify sustained uptime 24 hr+

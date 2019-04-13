@@ -51,6 +51,10 @@ class Database{
 		return sequelize.query("select * from worker where contact_uri='"+contact_uri+"'",
 		{ type: sequelize.QueryTypes.SELECT});
 	}
+
+	updateWorkerContact_uri(oldContact_uri,newContact_uri){
+		return sequelize.query("update worker set contact_uri='"+newContact_uri+"' where contact_uri='"+oldContact_uri+"'");
+	}
 	
 	                                                           
 }

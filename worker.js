@@ -78,7 +78,7 @@ class Worker{
 	}
 
 	async updateWorkerActivityFromSid(workerSid,activitySid,rejectPendingReservations){
-		var workerEntity;
+		var workerEntity=null;
 		try{
 			workerEntity=await this.workspace.workers(workerSid)
 						.update({
@@ -95,6 +95,26 @@ class Worker{
 		finally{
 			return workerEntity;
 		}
+
+	}
+
+	async updateContact_uri(oldContact_uri,newContact_uri){
+		console.log("updateWorkerName: getting workerSid from database");
+		var workerSid=await database.getWorkerSid(contact_uri);
+		if (workerSid==null){
+			throw("updateContact_uri: error: workerSid not found for "+contact_uri);
+		}
+
+
+		console.log("updateContact_uri: workerSid is "+workerSid);
+		var workerEntity=await this.workspace.workers(workerSid)
+						.update({
+							friendlyName:newName
+						})
+						.catch(err=>console.log("updateContact_uri: error: "+err));
+		console.log("updateContact_uri: worker's new friendlyName is "+workerEntity.friendlyName);
+		return workerEntity;
+		
 
 	}
 
