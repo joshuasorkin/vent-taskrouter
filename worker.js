@@ -106,7 +106,7 @@ class Worker{
 		}
 		console.log("updateContact_uri: workerSid is "+workerSid);
 		var dbResult=await database.updateWorkerContact_uri(oldContact_uri,newContact_uri);
-		if (dbResult!=null){
+		if (dbResult==null){
 			var workerEntity=await this.workspace.workers(workerSid)
 			.update({
 				attributes:JSON.stringify({
@@ -119,7 +119,7 @@ class Worker{
 
 		}
 		else{
-			console.log("updateContact_uri: dbResult is null");
+			console.log("updateContact_uri: dbResult is non-null, error: "+dbResult);
 			return null;
 		}
 		
