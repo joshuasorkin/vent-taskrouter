@@ -125,8 +125,13 @@ class Worker{
 			.update({
 				attributes:attributes
 			})
-			.catch(err=>console.log("updateContact_uri: error: "+err));
-			console.log("updateContact_uri: worker's new contact_uri is "+workerEntity.attributes.contact_uri);
+			.catch(err=>{
+				console.log("updateContact_uri: error: "+err);
+				return null;
+			});
+			if(workerEntity!=null){
+				console.log("updateContact_uri: worker's new contact_uri is "+workerEntity.attributes.contact_uri);
+			}
 			return workerEntity;
 
 		}

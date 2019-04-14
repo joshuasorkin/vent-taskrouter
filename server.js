@@ -123,6 +123,27 @@ app.post('/sms',async function(req,res){
 				responseValue=err;
 			}
 			break;
+		case "changenumber":
+			try{
+				if (bodyArray.length!=3){
+					responseValue="invalid command.  use 'changenumber [old number] [new number]'";
+				}
+				else{
+					oldNumber=bodyArray[1];
+					newNumber=bodyArray[2];
+					var workerEntity=await worker.updateContact_uri(oldNumber,newNumber);
+					if (workerEntity==null){
+						responseValue="Error updating number.";
+					}
+					else{
+						responseValue="Number updated."
+					}
+				}
+			}
+			catch(err){
+					responseValue=err;
+			}
+			break;
 
 		default:
 			console.log("/sms: default, setting worker to offline");
