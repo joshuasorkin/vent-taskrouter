@@ -15,5 +15,7 @@ async function update(){
     console.log("result: "+result);
 }
 
+update();
+
 //worker.addAllWorkersToDatabase();
 //workerObj.updateWorkerAddAttribute(null,null,null);
