@@ -119,6 +119,7 @@ class Worker{
 
 		}
 		else{
+			console.log("updateContact_uri: dbResult is null");
 			return null;
 		}
 		

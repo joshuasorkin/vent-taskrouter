@@ -10,8 +10,10 @@ clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 var workerObj=new Worker(clientWorkspace);
 
 //workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
-var result=workerObj.updateContact_uri("+15105753138","+15105753139");
-console.log("result: "+result);
+async function update(){
+    var result=await workerObj.updateContact_uri("+15105753138","+15105753139");
+    console.log("result: "+result);
+}
 
 //worker.addAllWorkersToDatabase();
 //workerObj.updateWorkerAddAttribute(null,null,null);
