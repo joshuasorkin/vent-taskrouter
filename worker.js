@@ -112,7 +112,7 @@ class Worker{
 			var workerEntity;
 			workerEntity=await this.workspace.workers(workerSid)
 			.fetch()
-			.then(workerObj=>attributes=worker.attributes);
+			.then(workerObj=>attributes=workerObj.attributes);
 			console.log(JSON.stringify(attributes));
 			attributes.contact_uri=newContact_uri;
 
