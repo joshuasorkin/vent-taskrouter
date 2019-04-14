@@ -114,14 +114,16 @@ class Worker{
 			.fetch()
 			.then(workerObj=>attributes=workerObj.attributes);
 			console.log("pre update");
-			console.log(JSON.stringify(attributes));
-			attributes.contact_uri=newContact_uri;
+			console.log(attributes);
+			var attributesObj=JSON.parse(attributes);
+			attributesObj.contact_uri=newContact_uri;
+			attributes=JSON.stringify(attributesObj);
 			console.log("post update");
-			console.log(JSON.stringify(attributes));
+			console.log(attributes);
 
 			var workerEntity=await this.workspace.workers(workerSid)
 			.update({
-				attributes:JSON.stringify(attributes)
+				attributes:attributes
 			})
 			.catch(err=>console.log("updateContact_uri: error: "+err));
 			console.log("updateContact_uri: worker's new contact_uri is "+workerEntity.attributes.contact_uri);
