@@ -115,8 +115,8 @@ class Worker{
 			.then(workerObj=>attributes=workerObj.attributes);
 			console.log("pre update");
 			console.log(JSON.stringify(attributes));
-			console.log("post update");
 			attributes.contact_uri=newContact_uri;
+			console.log("post update");
 			console.log(JSON.stringify(attributes));
 
 			var workerEntity=await this.workspace.workers(workerSid)
