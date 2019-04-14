@@ -104,6 +104,17 @@ app.post('/sms',async function(req,res){
 					//todo: this is a hack until I can figure out what the problem
 					//is with the return value from worker.create
 					if (responseValue==",1"){
+						confirmMessageBody="You have been added as a Vent worker, username "+friendlyName+
+																".  If you did not request to be added, please contact the administrator to request removal.";
+						client.messages
+						.create({
+							from:process.env.TWILIO_PHONE_NUMBER,
+							body:confirmMessageBody,
+							to:contact_uri
+						})
+						.then(message=>console.log("/sms: sent message to added worker: "+message.sid))
+						.catch(err=>console.log("/sms: Error sending message to added worker: "+err));
+
 						responseValue="Worker "+bodyArray[3]+" successfully created.";
 					}
 				}

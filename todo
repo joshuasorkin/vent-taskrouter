@@ -1,7 +1,12 @@
 high: needed for first prototype release
 
 (high)
-implement 'update' operation to update phone number in both Twilio and server database
+delete worker by contact_uri,
+enable worker to delete themselves
+this doesn't actually delete the worker,
+instead it adds a "delete:true" attribute
+so that they will not be contacted
+by group SMS
 
 (high)
 send confirmation message to number when user is created
@@ -26,6 +31,16 @@ how to treat user when no one is available
 --twilio configuration
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
+
+(medium)
+password encryption checksum:
+each character [A-Za-z0-9] has an ascii value "n" and array position "x",
+represent character as ((nth prime number) ^ x).  multiplying all these
+character values together gives password's hash value.
+e.g. "abc" would be
+(97th ^ 1) * (98th ^ 2) * (99th ^ 3)
+=(509^1)*(521^2)*(523^3)
+=19765067212828824
 
 (medium)
 save state so that when/if server reboots, can immediately pick up without 
@@ -111,3 +126,6 @@ is worker receiving second call?
 change random speech to random selection from text corpus
 
 (high) verify sustained uptime 24 hr+
+
+(high)
+implement 'update' operation to update phone number in both Twilio and server database
