@@ -107,11 +107,18 @@ class Worker{
 		console.log("updateContact_uri: workerSid is "+workerSid);
 		var dbResult=await database.updateWorkerContact_uri(oldContact_uri,newContact_uri);
 		if (dbResult==null){
+			//todo: is there a more efficient way to do this with a single call to worker?
+			var attributes;
+			var workerEntity;
+			workerEntity=await this.workspace.workers(workerSid)
+			.fetch()
+			.then(workerObj=>attributes=worker.attributes);
+			console.log(JSON.stringify(attributes));
+			attributes.contact_uri=newContact_uri;
+
 			var workerEntity=await this.workspace.workers(workerSid)
 			.update({
-				attributes:JSON.stringify({
-					contact_uri:newContact_uri
-				})
+				attributes:JSON.stringify(attributes)
 			})
 			.catch(err=>console.log("updateContact_uri: error: "+err));
 			console.log("updateContact_uri: worker's new contact_uri is "+workerEntity.attributes.contact_uri);
