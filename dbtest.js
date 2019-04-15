@@ -13,7 +13,7 @@ db.getWorkerSid(worker.contact_uri)
 */
 
 //db.updateWorkerContact_uri("+15105753139","+15105753138")
-db.createAvailableNotificationRequest("WK425caf724515f59b5620fba1af1e1fd8");
+db.createAvailableNotificationRequest("WK425caf724515f59b5620fba1af1e1fd8")
 .then(result=>{
 	console.log(result);
 });
