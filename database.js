@@ -65,6 +65,7 @@ class Database{
 
 	async createAvailableNotificationRequest(workerSid){
 		var selectResult=await sequelize.query("select * from worker where sid='"+workerSid+"'");
+		console.log("createAvailableNotificationRequest: selectResult: "+selectResult);
 		var id=selectResult[0].id;
 		console.log("createAvailableNotificationRequest: id is "+id);
 		var insertResult=await sequelize.query("insert into available_notification_request (worker_id) values ("+id+")");
