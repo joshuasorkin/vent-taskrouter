@@ -78,11 +78,16 @@ app.post('/sms',async function(req,res){
 			//todo: this try-catch is duplicate of the default,
 			//both need to be refactored into single function
 			try{
-				if(worker==null){
-					console.log("Worker is null, what's going on?");
+				if(bodyArray.length>1){
+					responseValue="Too many parameters for 'on'";
 				}
-				workerEntity=await worker.updateWorkerActivity(req.body.From,process.env.TWILIO_IDLE_SID,false);
-				responseValue=workerEntity.friendlyName+", you are now active, receiving calls.";
+				else{
+					if(worker==null){
+						console.log("Worker is null, what's going on?");
+					}
+					workerEntity=await worker.updateWorkerActivity(req.body.From,process.env.TWILIO_IDLE_SID,false);
+					responseValue=workerEntity.friendlyName+", you are now active, receiving calls.";
+				}
 				console.log(responseValue);
 			}
 			catch(err){

@@ -1,12 +1,6 @@
 high: needed for first prototype release
 
-(high)
-delete worker by contact_uri,
-enable worker to delete themselves
-this doesn't actually delete the worker,
-instead it adds a "delete:true" attribute
-so that they will not be contacted
-by group SMS
+
 
 (high)
 send confirmation message to number when user is created
@@ -16,12 +10,17 @@ code added but still need to test
 how to treat user when no one is available
 -send notification when users are back on the system
 
+(high)
+set worker to offline after they hang up
+set caller to offline after call ends
+
+
 (high) get domain so test users can see whether server is up
 
 (high) deal with space parsing in sms commands
 -spaces between items
 -too many items in sms command
--how to have a space in username?
+-how to have a space in username?  for now let's have no spaces
 
 (high) ability to create "do not connect" list for each user
 
@@ -32,6 +31,16 @@ how to treat user when no one is available
 --twilio configuration
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
+
+(medium)
+enable worker to deactivate themselves
+this doesn't actually delete the worker,
+instead it sets "active:false" attribute
+so that they will not be included 
+in any communication (e.g. group SMS with system notification)
+
+(medium)
+refactor /sms into sms.js
 
 (medium)
 password encryption checksum:
