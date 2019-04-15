@@ -324,16 +324,7 @@ app.post('/voice',async function(req,res){
 
 app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
-	//digits='1234567890';
-	var word=wait.randomSentence(5,5);
 	var word=textsplitter.randomSentenceFromFiletextArray();
-	//response.play({
-	//	digits:digits
-	//});
-	twimlBuilder.say(response,word);
-	//response.play({
-	//	digits:digits
-	//});
 	twimlBuilder.say(response,word);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
@@ -608,7 +599,8 @@ app.get('/automatic',function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	var response=new VoiceResponse();
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
-	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  Good-bye!");
+	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  Feel free to enjoy some random text selections for a while.");
+	response.redirect('/randomWordLoop')
 	response.hangup();
 	//response.redirect({method:'GET'},url);
 
