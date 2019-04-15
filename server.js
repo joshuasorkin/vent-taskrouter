@@ -96,6 +96,10 @@ app.post('/sms',async function(req,res){
 			}
 			break;
 		case "add":
+			if (bodyArray.length!=4){
+				responseValue="Incorrect number of parameters for 'add': add [password] [contact_uri] [username]";
+				break;
+			}
 			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
 				contact_uri=bodyArray[2];
 				friendlyName=bodyArray[3];
@@ -104,7 +108,6 @@ app.post('/sms',async function(req,res){
 						responseValue="Worker with contact_uri "+contact_uri+" already exists.";
 				}
 				else{
-
 					responseValue=await worker.createWorker(contact_uri,friendlyName);
 					//todo: this is a hack until I can figure out what the problem
 					//is with the return value from worker.create
@@ -131,6 +134,9 @@ app.post('/sms',async function(req,res){
 			break;
 		case "changename":
 			try{
+				if (bodyArray.length!=2){
+
+				}
 				newFriendlyName=bodyArray[1];
 				var workerEntity=await worker.updateWorkerName(req.body.From,newFriendlyName);
 				responseValue="Your new name is "+workerEntity.friendlyName+".";
@@ -337,7 +343,7 @@ app.post('/randomWordLoop',function(req,res){
 
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
-	twimlBuilder.say(response,'Please wait while I find a receiver.  In the meantime I will entertain you with randomized speech.');
+	twimlBuilder.say(response,'Please wait while I find a receiver.  In the meantime you will hear randomly selected text.');
 	//response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
@@ -606,7 +612,7 @@ app.get('/automatic',function(req,res){
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
 	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  Feel free to enjoy some random text selections for a while.");
 	response.redirect('/randomWordLoop')
-	response.hangup();
+	//response.hangup();
 	//response.redirect({method:'GET'},url);
 
 	
@@ -624,6 +630,10 @@ app.get('/automatic',function(req,res){
 
 	
 	res.send(response.toString());
+});
+
+app.get('/processAutomatic',function(req,res){
+
 });
 
 app.post('/workspaceEvent',async function(req,res){
