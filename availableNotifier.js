@@ -36,13 +36,17 @@ class AvailableNotifier{
     //todo: need to figure out how to check that the listener is not on this contact_uri's "do not contact list";
     //maybe the listener's number should get passed in and checked against the workerSid that is also returned 
     //in the iterator
-    send(contact_uri){
+    send(callbackParam){
+        var contact_uri=callbackParam.contact_uri;
         console.log("send: contact_uri: "+contact_uri);
         if(this.phoneNumberRegex.test(contact_uri)){
             var body="Message from Vent: There is now at least 1 listener available."
             client.messages
             .create({from: process.env.TWILIO_PHONE_NUMBER, body: body, to: contact_uri})
-            .then(message => console.log(message.sid));
+            .then(message => {
+                console.log("send: message.sid: "+message.sid);
+                database.updateNotificationToSent(callbackParam.sid);
+            });
         }
         else{
             console.log(contact_uri+" is not a valid phone number.");

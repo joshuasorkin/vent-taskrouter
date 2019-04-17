@@ -130,7 +130,11 @@ class Database{
 			var x;
 			for(x=0;x<result.length;x++){
 				console.log("iterator: contact_uri: "+result[x].contact_uri);
-				callback(result[x].contact_uri);
+				var callbackParam={
+					contact_uri:result[x].contact_uri,
+					sid:result[x].sid
+				}
+				callback(callbackParam);
 			}
 			
 		})
