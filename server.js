@@ -22,6 +22,8 @@ const TwimlBuilder=require('./twimlBuilder');
 const Wait=require('./wait');
 const ObjectUpdater=require('./objectUpdater');
 const Textsplitter=require('./textsplitter');
+const AvailableNotifier=require('./availableNotifier');
+var availableNotifier=new AvailableNotifier();
 var textsplitter=new Textsplitter();
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
@@ -650,6 +652,7 @@ app.post('/workspaceEvent',async function(req,res){
 	resourceType=req.body.ResourceType;
 	resourceSid=req.body.ResourceSid;
 	console.log("Event Details:\n"+eventType+"\n"+eventDescription+"\n"+eventDate+"\n"+resourceType+"\n"+resourceSid);
+	var workerSid;
 	switch (eventType){
 		case "reservation.rejected":
 			console.log("/workspaceEvent: reservation rejected, worker will be set offline");
@@ -657,6 +660,12 @@ app.post('/workspaceEvent',async function(req,res){
 			workerSid=req.body.WorkerSid;
 			console.log("/workspaceEvent: workerSid "+workerSid+" now being set to offline");
 			var updateResult=await worker.updateWorkerActivityFromSid(workerSid,process.env.TWILIO_OFFLINE_SID,true);
+			break;
+		case "worker.activity.update":
+			if (eventDescription.includes("updated to Idle Activity")){
+				workerSid=resourceSid;
+				availableNotifier.iterateSend(workerSid);
+			}
 			break;
 	}
 

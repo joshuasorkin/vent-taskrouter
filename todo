@@ -58,6 +58,10 @@ save state so that when/if server reboots, can immediately pick up without
 change voice to something warmer
 
 (medium)
+update event handler so that when setting user's status to "idle", it triggers
+the availableNotifier
+
+(medium)
 give people each other's numbers if they both opt in?
 or let them continue longer?
 

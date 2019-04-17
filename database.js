@@ -120,8 +120,10 @@ class Database{
 		}
 	}
 
-	iterateThroughUnsentNotificationsForMessaging(callback){
-		sequelize.query("select * from available_notification_request_worker where notification_sent=false",
+	//we pass in workerSid here because we don't want the worker who just went to Idle to get
+	//a notification of an available worker (since calling themselves isn't an option)
+	iterateThroughUnsentNotificationsForMessaging(callback,workerSid){
+		sequelize.query("select * from available_notification_request_worker where notification_sent=false and sid!='"+workerSid+"'",
 		{ type: sequelize.QueryTypes.SELECT})
 		.then(function(result){
 			console.log(result);
