@@ -1,3 +1,4 @@
+require('env2')('.env');
 const Database=require('./database');
 const client=require('twilio')(accountSid,authToken);
 
@@ -9,11 +10,38 @@ var database=new Database();
 
 class AvailableNotifier{
 
+    constructor(){
+        this.phoneNumberRegex=new RegExp("^\+\d+$");
+    }
     create(workerSid){
         var result=await database.createAvailableNotificationRequest(workerSid);
         return result;
     }
 
-    
+    updateToSent(workerSid){
+        var result=await database.updateNotificationToSent(workerSid);
+        return result;
+    }
+
+    iterateSend(){
+        var result=database.iterateThroughUnsentNotificationsForMessaging(send);
+    }
+
+    //todo: there should really be a class 'SMSSender' that handles outbound SMS
+    //so that this function only has to do something like SMSSender.send(contact_uri,message)
+    //given that there will surely be many different operations that call for sending messages to a
+    //group of users.
+    send(contact_uri){
+        if(this.phoneNumberRegex.test(contact_uri)){
+            var body="Message from Vent: There is now at least 1 listener available."
+            client.messages
+            .create({from: process.env.TWILIO_PHONE_NUMBER, body: body, to: contact_uri})
+            .then(message => console.log(message.sid));
+        }
+        else{
+            console.log(contact_uri+" is not a valid phone number.");
+        }
+    }
+
 
 }
