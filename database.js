@@ -125,6 +125,7 @@ class Database{
 		{ type: sequelize.QueryTypes.SELECT})
 		.then(function(result){
 			console.log(result);
+			var x;
 			for(x=0;x<result.length;x++){
 				callback(result[x].contact_uri);
 			}
