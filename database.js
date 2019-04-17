@@ -111,8 +111,13 @@ class Database{
 
 	async updateNotificationToSent(workerSid){
 		var id=await this.getWorkerIdFromSid(workerSid);
-		return sequelize.query("update available_notification_request set notification_sent=true"+ 
-								" where worker_id="+id+" and notification_sent=false");
+		if (id==null){
+			throw(workerSid+" does not exist in worker table");
+		}
+		else{
+			return sequelize.query("update available_notification_request set notification_sent=true"+ 
+									" where worker_id="+id+" and notification_sent=false");
+		}
 	}
 
 	
