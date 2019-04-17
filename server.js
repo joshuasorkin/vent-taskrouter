@@ -51,7 +51,7 @@ app.get('/testHeroku',function(req,res){
 });
 
 app.get('/admin',function(req,res){
-	res.sendFile('./admin.html');
+	res.sendFile(path.join(__dirname+'/admin.html'));
 });
 
 
