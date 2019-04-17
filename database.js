@@ -69,9 +69,20 @@ class Database{
 		console.log("createAvailableNotificationRequest: selectResult[0]: "+selectResult[0]);
 		var id=selectResult[0].id;
 		console.log("createAvailableNotificationRequest: id is "+id);
-		var insertResult=await sequelize.query("insert into available_notification_request (worker_id) values ("+id+")");
-		console.log(result);
+		var insertResult=await insertAvailableNotificationRequest(id);
+		console.log(insertResult);
 	}
+
+	insertAvailableNotificationRequest(worker_id){
+		return sequelize.query("insert into available_notification_request (worker_id) values ("+worker_id+")")
+				.then(result=>{
+					return result;
+				})
+				.catch(err=>{
+					return err;
+				});
+	}
+
 	
 	                                                           
 }
