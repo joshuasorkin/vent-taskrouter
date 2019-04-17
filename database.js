@@ -70,7 +70,7 @@ class Database{
 		var id=selectResult[0].id;
 		console.log("createAvailableNotificationRequest: id is "+id);
 		var insertResult=await insertAvailableNotificationRequest(id);
-		console.log(insertResult);
+		console.log("createAvailableNotificationRequest: insertResult: "+insertResult);
 	}
 
 	insertAvailableNotificationRequest(worker_id){
