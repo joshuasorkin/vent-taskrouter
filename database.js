@@ -78,7 +78,12 @@ class Database{
 		console.log("insertAvailableNotificationRequest");
 		return sequelize.query("insert into available_notification_request (worker_id) values ("+worker_id+")")
 				.then(result=>{
-					return result;
+					if(result==",1"){
+						return null;
+					}
+					else{
+						return result;
+					}
 				})
 				.catch(err=>{
 					if(err=="SequelizeUniqueConstraintError: Validation error"){
