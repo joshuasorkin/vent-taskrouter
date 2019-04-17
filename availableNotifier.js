@@ -18,7 +18,7 @@ class AvailableNotifier{
         return result;
     }
 
-    updateToSent(workerSid){
+    async updateToSent(workerSid){
         var result=await database.updateNotificationToSent(workerSid);
         return result;
     }
