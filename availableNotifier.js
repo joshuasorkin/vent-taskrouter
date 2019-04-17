@@ -47,3 +47,5 @@ class AvailableNotifier{
 
 
 }
+
+module.exports=AvailableNotifier;
