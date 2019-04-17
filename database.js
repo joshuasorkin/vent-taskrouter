@@ -124,6 +124,7 @@ class Database{
 		sequelize.query("select * from available_notification_request_worker where notification_sent=false",
 		{ type: sequelize.QueryTypes.SELECT})
 		.then(function(result){
+			console.log(result);
 			callback(result.contact_uri);
 		})
 		.catch(err=>console.log("iterateThroughUnsentNotificationsForMessaging: error: "+err));
