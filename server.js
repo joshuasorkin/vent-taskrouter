@@ -50,7 +50,7 @@ app.get('/testHeroku',function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/admin',function(req,res){
+app.get('/admin',function(req,res){
 	res.sendFile('admin.html');
 });
 
