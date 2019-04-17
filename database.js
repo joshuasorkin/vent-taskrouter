@@ -69,10 +69,11 @@ class Database{
 		console.log("createAvailableNotificationRequest: selectResult[0]: "+selectResult[0]);
 		var id=selectResult[0].id;
 		console.log("createAvailableNotificationRequest: id is "+id);
-		var insertResult=await insertAvailableNotificationRequest(id);
+		var insertResult=await this.insertAvailableNotificationRequest(id);
 		console.log("createAvailableNotificationRequest: insertResult: "+insertResult);
 	}
 
+	
 	insertAvailableNotificationRequest(worker_id){
 		console.log("insertAvailableNotificationRequest");
 		return sequelize.query("insert into available_notification_request (worker_id) values ("+worker_id+")")
