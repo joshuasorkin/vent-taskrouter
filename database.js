@@ -75,6 +75,7 @@ class Database{
 	async getWorkerIdFromSid(workerSid){
 		var selectResult=await sequelize.query("select * from worker where sid='"+workerSid+"'",
 		{ type: sequelize.QueryTypes.SELECT});
+		console.log("getWorkerIdFromSid: selectResult: "+JSON.stringify(selectResult));
 		console.log("getWorkerIdFromSid: selectResult[0]: "+selectResult[0]);
 		var id=selectResult[0].id;
 		console.log("getWorkerIdFromSid: id is "+id);
