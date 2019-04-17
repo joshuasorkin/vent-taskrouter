@@ -67,6 +67,9 @@ class Database{
 	//returns null if successful, otherwise returns string with error
 	async createAvailableNotificationRequest(workerSid){
 		var id=await this.getWorkerIdFromSid(workerSid);
+		if(id==null){
+			throw(workerSid+" does not exist in worker table");
+		}
 		var insertResult=await this.insertAvailableNotificationRequest(id);
 		console.log("createAvailableNotificationRequest: insertResult: "+insertResult);
 		return insertResult;
@@ -76,10 +79,15 @@ class Database{
 		var selectResult=await sequelize.query("select * from worker where sid='"+workerSid+"'",
 		{ type: sequelize.QueryTypes.SELECT});
 		console.log("getWorkerIdFromSid: selectResult: "+JSON.stringify(selectResult));
-		console.log("getWorkerIdFromSid: selectResult[0]: "+selectResult[0]);
-		var id=selectResult[0].id;
-		console.log("getWorkerIdFromSid: id is "+id);
-		return id;
+		if (selectResult.length==0){
+			return null;
+		}
+		else{
+			console.log("getWorkerIdFromSid: selectResult[0]: "+selectResult[0]);
+			var id=selectResult[0].id;
+			console.log("getWorkerIdFromSid: id is "+id);
+			return id;
+		}
 	}
 
 	insertAvailableNotificationRequest(worker_id){
@@ -103,7 +111,8 @@ class Database{
 
 	async updateNotificationToSent(workerSid){
 		var id=await this.getWorkerIdFromSid(workerSid);
-		return sequelize.query("update available_notification_request set notification_sent=true where worker_id="+id);
+		return sequelize.query("update available_notification_request set notification_sent=true"+ 
+								" where worker_id="+id+" and notification_sent=false");
 	}
 
 	
