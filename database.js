@@ -127,6 +127,7 @@ class Database{
 			console.log(result);
 			var x;
 			for(x=0;x<result.length;x++){
+				console.log("iterator: contact_uri: "+result[x].contact_uri);
 				callback(result[x].contact_uri);
 			}
 			

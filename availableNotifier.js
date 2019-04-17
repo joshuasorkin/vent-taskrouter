@@ -34,6 +34,7 @@ class AvailableNotifier{
     //given that there will surely be many different operations that call for sending messages to a
     //group of users.
     send(contact_uri){
+        console.log("send: contact_uri: "+contact_uri);
         if(this.phoneNumberRegex.test(contact_uri)){
             var body="Message from Vent: There is now at least 1 listener available."
             client.messages
