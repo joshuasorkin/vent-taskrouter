@@ -71,6 +71,7 @@ class Database{
 		console.log("createAvailableNotificationRequest: id is "+id);
 		var insertResult=await this.insertAvailableNotificationRequest(id);
 		console.log("createAvailableNotificationRequest: insertResult: "+insertResult);
+		return insertResult;
 	}
 
 	
