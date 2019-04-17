@@ -125,7 +125,10 @@ class Database{
 		{ type: sequelize.QueryTypes.SELECT})
 		.then(function(result){
 			console.log(result);
-			callback(result.contact_uri);
+			for(x=0;x<result.length;x++){
+				callback(result[x].contact_uri);
+			}
+			
 		})
 		.catch(err=>console.log("iterateThroughUnsentNotificationsForMessaging: error: "+err));
 	}
