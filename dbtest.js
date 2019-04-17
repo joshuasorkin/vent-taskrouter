@@ -16,7 +16,11 @@ db.getWorkerSid(worker.contact_uri)
 
 db.updateNotificationToSent("WK425caf724515f59b5620fba1af1e1fd8")
 .then(result=>{
-	console.log(result);
+	console.log("dbtest: "+result);
+	db.updateNotificationToSent("abcxy")
+	.then(result=>{
+		console.log("dbtest: "+result);
+	})
 });
 
 /*
