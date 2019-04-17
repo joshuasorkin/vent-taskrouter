@@ -13,6 +13,13 @@ db.getWorkerSid(worker.contact_uri)
 */
 
 //db.updateWorkerContact_uri("+15105753139","+15105753138")
+
+db.updateNotificationToSent("WK425caf724515f59b5620fba1af1e1fd8")
+.then(result=>{
+	console.log(result);
+});
+
+/*
 db.createAvailableNotificationRequest("WK425caf724515f59b5620fba1af1e1fd8")
 .then(result=>{
 	if (result==null){
@@ -25,6 +32,7 @@ db.createAvailableNotificationRequest("WK425caf724515f59b5620fba1af1e1fd8")
 	console.log("moving on to next worker...");
 	db.createAvailableNotificationRequest("WK007e94671dc41a73ee8955aacf6ec743");
 });
+*/
 
 /*
 db.getAvailableAgent(process.env.testgoodphonenumber)ge
