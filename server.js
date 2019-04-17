@@ -610,10 +610,11 @@ app.get('/automatic',function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	var response=new VoiceResponse();
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
-	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  Feel free to enjoy some random text selections for a while.");
+	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  I will notify you by text message when a receiver becomes available.  You will now hear random text until you hang up.");
 	response.redirect('/randomWordLoop')
 	//response.hangup();
 	//response.redirect({method:'GET'},url);
+	
 
 	
 

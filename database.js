@@ -63,18 +63,24 @@ class Database{
 		}
 	}
 
+	//adds an entry to the available_notification_request table, using workerSid to look up worker's Id number
+	//returns null if successful, otherwise returns string with error
 	async createAvailableNotificationRequest(workerSid){
-		var selectResult=await sequelize.query("select * from worker where sid='"+workerSid+"'",
-		{ type: sequelize.QueryTypes.SELECT});
-		console.log("createAvailableNotificationRequest: selectResult[0]: "+selectResult[0]);
-		var id=selectResult[0].id;
-		console.log("createAvailableNotificationRequest: id is "+id);
+		var id=await this.getWorkerIdFromSid(workerSid);
 		var insertResult=await this.insertAvailableNotificationRequest(id);
 		console.log("createAvailableNotificationRequest: insertResult: "+insertResult);
 		return insertResult;
 	}
 
-	
+	async getWorkerIdFromSid(workerSid){
+		var selectResult=await sequelize.query("select * from worker where sid='"+workerSid+"'",
+		{ type: sequelize.QueryTypes.SELECT});
+		console.log("getWorkerIdFromSid: selectResult[0]: "+selectResult[0]);
+		var id=selectResult[0].id;
+		console.log("getWorkerIdFromSid: id is "+id);
+		return id;
+	}
+
 	insertAvailableNotificationRequest(worker_id){
 		console.log("insertAvailableNotificationRequest");
 		return sequelize.query("insert into available_notification_request (worker_id) values ("+worker_id+")")
@@ -92,6 +98,11 @@ class Database{
 					}
 					else throw(err);
 				});
+	}
+
+	updateNotificationToSent(workerSid){
+		var id=await this.getWorkerIdFromSid(workerSid);
+		return sequelize.query("update available_notification_request set notification_sent=true where worker_id="+id);
 	}
 
 	

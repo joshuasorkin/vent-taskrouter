@@ -98,6 +98,7 @@ class Worker{
 
 	}
 
+
 	async updateContact_uri(oldContact_uri,newContact_uri){
 		console.log("updateWorkerName: getting workerSid from database");
 		var workerSid=await database.getWorkerSid(oldContact_uri);
