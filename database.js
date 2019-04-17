@@ -74,6 +74,7 @@ class Database{
 	}
 
 	insertAvailableNotificationRequest(worker_id){
+		console.log("insertAvailableNotificationRequest");
 		return sequelize.query("insert into available_notification_request (worker_id) values ("+worker_id+")")
 				.then(result=>{
 					return result;
