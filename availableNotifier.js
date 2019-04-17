@@ -13,7 +13,7 @@ var database=new Database();
 class AvailableNotifier{
 
     constructor(){
-        this.phoneNumberRegex=new RegExp("^\+\d+$");
+        this.phoneNumberRegex=new RegExp("^\\+\\d+$");
     }
     async create(workerSid){
         var result=await database.createAvailableNotificationRequest(workerSid);
