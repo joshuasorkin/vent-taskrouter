@@ -26,7 +26,7 @@ class AvailableNotifier{
     }
 
     iterateSend(){
-        var result=database.iterateThroughUnsentNotificationsForMessaging(send);
+        var result=database.iterateThroughUnsentNotificationsForMessaging(this.send);
     }
 
     //todo: there should really be a class 'SMSSender' that handles outbound SMS
