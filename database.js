@@ -100,7 +100,7 @@ class Database{
 				});
 	}
 
-	updateNotificationToSent(workerSid){
+	async updateNotificationToSent(workerSid){
 		var id=await this.getWorkerIdFromSid(workerSid);
 		return sequelize.query("update available_notification_request set notification_sent=true where worker_id="+id);
 	}
