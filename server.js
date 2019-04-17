@@ -555,6 +555,7 @@ app.post('/assignment', async function (req, res) {
 	console.log("task sid: "+taskSid);
 	TaskAttributes=JSON.parse(req.body.TaskAttributes);
 	callSid=TaskAttributes.call_sid;
+	fromNumber=TaskAttributes.from;
 	minutes=TaskAttributes.minutes;
 	console.log("call sid: "+callSid);
 	reservationSid=req.body.ReservationSid;
@@ -569,7 +570,8 @@ app.post('/assignment', async function (req, res) {
 		callSid:callSid,
 		workerSid:workerSid,
 		taskQueueSid:taskQueueSid,
-		minutes:minutes
+		minutes:minutes,
+		fromNumber:fromNumber
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 
@@ -614,12 +616,18 @@ app.get('/endCall_automatic',function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/automatic',function(req,res){
+//this is the URL reached when there are no valid live agents remaining to accept the call,
+//and the task falls through to the automatic queue
+app.get('/automatic',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	var response=new VoiceResponse();
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
 	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  I will notify you by text message when a receiver becomes available.  You will now hear random text until you hang up.");
 	response.redirect('/randomWordLoop')
+	workerSid=await worker.getWorkerSid(parameters.fromNumber);
+	console.log("/automatic: workerSid: "+workerSid);
+	console.log("/automatic: now creating available notification request");
+	availableNotifier.create(workerSid);
 	//response.hangup();
 	//response.redirect({method:'GET'},url);
 	

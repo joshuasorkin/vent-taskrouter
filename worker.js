@@ -145,6 +145,11 @@ class Worker{
 
 	}
 
+	async getWorkerSid(contact_uri){
+		var workerSid=await database.getWorkerSid(contact_uri);
+		return workerSid;
+	}
+
 	async contact_uriExists(contact_uri){
 		var workerSid=await database.getWorkerSid(contact_uri);
 		console.log("contact_uriExists: workerSid "+workerSid);
