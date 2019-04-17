@@ -81,7 +81,10 @@ class Database{
 					return result;
 				})
 				.catch(err=>{
-					return err;
+					if(err=="SequelizeUniqueConstraintError: Validation error"){
+						return "Open AvailableNotificationRequest for "+worker_id+" already exists."
+					}
+					else throw(err);
 				});
 	}
 
