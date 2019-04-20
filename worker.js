@@ -84,7 +84,9 @@ class Worker{
 			if (attributeArrayValue==null){
 				attributes[attributeName]=[];
 			}
-			attributes[attributeName]=[attributeArrayValue];
+			else{
+				attributes[attributeName]=[attributeArrayValue];
+			}
 		}
 		else{
 			if(!attributeArrayValue==null){
