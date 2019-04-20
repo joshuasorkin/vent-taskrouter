@@ -76,7 +76,7 @@ class Worker{
 	}
 
 	async updateWorkerAddAttribute(workerSid,attributeName,attributeValue){
-		var workerEntity=await this.workspace.workers(workerSid);
+		var workerEntity=await this.workspace.workers(workerSid).fetch();
 		console.log(JSON.stringify(workerEntity));
 		console.log(workerEntity.friendlyName);
 	}
