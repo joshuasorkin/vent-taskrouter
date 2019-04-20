@@ -14,7 +14,7 @@ async function update(){
     var result;
     clientWorkspace.workers
     .each(worker=>{
-        result=await workerObj.updateWorkerAddAttributeArrayValue(worker,"do_not_contact",null);
+        result=workerObj.updateWorkerAddAttributeArrayValue(worker,"do_not_contact",null);
     })
 }
 
