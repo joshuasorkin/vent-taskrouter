@@ -11,7 +11,8 @@ var workerObj=new Worker(clientWorkspace);
 
 //workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
 async function update(){
-    var sid=await workerObj.updateWorkerAddAttribute("WK425caf724515f59b5620fba1af1e1fd8","","");
+    var sid=await workerObj.updateWorkerAddAttributeArrayValue("WK425caf724515f59b5620fba1af1e1fd8",doNotContact,"wrongnumber");
+    var sid=await workerObj.updateWorkerAddAttributeArrayValue("WK425caf724515f59b5620fba1af1e1fd8",languages,"au");
 }
 
 update();
