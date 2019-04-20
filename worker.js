@@ -75,14 +75,21 @@ class Worker{
 		return workerEntity;
 	}
 
+	//either adds an array property to the worker attributes object,
+	//or pushes attributeArrayValue into the existing array property
 	async updateWorkerAddAttributeArrayValue(workerSid,attributeName,attributeArrayValue){
 		var workerEntity=await this.workspace.workers(workerSid).fetch();
 		var attributes=JSON.parse(workerEntity.attributes);
 		if (!attributes.hasOwnProperty(attributeName)){
+			if (attributeArrayValue==null){
+				attributes[attributeName]=[];
+			}
 			attributes[attributeName]=[attributeArrayValue];
 		}
 		else{
-			attributes[attributeName].push(attributeArrayValue);
+			if(!attributeArrayValue==null){
+				attributes[attributeName].push(attributeArrayValue);
+			}
 		}
 		console.log(attributes);
 	}
