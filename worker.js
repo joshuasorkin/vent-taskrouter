@@ -77,8 +77,9 @@ class Worker{
 
 	async updateWorkerAddAttribute(workerSid,attributeName,attributeValue){
 		var workerEntity=await this.workspace.workers(workerSid).fetch();
-		console.log(JSON.stringify(workerEntity));
-		console.log(workerEntity.friendlyName);
+		var attributes=workerEntity.attributes;
+		attributes.doNotContact=[];
+		console.log(attributes);
 	}
 
 	async updateWorkerActivityFromSid(workerSid,activitySid,rejectPendingReservations){
