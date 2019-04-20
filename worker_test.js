@@ -18,7 +18,9 @@ async function update(){
     })
 }
 
-update();
+
+workerObj.createWorker("abcxisiwe","zzyswiew");
+//update();
 
 //worker.addAllWorkersToDatabase();
 //workerObj.updateWorkerAddAttribute(null,null,null);

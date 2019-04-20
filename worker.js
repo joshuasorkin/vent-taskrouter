@@ -11,7 +11,8 @@ class Worker{
 		return this.workspace.workers
 					.create({attributes: JSON.stringify({
 						languages: 'en',
-						contact_uri: contact_uri
+						contact_uri: contact_uri,
+						do_not_contact:[]
 					}), friendlyName: friendlyName})
 					.then(worker=>{
 						return database.createWorker(worker)
