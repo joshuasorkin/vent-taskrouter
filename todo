@@ -1,14 +1,8 @@
 high: needed for first prototype release
 
-
-
 (high)
 send confirmation message to number when user is created
 code added but still need to test
-
-(high)
-how to treat user when no one is available
--send notification when users are back on the system
 
 (high)
 set worker to offline after they hang up
@@ -57,9 +51,6 @@ save state so that when/if server reboots, can immediately pick up without
 (medium)
 change voice to something warmer
 
-(medium)
-update event handler so that when setting user's status to "idle", it triggers
-the availableNotifier
 
 (medium)
 give people each other's numbers if they both opt in?
@@ -143,3 +134,11 @@ change random speech to random selection from text corpus
 
 (high)
 implement 'update' operation to update phone number in both Twilio and server database
+
+(medium)
+update event handler so that when setting user's status to "idle", it triggers
+the availableNotifier
+
+(high)
+how to treat user when no one is available
+-send notification when users are back on the system

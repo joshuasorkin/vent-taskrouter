@@ -11,8 +11,7 @@ var workerObj=new Worker(clientWorkspace);
 
 //workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
 async function update(){
-    var result=await workerObj.updateContact_uri("+15105753139","+15105753138");
-    console.log("result: "+result);
+    var sid=await workerObj.updateWorkerAddAttribute("WK425caf724515f59b5620fba1af1e1fd8","","");
 }
 
 update();

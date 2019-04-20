@@ -23,6 +23,11 @@ class Worker{
 					});
 	}
 	
+	addPropertyToWorker(worker,propertyName,initialValue){
+		var attributes=worker.attributes;
+		worker.update()
+	}
+
 	addAllWorkersToDatabase(){
 		this.workspace.workers
 			.each(worker=>{
@@ -71,10 +76,8 @@ class Worker{
 	}
 
 	async updateWorkerAddAttribute(workerSid,attributeName,attributeValue){
-		var workerEntity=await this.workspace.workers
-								.each(worker=>{
-									console.log("friendlyName: "+worker.friendlyName);
-								});
+		var workerEntity=await this.workspace.workers(workerSid);
+		console.log(workerEntity.attributes);
 	}
 
 	async updateWorkerActivityFromSid(workerSid,activitySid,rejectPendingReservations){
