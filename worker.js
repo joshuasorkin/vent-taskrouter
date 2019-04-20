@@ -92,7 +92,11 @@ class Worker{
 				attributes[attributeName].push(attributeArrayValue);
 			}
 		}
-		console.log(attributes);
+		workerEntity.update({
+			attributes:attributes
+		})
+		.then(updatedWorker=>console.log(JSON.parse(updatedWorker.attributes)))
+		.catch(err=>console.log("updateWorkerAddAttributeArrayValue: error: "+err));
 	}
 
 	async updateWorkerActivityFromSid(workerSid,activitySid,rejectPendingReservations){
