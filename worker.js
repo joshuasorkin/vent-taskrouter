@@ -77,8 +77,7 @@ class Worker{
 
 	//either adds an array property to the worker attributes object,
 	//or pushes attributeArrayValue into the existing array property
-	async updateWorkerAddAttributeArrayValue(workerSid,attributeName,attributeArrayValue){
-		var workerEntity=await this.workspace.workers(workerSid).fetch();
+	async updateWorkerAddAttributeArrayValue(workerEntity,attributeName,attributeArrayValue){
 		var attributes=JSON.parse(workerEntity.attributes);
 		if (!attributes.hasOwnProperty(attributeName)){
 			if (attributeArrayValue==null){
