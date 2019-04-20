@@ -77,7 +77,7 @@ class Worker{
 
 	async updateWorkerAddAttribute(workerSid,attributeName,attributeValue){
 		var workerEntity=await this.workspace.workers(workerSid).fetch();
-		var attributes=workerEntity.attributes;
+		var attributes=JSON.parse(workerEntity.attributes);
 		attributes.doNotContact=[];
 		console.log(attributes);
 	}
