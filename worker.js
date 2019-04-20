@@ -93,7 +93,7 @@ class Worker{
 			}
 		}
 		workerEntity.update({
-			attributes:attributes
+			attributes:JSON.stringify(attributes)
 		})
 		.then(updatedWorker=>console.log(JSON.parse(updatedWorker.attributes)))
 		.catch(err=>console.log("updateWorkerAddAttributeArrayValue: error: "+err));
