@@ -75,10 +75,15 @@ class Worker{
 		return workerEntity;
 	}
 
-	async updateWorkerAddAttribute(workerSid,attributeName,attributeValue){
+	async updateWorkerAddAttributeArrayValue(workerSid,attributeName,attributeArrayValue){
 		var workerEntity=await this.workspace.workers(workerSid).fetch();
 		var attributes=JSON.parse(workerEntity.attributes);
-		attributes.doNotContact=[];
+		if (!attributes.hasOwnProperty(attributeName)){
+			attributes[attributeName]=[attributeArrayValue];
+		}
+		else{
+			attributes[attributeName].push(attributeArrayValue);
+		}
 		console.log(attributes);
 	}
 
