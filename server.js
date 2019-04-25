@@ -271,6 +271,8 @@ app.post('/conferenceEnd_timesUp',function(req,res){
 
 
 app.post('/gatherConferenceMinutes',function(req,res){
+	console.log("/gatherConferenceMinutes: req body: "+req.body);
+	
 	const response=new VoiceResponse();
 	const gather=response.gather({
 		input:'dtmf',
@@ -330,10 +332,6 @@ app.post('/voice',async function(req,res){
 		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
 		attributes=JSON.parse(workerEntity.attributes);
 		do_not_contact=attributes.do_not_contact;
-		console.log("/voice: do_not_contact for this caller: "+attributes.do_not_contact);
-		for(x=0;x<do_not_contact.length;x++){
-			console.log(do_not_contact[x]);
-		}
 		response.redirect('/gatherConferenceMinutes');
 	}
 	else{
