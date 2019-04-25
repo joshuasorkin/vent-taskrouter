@@ -328,6 +328,7 @@ app.post('/voice',async function(req,res){
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	if(contact_uriExists){
 		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
+		console.log("/voice: worker attributes for this caller: "+JSON.stringify(workerEntity.attributes));
 		response.redirect('/gatherConferenceMinutes');
 	}
 	else{
