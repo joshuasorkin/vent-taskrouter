@@ -76,6 +76,7 @@ class Worker{
 	async updateWorkerAddAttributeArrayValue(workerEntity,attributeName,attributeArrayValue){
 		var attributes=JSON.parse(workerEntity.attributes);
 		if (!attributes.hasOwnProperty(attributeName)){
+			console.log("updateWorkerAddAttributeArrayValue: new property to create: "+attributeName+": "+attributeArrayValue);
 			if (attributeArrayValue==null){
 				attributes[attributeName]=[];
 			}
@@ -84,6 +85,7 @@ class Worker{
 			}
 		}
 		else{
+			console.log("updateWorkerAddAttributeArrayValue: adding value to array property: "+attributeName+": "+attributeArrayValue);
 			if(!attributeArrayValue==null){
 				attributes[attributeName].push(attributeArrayValue);
 			}
