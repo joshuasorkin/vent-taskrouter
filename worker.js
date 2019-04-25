@@ -86,7 +86,7 @@ class Worker{
 		}
 		else{
 			console.log("updateWorkerAddAttributeArrayValue: adding value to array property: "+attributeName+": "+attributeArrayValue);
-			if(!attributeArrayValue==null){
+			if(attributeArrayValue!=null)){
 				attributes[attributeName].push(attributeArrayValue);
 			}
 		}
