@@ -331,7 +331,7 @@ app.post('/voice',async function(req,res){
 		attributesJSON=JSON.stringify(workerEntity.attributes);
 		attributes=workerEntity.attributes;
 		console.log("/voice: attributes for this caller: "+attributesJSON);
-		console.log("/voice: dnc for this caller: "+attributes.do_not_contact);
+		console.log("/voice: dnc for this caller: "+attributes["do_not_contact"]);
 		response.redirect('/gatherConferenceMinutes');
 	}
 	else{
