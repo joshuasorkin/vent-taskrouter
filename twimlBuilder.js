@@ -6,6 +6,8 @@
 require('env2')('.env');
 const VoiceResponse=require('twilio').twiml.VoiceResponse;
 const twilio=require('twilio');
+const UrlSerializer=require('./urlSerializer');
+var urlSerializer=new UrlSerializer();
 
 class TwimlBuilder{
     constructor(){
@@ -24,11 +26,13 @@ class TwimlBuilder{
 
     //add a gather input that gets a number of minutes
     //and passes them to /processGatherConferenceMinutes
-    gatherConferenceMinutes(response,minMinutes,maxMinutes){
+    gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters){
+        var url=urlSerializer.serialize('processGatherConferenceMinutes',parameters);
         const gather=response.gather({
             input:'dtmf',
             timeout:5,
-            action:'/processGatherConferenceMinutes'
+            action:url,
+            method:'GET'
         });
         this.say(gather,'How many minutes of conversation would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
         this.say(response,"I didn't receive any input.  Good-bye.");

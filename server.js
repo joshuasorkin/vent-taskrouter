@@ -268,10 +268,11 @@ app.post('/conferenceEnd_timesUp',function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/processGatherConferenceMinutes',async function(req,res){
+app.get('/processGatherConferenceMinutes',async function(req,res){
 	console.log("/processGatherConferenceMinutes: req.body: "+JSON.stringify(req.body));
-	const digits=req.body.Digits;
+	const digits=req.query.Digits;
 	const response=new VoiceResponse();
+	var parameters=urlSerializer.deserialize(req);
 	var digitsInt;
 	var valid=true;
 	if (digits.includes("*")){
@@ -291,11 +292,13 @@ app.post('/processGatherConferenceMinutes',async function(req,res){
 	}
 	if (!valid){
 		twimlBuilder.say(response,"Not a valid number of minutes.");
-		twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes);
+		twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters);
 	}
 	else{
+		do_not_contact=parameters.do_not_contact;
 		const taskJSON={
-			minutes:digitsInt
+			minutes:digitsInt,
+			do_not_contact:do_not_contact
 		}
 		response.enqueue({
 			workflowSid:workflowSid,
@@ -315,7 +318,10 @@ app.post('/voice',async function(req,res){
 		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
 		attributes=JSON.parse(workerEntity.attributes);
 		do_not_contact=attributes.do_not_contact;
-		twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes);
+		parameters={
+			do_not_contact:do_not_contact
+		}
+		twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters);
 	}
 	else{
 		twimlBuilder.say(response,"You are not recognized as an authorized user.  Good-bye.");
