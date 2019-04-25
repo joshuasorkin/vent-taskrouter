@@ -30,8 +30,8 @@ class TwimlBuilder{
             timeout:5,
             action:'/processGatherConferenceMinutes'
         });
-        twimlBuilder.say(gather,'How many minutes of conversation would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
-        twimlBuilder.say(response,"I didn't receive any input.  Good-bye.");
+        this.say(gather,'How many minutes of conversation would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
+        this.say(response,"I didn't receive any input.  Good-bye.");
     }
 
 }
