@@ -12,15 +12,15 @@ var workerObj=new Worker(clientWorkspace);
 //workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
 async function update(){
     var result;
-    clientWorkspace.workers
-    .each(worker=>{
-        result=workerObj.updateWorkerAddAttributeArrayValue(worker,"do_not_contact",null);
-    })
+    var workerEntity=await clientWorkspace.workers('WK425caf724515f59b5620fba1af1e1fd8')
+    .fetch()
+    workerObj.updateWorkerAddAttributeArrayValue(workerEntity,"do_not_contact","+19257251305");
+    });
 }
 
 
-workerObj.createWorker("abcxisiwe","zzyswiew");
-//update();
+//workerObj.createWorker("abcxisiwe","zzyswiew");
+update();
 
 //worker.addAllWorkersToDatabase();
 //workerObj.updateWorkerAddAttribute(null,null,null);

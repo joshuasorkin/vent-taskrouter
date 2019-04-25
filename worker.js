@@ -23,11 +23,6 @@ class Worker{
 						return "Worker create error: "+err.message;
 					});
 	}
-	
-	addPropertyToWorker(worker,propertyName,initialValue){
-		var attributes=worker.attributes;
-		worker.update()
-	}
 
 	addAllWorkersToDatabase(){
 		this.workspace.workers

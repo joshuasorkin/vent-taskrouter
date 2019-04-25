@@ -282,7 +282,7 @@ app.post('/gatherConferenceMinutes',function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/processGatherConferenceMinutes',function(req,res){
+app.post('/processGatherConferenceMinutes',async function(req,res){
 	const digits=req.body.Digits;
 	const response=new VoiceResponse();
 	var digitsInt;
@@ -310,8 +310,7 @@ app.post('/processGatherConferenceMinutes',function(req,res){
 	}
 	else{
 		const taskJSON={
-			minutes:digitsInt,
-			rejectedWorkers:[]
+			minutes:digitsInt
 		}
 		response.enqueue({
 			workflowSid:workflowSid,

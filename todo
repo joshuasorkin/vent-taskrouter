@@ -1,9 +1,12 @@
 high: needed for first prototype release
 
-(high)
-send confirmation message to number when user is created
-code added but still need to test
-
+(high) ability to create "do not contact" list for each user
+-will need to change caller's initial IVR endpoints from POST to GET because we'll need to pass
+ the caller's do_not_contact list to /processGatherConferenceMinutes so it can be added as a TaskAttribute
+ when the task is enqueued
+-add target worker expression to workflow configuration:
+ worker.sid not in task.do_not_contact
+ 
 (high)
 set worker to offline after they hang up
 set caller to offline after call ends
@@ -15,8 +18,6 @@ set caller to offline after call ends
 -spaces between items
 -too many items in sms command
 -how to have a space in username?  for now let's have no spaces
-
-(high) ability to create "do not connect" list for each user
 
 (high) document all configuration:
 --toroid.org git hook
@@ -142,3 +143,7 @@ the availableNotifier
 (high)
 how to treat user when no one is available
 -send notification when users are back on the system
+
+(high)
+send confirmation message to number when user is created
+code added but still need to test
