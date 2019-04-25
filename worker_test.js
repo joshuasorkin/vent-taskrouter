@@ -13,7 +13,7 @@ var workerObj=new Worker(clientWorkspace);
 async function update(){
     var result;
     var workerEntity=await clientWorkspace.workers('WK425caf724515f59b5620fba1af1e1fd8')
-    .fetch()
+    .fetch();
     workerObj.updateWorkerAddAttributeArrayValue(workerEntity,"do_not_contact","+19257251305");
 }
 

@@ -88,7 +88,7 @@ class Worker{
 				attributes[attributeName].push(attributeArrayValue);
 			}
 		}
-		console.log("updateWorkerAddAttributeArrayValue: new attributes: "+attributes);
+		console.log("updateWorkerAddAttributeArrayValue: new attributes: "+JSON.stringify(attributes));
 		workerEntity.update({
 			attributes:JSON.stringify(attributes)
 		})
