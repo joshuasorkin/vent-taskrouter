@@ -15,9 +15,10 @@ class WorkflowConfigurer{
 						"targets":[
 							{
 								"queue":queueSid,
-								"expression":"(task.caller!=worker.contact_uri) and (worker.sid NOT IN task.do_not_contact) and (worker.available == true)",
+								"expression":"(task.caller!=worker.contact_uri) and (worker.sid NOT IN task.do_not_contact)",
 								//"expression":"task.caller!=worker.contact_uri",
-								"skip_if": "workers.available == 0"
+								//"skip_if": "workers.available == 0"
+								"skip_if": "1==1"
 							},
 							{
 								"queue":automaticQueueSid
