@@ -269,7 +269,7 @@ app.post('/conferenceEnd_timesUp',function(req,res){
 });
 
 app.post('/processGatherConferenceMinutes',async function(req,res){
-	console.log("/processGatherConferenceMinutes: req.body: "+req.body);
+	console.log("/processGatherConferenceMinutes: req.body: "+JSON.stringify(req.body));
 	const digits=req.body.Digits;
 	const response=new VoiceResponse();
 	var digitsInt;
