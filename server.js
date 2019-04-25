@@ -268,23 +268,8 @@ app.post('/conferenceEnd_timesUp',function(req,res){
 	res.send(response.toString());
 });
 
-
-
-app.post('/gatherConferenceMinutes',function(req,res){
-	console.log("/gatherConferenceMinutes: req body: "+req.body);
-	
-	const response=new VoiceResponse();
-	const gather=response.gather({
-		input:'dtmf',
-		timeout:5,
-		action:'/processGatherConferenceMinutes'
-	});
-	twimlBuilder.say(gather,'How many minutes of conversation would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
-	twimlBuilder.say(response,"I didn't receive any input.  Good-bye.");
-	res.send(response.toString());
-});
-
 app.post('/processGatherConferenceMinutes',async function(req,res){
+	console.log("/processGatherConferenceMinutes: req.body: "+req.body);
 	const digits=req.body.Digits;
 	const response=new VoiceResponse();
 	var digitsInt;
@@ -307,7 +292,6 @@ app.post('/processGatherConferenceMinutes',async function(req,res){
 	if (!valid){
 		twimlBuilder.say(response,"Not a valid number of minutes.");
 		twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes);
-		//response.redirect('/gatherConferenceMinutes');
 	}
 	else{
 		const taskJSON={
@@ -332,7 +316,6 @@ app.post('/voice',async function(req,res){
 		attributes=JSON.parse(workerEntity.attributes);
 		do_not_contact=attributes.do_not_contact;
 		twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes);
-		//response.redirect('/gatherConferenceMinutes');
 	}
 	else{
 		twimlBuilder.say(response,"You are not recognized as an authorized user.  Good-bye.");
