@@ -329,7 +329,7 @@ app.post('/voice',async function(req,res){
 	if(contact_uriExists){
 		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
 		attributes=JSON.parse(workerEntity.attributes);
-		console.log("/voice: do_not_call for this caller: "+attributes.do_not_call);
+		console.log("/voice: dnc attributes for this caller: "+attributes.do_not_call);
 		response.redirect('/gatherConferenceMinutes');
 	}
 	else{
