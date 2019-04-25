@@ -332,7 +332,16 @@ app.post('/voice',async function(req,res){
 		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
 		attributes=JSON.parse(workerEntity.attributes);
 		do_not_contact=attributes.do_not_contact;
-		response.redirect('/gatherConferenceMinutes');
+		const gather=response.gather({
+			input:'dtmf',
+			timeout:5,
+			action:'/processGatherConferenceMinutes'
+		});
+		twimlBuilder.say(gather,'How many minutes of conversation would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
+		twimlBuilder.say(response,"I didn't receive any input.  Good-bye.");
+
+
+		//response.redirect('/gatherConferenceMinutes');
 	}
 	else{
 		twimlBuilder.say(response,"You are not recognized as an authorized user.  Good-bye.");
