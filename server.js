@@ -226,6 +226,7 @@ app.get('/conferenceAnnounceEnd_timeUp',function(req,res){
 
 
 app.get('/endConference_update',function(req,res){
+	console.log("/endConference_update: reached this endpoint");
 	var parameters=urlSerializer.deserialize(req);
 	var conferenceSid=parameters.conferenceSid;
 	conference.endConference_update(conferenceSid);

@@ -97,6 +97,7 @@ class Conference{
 		.update({
 			status:'completed'
 		})
+		.then(conference=>console.log("endConference_update: successfully set conference to completed"))
 		.catch(err=>console.log("endConference_update: error: "+err));
 	}
 
