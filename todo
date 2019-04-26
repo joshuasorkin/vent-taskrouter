@@ -28,6 +28,15 @@ set caller to offline after call ends
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
 (medium)
+implement control panel for conference participants that doesn't require them
+to temporarily exit conference with "*":
+-SMS (e.g. texting "exit" will remove the participant from 
+ whatever conference they're currently in and take them to an IVR menu)
+-Single page web app.  not ideal given that my Android chrome browser tends to reload pages, but we could leave cookies
+ to keep it stateful.  good for people whose mobile OS doesn't allow SMS during phone call.  at this point might as well just
+ go over to an API that's better suited for TCP/IP voice conversations (whatever Facebook is using for their phone calls) 
+
+(medium)
 enable worker to deactivate themselves
 this doesn't actually delete the worker,
 instead it sets "active:false" attribute

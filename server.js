@@ -230,7 +230,6 @@ app.get('/endConference_update',function(req,res){
 	var conferenceSid=parameters.conferenceSid;
 	conference.endConference_update(conferenceSid);
 	const response=new VoiceResponse();
-	twimlBuilder.say("Are both of you hearing this at the end of the conference?");
 	res.send(response.toString());
 });
 

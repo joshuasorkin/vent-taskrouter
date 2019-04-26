@@ -88,7 +88,10 @@ class Conference{
 		.catch(err=>console.log("endConferenceAnnounce: error updating: "+err));
 	}
 
-	endConference_update(conferenceSid){
+	async endConference_update(conferenceSid){
+		var participants=await this.client.conferences(conferenceSid).participants
+								.list();
+		participants.forEach(p => console.log("endConference_update: participant callSid: "+p.callSid));
 		console.log("endConference_update: about to update conference to completed");
 		this.client.conferences(conferenceSid)
 		.update({
