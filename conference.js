@@ -91,19 +91,8 @@ class Conference{
 	async endConference_update(conferenceSid){
 		var participants=await this.client.conferences(conferenceSid).participants
 								.list();
-		participants.forEach(p => {
-			try{
-				console.log("endConference_update: participant callSid: "+p.callSid);
-				var call=await this.client.calls(p.callSid)
-				.update({
-					method:'POST',
-					url:process.env.APP_BASE_URL+'/postConferenceIVR'
-				});
-				console.log("endConference_update: redirected call with sid "+call.sid);
-			}
-			catch(err){
-				console.log("endConference_update: error redirecting call: "+err);
-			}
+		participants.forEach(participant => {
+			postConferenceRedirect(participant);
 		});
 		console.log("endConference_update: about to update conference to completed");
 		this.client.conferences(conferenceSid)
@@ -114,6 +103,21 @@ class Conference{
 		.catch(err=>console.log("endConference_update: error: "+err));
 	}
 
+	async postConferenceRedirect(participant){
+		try{
+			console.log("endConference_update: participant callSid: "+participant.callSid);
+			var call=await this.client.calls(participant.callSid)
+			.update({
+				method:'POST',
+				url:process.env.APP_BASE_URL+'/postConferenceIVR'
+			});
+			console.log("endConference_update: redirected call with sid "+call.sid);
+		}
+		catch(err){
+			console.log("endConference_update: error redirecting call: "+err);
+		}
+
+	}
 
 
 	endConferenceTask(taskSid){
