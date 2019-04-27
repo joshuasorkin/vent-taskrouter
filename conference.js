@@ -91,7 +91,16 @@ class Conference{
 	async endConference_update(conferenceSid){
 		var participants=await this.client.conferences(conferenceSid).participants
 								.list();
-		participants.forEach(p => console.log("endConference_update: participant callSid: "+p.callSid));
+		participants.forEach(p => {
+			console.log("endConference_update: participant callSid: "+p.callSid);
+			this.client.calls(p.callSid)
+			.update({
+				method:'POST',
+				url:process.env.APP_BASE_URL+'/postConferenceIVR'
+			})
+			.then(call => console.log("endConference_update: redirected call with sid "+call.sid))
+			.catch(err=>console.log("endConference_update: error redirecting call: "+err));
+		});
 		console.log("endConference_update: about to update conference to completed");
 		this.client.conferences(conferenceSid)
 		.update({

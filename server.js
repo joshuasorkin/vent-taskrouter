@@ -225,6 +225,28 @@ app.get('/conferenceAnnounceEnd_timeUp',function(req,res){
 });
 
 
+app.post('/postConferenceIVR',function(req,res){
+	const response=new VoiceResponse();
+	var url=process.env.APP_BASE_URL+'/process_postConferenceIVR';
+	const gather=response.gather({
+		input:'dtmf',
+		timeout:5,
+		action:url,
+		method:'POST'
+  });
+	twimlBuilder.say(gather,"Would you like to be connected to this person on future calls?  Press 1 for yes, 2 for no.");
+	res.send(response.toString());
+});
+
+app.post('/process_postConferenceIVR',function(req,res){
+	const digits=req.body.Digits;
+	const response=new VoiceResponse();
+	twimlBuilder.say(response,"You pressed "+digits);
+	response.hangup();
+	res.send(response.toString());
+});
+
+
 
 
 app.get('/endConference_update',function(req,res){
@@ -233,7 +255,6 @@ app.get('/endConference_update',function(req,res){
 	var conferenceSid=parameters.conferenceSid;
 	conference.endConference_update(conferenceSid);
 	const response=new VoiceResponse();
-	twimlBuilder.say(response,"did you hear this?  it's in end conference update.");
 	res.send(response.toString());
 });
 
