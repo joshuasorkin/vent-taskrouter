@@ -233,7 +233,7 @@ app.get('/endConference_update',function(req,res){
 	var conferenceSid=parameters.conferenceSid;
 	conference.endConference_update(conferenceSid);
 	const response=new VoiceResponse();
-	twimlBuilder.say("did you hear this?  it's in end conference update.");
+	twimlBuilder.say(response,"did you hear this?  it's in end conference update.");
 	res.send(response.toString());
 });
 
