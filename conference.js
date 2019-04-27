@@ -99,7 +99,7 @@ class Conference{
 					method:'POST',
 					url:process.env.APP_BASE_URL+'/postConferenceIVR'
 				});
-				call => console.log("endConference_update: redirected call with sid "+call.sid);
+				console.log("endConference_update: redirected call with sid "+call.sid);
 			}
 			catch(err){
 				console.log("endConference_update: error redirecting call: "+err);
