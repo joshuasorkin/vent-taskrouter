@@ -409,13 +409,13 @@ app.get('/agent_answer',async function(req,res){
 		response.hangup();
 	}
 	else{
-		twimlBuilder.say(response,'Hello, thanks for answering.  You have a call from Vent, requested length '+minutes+'minutes.  Press 1 to accept, or 2 to refuse.');
 		const gather=response.gather({
 			numDigits:1,
 			action:url,
 			method:'GET',
 			timeout:5
 		});
+		twimlBuilder.say(gather,'Hello, thanks for answering.  You have a call from Vent, requested length '+minutes+'minutes.  Press 1 to accept, or 2 to refuse.');
 		response.redirect({method:'GET'},redirectUrl);
 	}
 	res.send(response.toString());
