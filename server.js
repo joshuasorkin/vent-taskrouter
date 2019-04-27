@@ -93,8 +93,10 @@ app.post('/sms',async function(req,res){
 					if(worker==null){
 						console.log("Worker is null, what's going on?");
 					}
-					workerEntity=await worker.updateWorkerActivity(req.body.From,process.env.TWILIO_IDLE_SID,false);
-					responseValue=workerEntity.friendlyName+", you are now active, receiving calls.";
+					else{
+						workerEntity=await worker.updateWorkerActivity(req.body.From,process.env.TWILIO_IDLE_SID,false);
+						responseValue=workerEntity.friendlyName+", you are now active, receiving calls.";
+					}
 				}
 				console.log(responseValue);
 			}
@@ -214,7 +216,7 @@ app.get('/conferenceAnnounceEnd_timeUp',function(req,res){
 	var parameters=urlSerializer.deserialize(req);
 	url=urlSerializer.serialize('endConference_update',parameters);
 	const response=new VoiceResponse();
-	console.log("/conferenceAnnounceEnd_participantLeave: running conferenceAnnounceEnd");
+	console.log("/conferenceAnnounceEnd_timeUp: running conferenceAnnounceEnd");
 	twimlBuilder.say(response,'Time\'s up.  Thanks for participating.  I\'ll end the conference now.');
 	response.redirect({
 		method:'GET'
@@ -231,6 +233,7 @@ app.get('/endConference_update',function(req,res){
 	var conferenceSid=parameters.conferenceSid;
 	conference.endConference_update(conferenceSid);
 	const response=new VoiceResponse();
+	twimlBuilder.say("did you hear this?  it's in end conference update.");
 	res.send(response.toString());
 });
 
