@@ -126,7 +126,7 @@ class Conference{
 					workerSid:workerSid,
 					otherParticipantWorkerSid:otherParticipantWorkerSid
 				}
-				var url=urlSerializer.serialize('postConferenceIVR',parameters);
+				var url=this.urlSerializer.serialize('postConferenceIVR',parameters);
 				var call=await this.client.calls(participant.callSid)
 				.update({
 					method:'GET',
