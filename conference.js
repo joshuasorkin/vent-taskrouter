@@ -91,7 +91,7 @@ class Conference{
 	async endConference_update(conferenceSid){
 		var participants=await this.client.conferences(conferenceSid).participants
 								.list();
-		var redirectResult=await postConferenceRedirectAll(participants);
+		var redirectResult=await this.postConferenceRedirectAll(participants);
 		console.log("endConference_update: about to update conference to completed");
 		this.client.conferences(conferenceSid)
 		.update({
@@ -103,7 +103,7 @@ class Conference{
 
 	async postConferenceRedirectAll(participants){
 		for(index=0;index<participants.length;index++){
-			var call=await postConferenceRedirect(participants[index]);
+			var call=await this.postConferenceRedirect(participants[index]);
 		}
 	}
 

@@ -11,6 +11,13 @@ high: needed for first prototype release
 set worker to offline after they hang up
 set caller to offline after call ends
 
+(high)
+add SMS commands:
+-"systemstatus" command that returns the following:
+ "There are [number] available listeners waiting for your call."
+-"help"
+ lists each command and its syntax
+
 
 (high) get domain so test users can see whether server is up
 
