@@ -115,18 +115,6 @@ class Database{
 								"values(?,?,?)",{
 									replacements:[workerSid,callSid,conferenceSid],
 									type:sequelize.QueryTypes.INSERT
-								})
-								.then(result=>{
-									if(result==",1"){
-										return null;
-									}
-									else{
-										return result;
-									}
-								})
-								.catch(err=>{
-									console.log("insertConferenceParticipant: error: "+err);
-									throw(err);
 								});
 
 	}

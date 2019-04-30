@@ -480,8 +480,12 @@ app.get('/conferenceEvents',async function(req,res){
 			break;
 		case "participant-join":
 			//todo:add participant's callSid and workerSid to conference_participant
+			var callSid=req.query.callSid;
+			console.log("/conferenceEvents: callSid: "+callSid);
+			var workerSid=await worker.getWorkerSidFromCallSid(callSid);
+			console.log("/conferenceEvents: workerSid: "+workerSid);
+			var insertResult=await conference.insertConferenceParticipant(workerSid,callSid,conferenceSid);
 			break;
-
 		case "participant-leave":
 			console.log("/conferenceEvents: now ending conference, starting with endConferenceAnnounce...");
 			
@@ -614,7 +618,14 @@ app.post('/assignment', async function (req, res) {
 				from: process.env.TWILIO_PHONE_NUMBER,
 				method: 'GET'
 				
-			}).then(call=>console.log("/assignment: logging return value of client calls create, 'to' value "+call.to));
+			}).then(call=>{
+				console.log("/assignment: logging return value of client calls create, 'to' value "+call.to);
+				var outboundCallSid=call.sid;
+				var result=await worker.insertCallSidWorkerSid(outboundCallSid,workerSid);
+				if (result!=null){
+					console.log("/voice: insertCallSidWorkerSid failed: "+result);
+				}
+			});
 			break;
 		case process.env.TWILIO_TASKQUEUE_AUTOMATIC_SID:
 			clientWorkspace

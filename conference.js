@@ -143,6 +143,22 @@ class Conference{
 			.catch(err=>console.log("conference task update error: "+err));
 	}
 
+	async insertConferenceParticipant(workerSid,callSid,conferenceSid){
+		try{
+			var result=await database.insertConferenceParticipant(workerSid,callSid,conferenceSid);
+			if(result==",1"){
+				return null;
+			}
+			else{
+				return result;
+			}
+		}
+		catch(err){
+			console.log("insertConferenceParticipant: error: "+err);
+			throw(err);
+		}
+	}
+
 
 	
 }
