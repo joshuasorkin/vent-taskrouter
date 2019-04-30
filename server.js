@@ -613,20 +613,25 @@ app.post('/assignment', async function (req, res) {
 
 	switch(taskQueueSid){
 		case process.env.TWILIO_TASKQUEUE_SID:
-			var call=client.calls.create({
-				url:url,
-				to: contact_uri,
-				from: process.env.TWILIO_PHONE_NUMBER,
-				method: 'GET'
-				
-			}).then(call=>{
+			var call;
+			try{
+				var call=await client.calls.create({
+					url:url,
+					to: contact_uri,
+					from: process.env.TWILIO_PHONE_NUMBER,
+					method: 'GET'
+				});
 				console.log("/assignment: logging return value of client calls create, 'to' value "+call.to);
 				var outboundCallSid=call.sid;
 				var result=await worker.insertCallSidWorkerSid(outboundCallSid,workerSid);
 				if (result!=null){
 					console.log("/voice: insertCallSidWorkerSid failed: "+result);
 				}
-			});
+			}
+			catch(err){
+				console.log(err);
+				throw(err);
+			}
 			break;
 		case process.env.TWILIO_TASKQUEUE_AUTOMATIC_SID:
 			clientWorkspace
