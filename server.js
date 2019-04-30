@@ -253,12 +253,7 @@ app.get('/process_postConferenceIVR',async function(req,res){
 			twimlBuilder.say(response,"I'm sorry you didn't enjoy your conversation.  I'll make sure "+
 																	"you're not connected to them on any future calls.  Good-bye.");
 			response.hangup();
-			var workerEntity=await clientWorkspace
-															.workers(parameters.workerSid)
-															.fetch();
-			
-			var result=await worker.updateWorkerAddAttributeArrayValue(workerEntity,"do_not_contact",
-																								parameters.otherParticipantWorkerSid);
+			worker.addBothToDoNotContact(parameters.workerSid,parameters.otherParticipantWorkerSid);
 			break;
 		default:
 			var url=urlSerializer.serialize('postConferenceIVR',parameters);

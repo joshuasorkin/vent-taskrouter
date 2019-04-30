@@ -87,7 +87,9 @@ class Worker{
 		else{
 			console.log("updateWorkerAddAttributeArrayValue: adding value to array property: "+attributeName+": "+attributeArrayValue);
 			if(attributeArrayValue!=null){
-				attributes[attributeName].push(attributeArrayValue);
+				if(!attributes.includes(attributeArrayValue)){
+					attributes[attributeName].push(attributeArrayValue);
+				}
 			}
 		}
 		console.log("updateWorkerAddAttributeArrayValue: new attributes: "+JSON.stringify(attributes));
@@ -210,6 +212,20 @@ class Worker{
 			return result;
 		}
 
+	}
+
+	async addToDoNotContact(workerSid,otherWorkerSid){
+		var workerEntity=await this.workspace
+								.workers(workerSid)
+								.fetch();
+		var result=await this.updateWorkerAddAttributeArrayValue(
+							workerEntity,"do_not_contact",
+							otherWorkerSid);
+	}
+
+	addBothToDoNotContact(workerSid,otherWorkerSid){
+		this.addToDoNotContact(workerSid,otherWorkerSid);
+		this.addToDoNotContact(otherWorkerSid,workerSid);
 	}
 	
 }
