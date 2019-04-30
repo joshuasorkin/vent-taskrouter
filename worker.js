@@ -201,7 +201,7 @@ class Worker{
 	async getWorkerSidFromCallSid(callSid){
 		var result=await database.getWorkerSidFromCallSid(callSid);
 		if (result==null){
-			throw("getWorkerSidFromCallSid: callSid "+callsid+" not found in callsid_workersid");
+			throw("getWorkerSidFromCallSid: callSid "+callSid+" not found in callsid_workersid");
 		}
 		else{
 			return result;
