@@ -91,9 +91,7 @@ class Conference{
 	async endConference_update(conferenceSid){
 		var participants=await this.client.conferences(conferenceSid).participants
 								.list();
-		participants.forEach(participant => {
-			postConferenceRedirect(participant);
-		});
+		var redirectResult=await postConferenceRedirectAll(participants);
 		console.log("endConference_update: about to update conference to completed");
 		this.client.conferences(conferenceSid)
 		.update({
@@ -101,6 +99,12 @@ class Conference{
 		})
 		.then(conference=>console.log("endConference_update: successfully set conference to completed"))
 		.catch(err=>console.log("endConference_update: error: "+err));
+	}
+
+	async postConferenceRedirectAll(participants){
+		for(index=0;index<participants.length;index++){
+			var call=await postConferenceRedirect(participants[index]);
+		}
 	}
 
 	async postConferenceRedirect(participant){
@@ -112,9 +116,11 @@ class Conference{
 				url:process.env.APP_BASE_URL+'/postConferenceIVR'
 			});
 			console.log("endConference_update: redirected call with sid "+call.sid);
+			return call;
 		}
 		catch(err){
 			console.log("endConference_update: error redirecting call: "+err);
+			return null;
 		}
 
 	}
