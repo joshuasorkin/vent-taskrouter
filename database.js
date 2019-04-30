@@ -131,6 +131,16 @@ class Database{
 
 	}
 
+	insertCallSidWorkerSid(callSid,workerSid){
+		console.log("insertCallSidWorkerSid");
+		return sequelize.query("insert into callsid_workersid (callsid,workersid) "+
+								"values(?,?)",{
+									replacements:[callSid,workerSid],
+									type:sequelize.QueryTypes.INSERT
+								});
+								
+	}
+
 	async updateNotificationToSent(workerSid){
 		var id=await this.getWorkerIdFromSid(workerSid);
 		if (id==null){

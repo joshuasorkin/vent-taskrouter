@@ -338,6 +338,7 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 app.post('/voice',async function(req,res){
 	const fromNumber=req.body.From;
 	const response=new VoiceResponse();
+	const callSid=req.body.sid;
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	if(contact_uriExists){
 		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
@@ -580,6 +581,7 @@ app.post('/assignment', async function (req, res) {
 	TaskAttributes=JSON.parse(req.body.TaskAttributes);
 	callSid=TaskAttributes.call_sid;
 	fromNumber=TaskAttributes.from;
+	callerWorkerSid=TaskAttributes.callerWorkerSid;
 	minutes=TaskAttributes.minutes;
 	console.log("call sid: "+callSid);
 	reservationSid=req.body.ReservationSid;
@@ -595,7 +597,8 @@ app.post('/assignment', async function (req, res) {
 		workerSid:workerSid,
 		taskQueueSid:taskQueueSid,
 		minutes:minutes,
-		fromNumber:fromNumber
+		fromNumber:fromNumber,
+		callerWorkerSid:callerWorkerSid
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 

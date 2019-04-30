@@ -10,6 +10,10 @@ clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 var workerObj=new Worker(clientWorkspace);
 var args=process.argv.slice(2);
 var workerSid=args[0];
+var result=workerObj.insertCallSidWorkerSid(workerSid,"callSid1234");
+console.log("result: "+result);
+console.log("this happens after the result.");
+
 
 //workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
 async function update(workerSid){
@@ -22,7 +26,7 @@ async function update(workerSid){
 
 
 //workerObj.createWorker("abcxisiwe","zzyswiew");
-update(workerSid);
+//update(workerSid);
 
 //worker.addAllWorkersToDatabase();
 //workerObj.updateWorkerAddAttribute(null,null,null);

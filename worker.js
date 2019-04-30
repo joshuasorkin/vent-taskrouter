@@ -180,6 +180,23 @@ class Worker{
 		console.log("workerSid!=null: "+(workerSid!=null));
 		return (workerSid!=null);
 	}
+
+	async insertCallSidWorkerSid(callSid,workerSid){
+		var result;
+		try{
+			result=await database.insertCallSidWorkerSid(callSid,workerSid);
+			if(result==",1"){
+				return null;
+			}
+			else{
+				return result;
+			}
+		}
+		catch(err){
+			console.log("insertCallSidWorkerSid: error: "+err);
+			throw(err);
+		}
+	}
 	
 }
 
