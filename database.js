@@ -173,6 +173,23 @@ class Database{
 		.catch(err=>console.log("iterateThroughUnsentNotificationsForMessaging: error: "+err));
 	}
 
+	async getWorkerSidFromCallSid(callSid){
+		var selectResult=await sequelize.query("select * from callsid_workersid where callsid=?",{
+			replacements:[callSid], 
+			type: sequelize.QueryTypes.SELECT
+		});
+		console.log("getWorkerSidFromCallSid: selectResult: "+JSON.stringify(selectResult));
+		if (selectResult.length==0){
+			return null;
+		}
+		else{
+			console.log("getCallSidFromWorkerSid: selectResult[0]: "+selectResult[0]);
+			var workerSid=selectResult[0].workersid;
+			console.log("getWorkerIdFromSid: id is "+workerSid);
+			return workerSid;
+		}
+	}
+
 	
 	                                                           
 }

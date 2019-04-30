@@ -197,6 +197,17 @@ class Worker{
 			throw(err);
 		}
 	}
+
+	async getWorkerSidFromCallSid(callSid){
+		var result=await database.getWorkerSidFromCallSid(callSid);
+		if (result==null){
+			throw("getWorkerSidFromCallSid: callSid "+callsid+" not found in callsid_workersid");
+		}
+		else{
+			return result;
+		}
+
+	}
 	
 }
 

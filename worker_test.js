@@ -12,13 +12,22 @@ var args=process.argv.slice(2);
 var workerSid=args[0];
 
 
+
+async function select(callSid){
+    var result=await workerObj.getWorkerSidFromCallSid(callSid);
+    console.log(result);
+}
+
+select("12345");
+select("laksjdfl;kasdfj");
+
 async function insert(callSid,workerSid){
     var result=await workerObj.insertCallSidWorkerSid(callSid,workerSid);
     console.log("result: "+result);
     console.log("this happens after the result.");
 }
 
-insert("callsidXIOSFDI",workerSid);
+//insert("callsidXIOSFDI",workerSid);
 
 //workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
 async function update(workerSid){
