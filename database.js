@@ -183,9 +183,9 @@ class Database{
 			return null;
 		}
 		else{
-			console.log("getCallSidFromWorkerSid: selectResult[0]: "+selectResult[0]);
+			console.log("getWorkerSidFromCallSid: selectResult[0]: "+selectResult[0]);
 			var workerSid=selectResult[0].workersid;
-			console.log("getWorkerIdFromSid: id is "+workerSid);
+			console.log("getWorkerIdFromCallSid: id is "+workerSid);
 			return workerSid;
 		}
 	}
