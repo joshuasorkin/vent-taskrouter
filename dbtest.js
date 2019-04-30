@@ -3,6 +3,15 @@ require('env2')('.env');
 
 
 var db=new Database();
+var args=process.argv.slice(2);
+var workerSid=args[0];
+
+async function insert(){
+	var result=await db.insertConferenceParticipant(workerSid,"callSid101","conferenceSid12345");
+	return result;
+}
+
+console.log(insert());
 /*
 worker={
 	contact_uri:'+15105753138',
@@ -13,12 +22,12 @@ db.getWorkerSid(worker.contact_uri)
 */
 
 //db.updateWorkerContact_uri("+15105753139","+15105753138")
-
+/*
 function show(contact_uri){
 	console.log("contact_uri is: "+contact_uri);
 }
 db.iterateThroughUnsentNotificationsForMessaging(show);
-
+*/
 
 /*
 db.updateNotificationToSent("WK425caf724515f59b5620fba1af1e1fd8")

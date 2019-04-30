@@ -109,6 +109,28 @@ class Database{
 				});
 	}
 
+	insertConferenceParticipant(workerSid,callSid,conferenceSid){
+		console.log("insertConferenceParticipant");
+		return sequelize.query("insert into conference_participant (workerSid,callSid,conferenceSid) "+
+								"values(?,?,?)",{
+									replacements:[workerSid,callSid,conferenceSid],
+									type:sequelize.QueryTypes.INSERT
+								})
+								.then(result=>{
+									if(result==",1"){
+										return null;
+									}
+									else{
+										return result;
+									}
+								})
+								.catch(err=>{
+									console.log("insertConferenceParticipant: error: "+err);
+									throw(err);
+								});
+
+	}
+
 	async updateNotificationToSent(workerSid){
 		var id=await this.getWorkerIdFromSid(workerSid);
 		if (id==null){

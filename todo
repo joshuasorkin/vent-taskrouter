@@ -64,7 +64,8 @@ e.g. "abc" would be
 =19765067212828824
 
 (medium)
-save state so that when/if server reboots, can immediately pick up without 
+continuously update state in database so that when/if server reboots, in-progress conversations remain uninterrupted
+
 (medium)
 change voice to something warmer
 
@@ -92,6 +93,16 @@ how do I add an alias?  can I write to .bashrc?
 and have workflow order by this number
 
 (medium) use md5 hash to check password, no plaintext
+
+(medium)
+chat coaching:
+conversation expert is in coaching mode, so that as the conversation progresses,
+they can give advice.  if this is happening in the for-pay model where the caller is paying
+the receiver, maybe a fraction of the payment goes to the expert
+
+(medium)
+if both caller and receiver opt in, they can connect their call to a third participant,
+and then if all three opt in, they can add a fourth, and so on...
 
 
 ---done---
