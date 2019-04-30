@@ -1,6 +1,7 @@
 const UrlSerializer=require('./urlSerializer');
 const VoiceResponse=require('twilio').twiml.VoiceResponse;
 const TwimlBuilder=require('./twimlBuilder');
+const Database=require('./database');
 require('env2')('.env');
 
 class Conference{
@@ -10,6 +11,7 @@ class Conference{
 		this.workspace=workspace;
 		this.urlSerializer=new UrlSerializer();
 		this.twimlBuilder=new TwimlBuilder();
+		this.database=new Database();
 	}
 	generateConference(parameters,initialSay){
 		var response=new VoiceResponse();

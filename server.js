@@ -327,7 +327,7 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 		}
 		response.enqueue({
 			workflowSid:workflowSid,
-
+			callerWorkerSid:parameters.workerSid,
 			waitUrl:'/wait'
 		})
 		.task({},JSON.stringify(taskJSON));
@@ -341,10 +341,13 @@ app.post('/voice',async function(req,res){
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	if(contact_uriExists){
 		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
+		console.log("/voice: worker's sid is "+workerEntity.sid);
+		workerSid=workerEntity.sid;
 		attributes=JSON.parse(workerEntity.attributes);
 		do_not_contact=attributes.do_not_contact;
 		parameters={
-			do_not_contact:do_not_contact
+			do_not_contact:do_not_contact,
+			workerSid:workerSid
 		}
 		twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters);
 	}
@@ -470,6 +473,10 @@ app.get('/conferenceEvents',async function(req,res){
 				conference.setTimedAnnounce(initialMinutes,initialMinutes-1,conferenceSid);
 			}
 			break;
+		case "participant-join":
+			//todo:add participant's callSid and workerSid to conference_participant
+			break;
+
 		case "participant-leave":
 			console.log("/conferenceEvents: now ending conference, starting with endConferenceAnnounce...");
 			
