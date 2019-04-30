@@ -188,7 +188,7 @@ class Database{
 													replacements:[conferenceSid,callSid],
 													type:sequelize.QueryTypes.SELECT
 												});
-		console.log("getOtherParticipants: selectResult: "+JSON.stringify(selectResult));
+		console.log("getOtherParticipantWorkerSid: selectResult: "+JSON.stringify(selectResult));
 		if (selectResult.length==0){
 			return null;
 		}
@@ -198,12 +198,12 @@ class Database{
 			var result=[];
 			var index;
 			for(index=0;index<result.length;index++){
-				result.push(selectResult[index].workerSid);
+				result.push(selectResult[index].workersid);
 			}
 			return result;
 		}
 		else{
-			return selectResult[0].workerSid;
+			return selectResult[0].workersid;
 		}
 	}
 
