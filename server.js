@@ -240,7 +240,7 @@ app.get('/postConferenceIVR',function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/process_postConferenceIVR',function(req,res){
+app.get('/process_postConferenceIVR',async function(req,res){
 	var parameters=urlSerializer.deserialize(req);
 	const digits=req.query.Digits;
 	const response=new VoiceResponse();
@@ -261,7 +261,7 @@ app.get('/process_postConferenceIVR',function(req,res){
 																								parameters.otherParticipantWorkerSid);
 			break;
 		default:
-			var url=urlSerializer.serialize('process_postConferenceIVR',parameters);
+			var url=urlSerializer.serialize('postConferenceIVR',parameters);
 			response.redirect({method:'GET'},url);
 	}
 	
