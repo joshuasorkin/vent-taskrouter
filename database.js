@@ -178,6 +178,35 @@ class Database{
 		}
 	}
 
+	//returns other participant's workerSid,
+	//or array of workerSids for multiple participants
+	//eventually it should just have a single return type of array
+	async getOtherParticipantWorkerSid(conferenceSid,callSid){
+		var selectResult=await sequelize.query("select * from conference_participant "+
+												"where conferenceSid=? and "+
+												"callSid!=?",{
+													replacements:[conferenceSid,callSid],
+													type:sequelize.QueryTypes.SELECT
+												});
+		console.log("getOtherParticipants: selectResult: "+JSON.stringify(selectResult));
+		if (selectResult.length==0){
+			return null;
+		}
+		//todo: this will be if we ever have more than two participants in conference
+		//for now it's YAGNI but might as well leave it in here
+		else if(selectResult.length>1){
+			var result=[];
+			var index;
+			for(index=0;index<result.length;index++){
+				result.push(selectResult[index].workerSid);
+			}
+			return result;
+		}
+		else{
+			return selectResult[0].workerSid;
+		}
+	}
+
 	
 	                                                           
 }

@@ -98,7 +98,10 @@ class Worker{
 			console.log(updatedWorker.friendlyName);
 			console.log(JSON.parse(updatedWorker.attributes));
 		})
-		.catch(err=>console.log("updateWorkerAddAttributeArrayValue: error: "+err));
+		.catch(err=>{
+			console.log("updateWorkerAddAttributeArrayValue: error: "+err);
+			throw(err);
+		});
 	}
 
 	async updateWorkerActivityFromSid(workerSid,activitySid,rejectPendingReservations){

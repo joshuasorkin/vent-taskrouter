@@ -112,15 +112,32 @@ class Conference{
 
 	async postConferenceRedirect(participant){
 		try{
-			console.log("endConference_update: participant callSid: "+participant.callSid);
-			var call=await this.client.calls(participant.callSid)
-			.update({
-				method:'POST',
-				url:process.env.APP_BASE_URL+'/postConferenceIVR'
-			});
-			console.log("endConference_update: redirected call with sid "+call.sid);
-			return call;
+			console.log("postConferenceRedirect: participant callSid: "+participant.callSid);
+			console.log("postConferenceRedirect: conferenceSid: "+participant.conferenceSid);
+			var otherParticipantWorkerSid=await this.database
+												.getOtherParticipantWorkerSid(participant.conferenceSid,
+												participant.callSid);
+			if(otherParticipantWorkerSid!=null){
+				//code in this if-block for transferring participant to do_not_contact option
+				//it is only necessary if they ended up in conference with a receiver
+				//and if nobody accepted then otherParticipantWorkerSid will be null
+				var workerSid=await this.database.getWorkerSidFromCallSid(participant.callSid);
+				var parameters={
+					workerSid:workerSid,
+					otherParticipantWorkerSid:otherParticipantWorkerSid
+				}
+				var url=urlSerializer.serialize('postConferenceIVR',parameters);
+				var call=await this.client.calls(participant.callSid)
+				.update({
+					method:'GET',
+					url:url
+				});
+				console.log("endConference_update: redirected call with sid "+call.sid);
+				return call;
+			}
 		}
+		//maybe I should refactor this so that the redirect happens in its own function with
+		//its own try-catch block
 		catch(err){
 			console.log("endConference_update: error redirecting call: "+err);
 			return null;

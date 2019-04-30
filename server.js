@@ -225,24 +225,46 @@ app.get('/conferenceAnnounceEnd_timeUp',function(req,res){
 });
 
 
-app.post('/postConferenceIVR',function(req,res){
+app.get('/postConferenceIVR',function(req,res){
+	var parameters=urlSerializer.deserialize(req);
 	const response=new VoiceResponse();
-	var url=process.env.APP_BASE_URL+'/process_postConferenceIVR';
+
+	var url=urlSerializer.serialize('process_postConferenceIVR',parameters);
 	const gather=response.gather({
 		input:'dtmf',
 		timeout:5,
 		action:url,
-		method:'POST'
+		method:'GET'
   });
 	twimlBuilder.say(gather,"Would you like to be connected to this person on future calls?  Press 1 for yes, 2 for no.");
 	res.send(response.toString());
 });
 
-app.post('/process_postConferenceIVR',function(req,res){
-	const digits=req.body.Digits;
+app.get('/process_postConferenceIVR',function(req,res){
+	var parameters=urlSerializer.deserialize(req);
+	const digits=req.query.Digits;
 	const response=new VoiceResponse();
-	twimlBuilder.say(response,"You pressed "+digits);
-	response.hangup();
+	switch(digits){
+		case '1':
+			twimlBuilder.say(response,"I'm glad you enjoyed your conversation.  Good-bye.");
+			response.hangup;
+			break;
+		case '2':
+			twimlBuilder.say(response,"I'm sorry you didn't enjoy your conversation.  I'll make sure "+
+																	"you're not connected to them on any future calls.  Good-bye.");
+			response.hangup();
+			var workerEntity=await clientWorkspace
+															.workers(parameters.workerSid)
+															.fetch();
+			
+			var result=await worker.updateWorkerAddAttributeArrayValue(workerEntity,"do_not_contact",
+																								parameters.otherParticipantWorkerSid);
+			break;
+		default:
+			var url=urlSerializer.serialize('process_postConferenceIVR',parameters);
+			response.redirect({method:'GET'},url);
+	}
+	
 	res.send(response.toString());
 });
 
