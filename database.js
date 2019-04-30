@@ -185,7 +185,7 @@ class Database{
 		else{
 			console.log("getWorkerSidFromCallSid: selectResult[0]: "+selectResult[0]);
 			var workerSid=selectResult[0].workersid;
-			console.log("getWorkerIdFromCallSid: id is "+workerSid);
+			console.log("getWorkerSidFromCallSid: id is "+workerSid);
 			return workerSid;
 		}
 	}
