@@ -102,6 +102,7 @@ class Conference{
 	}
 
 	async postConferenceRedirectAll(participants){
+		var index;
 		for(index=0;index<participants.length;index++){
 			var call=await this.postConferenceRedirect(participants[index]);
 		}
