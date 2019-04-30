@@ -481,7 +481,7 @@ app.get('/conferenceEvents',async function(req,res){
 			break;
 		case "participant-join":
 			//todo:add participant's callSid and workerSid to conference_participant
-			var callSid=req.query.callSid;
+			var callSid=req.query.CallSid;
 			console.log("/conferenceEvents: callSid: "+callSid);
 			var workerSid=await worker.getWorkerSidFromCallSid(callSid);
 			console.log("/conferenceEvents: workerSid: "+workerSid);
