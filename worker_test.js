@@ -10,7 +10,7 @@ clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 var workerObj=new Worker(clientWorkspace);
 var args=process.argv.slice(2);
 var workerSid=args[0];
-var result=workerObj.insertCallSidWorkerSid(workerSid,"callSid1234");
+var result=workerObj.insertCallSidWorkerSid("callSid1234",workerSid);
 console.log("result: "+result);
 console.log("this happens after the result.");
 
