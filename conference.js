@@ -145,7 +145,7 @@ class Conference{
 
 	async insertConferenceParticipant(workerSid,callSid,conferenceSid){
 		try{
-			var result=await database.insertConferenceParticipant(workerSid,callSid,conferenceSid);
+			var result=await this.database.insertConferenceParticipant(workerSid,callSid,conferenceSid);
 			if(result==",1"){
 				return null;
 			}
