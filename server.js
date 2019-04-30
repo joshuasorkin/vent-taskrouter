@@ -338,7 +338,8 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 app.post('/voice',async function(req,res){
 	const fromNumber=req.body.From;
 	const response=new VoiceResponse();
-	const callSid=req.body.sid;
+	const callSid=req.body.CallSid;
+	console.log("/voice: callSid: "+callSid);
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	if(contact_uriExists){
 		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
