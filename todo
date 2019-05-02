@@ -1,12 +1,10 @@
 high: needed for first prototype release
-
-(high) ability to create "do not contact" list for each user
--will need to change caller's initial IVR endpoints from POST to GET because we'll need to pass
- the caller's do_not_contact list to /processGatherConferenceMinutes so it can be added as a TaskAttribute
- when the task is enqueued
--add target worker expression to workflow configuration:
- worker.sid not in task.do_not_contact
  
+(high)
+is there a way to avoid that initial "please wait..." before jumping to
+"no one is available"?  maybe the "please wait..." should be an interrupt to the caller's callSid
+right before generating each outbound call, saying "please wait, we are now calling a potential receiver"
+
 (high)
 set worker to offline after they hang up
 set caller to offline after call ends
@@ -174,3 +172,10 @@ how to treat user when no one is available
 (high)
 send confirmation message to number when user is created
 code added but still need to test
+
+(high) ability to create "do not contact" list for each user
+-will need to change caller's initial IVR endpoints from POST to GET because we'll need to pass
+ the caller's do_not_contact list to /processGatherConferenceMinutes so it can be added as a TaskAttribute
+ when the task is enqueued
+-add target worker expression to workflow configuration:
+ worker.sid not in task.do_not_contact

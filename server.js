@@ -352,6 +352,11 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 	res.send(response.toString());
 });
 
+app.post('/redirectToWait',function(req,res){
+	response=new VoiceResponse();
+	twimlBuilder.say(response,"Now contacting a potential receiver.");
+});
+
 app.post('/voice',async function(req,res){
 	const fromNumber=req.body.From;
 	const response=new VoiceResponse();
@@ -388,6 +393,7 @@ app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
 	var word=textsplitter.randomSentenceFromFiletextArray();
 	twimlBuilder.say(response,word);
+	response.play(process.env.APP_BASE_URL+'/marker_sound.mp3');
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 })
