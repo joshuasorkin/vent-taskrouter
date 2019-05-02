@@ -393,7 +393,7 @@ app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
 	var word=textsplitter.randomSentenceFromFiletextArray();
 	twimlBuilder.say(response,word);
-	response.play(process.env.APP_BASE_URL+'/marker_sound.mp3');
+	response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 })
