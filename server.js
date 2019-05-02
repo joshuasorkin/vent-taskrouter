@@ -354,7 +354,10 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 
 app.post('/redirectToWait',function(req,res){
 	response=new VoiceResponse();
-	twimlBuilder.say(response,"Now contacting a potential receiver.");
+	twimlBuilder.say(response,"Now contacting a potential receiver.  Please continue to wait.");
+	response.play(process.env.WAIT_URL);
+	response.redirect('/randomWordLoop');
+	res.send(response.toString());
 });
 
 app.post('/voice',async function(req,res){
@@ -393,7 +396,7 @@ app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
 	var word=textsplitter.randomSentenceFromFiletextArray();
 	twimlBuilder.say(response,word);
-	response.play(process.env.WAIT_URL);
+	//response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 })
@@ -401,7 +404,7 @@ app.post('/randomWordLoop',function(req,res){
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
 	twimlBuilder.say(response,'Please wait while I find a receiver.  In the meantime you will hear randomly selected text.');
-	//response.play(process.env.WAIT_URL);
+	response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 });
@@ -638,6 +641,11 @@ app.post('/assignment', async function (req, res) {
 		case process.env.TWILIO_TASKQUEUE_SID:
 			var call;
 			try{
+				var notifyCaller=client.calls(parameters.callSid).update({
+					method:'POST',
+					url:'/redirectToWait'
+				});
+
 				var call=await client.calls.create({
 					url:url,
 					to: contact_uri,
@@ -694,6 +702,7 @@ app.get('/automatic',async function(req,res){
 	var response=new VoiceResponse();
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
 	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  I will notify you by text message when a receiver becomes available.  You will now hear random text until you hang up.");
+	response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop')
 	workerSid=await worker.getWorkerSid(parameters.fromNumber);
 	console.log("/automatic: workerSid: "+workerSid);
