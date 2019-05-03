@@ -641,6 +641,7 @@ app.post('/assignment', async function (req, res) {
 		case process.env.TWILIO_TASKQUEUE_SID:
 			var call;
 			try{
+				console.log("/assignment: now redirecting caller with wait notification");
 				var notifyCaller=client.calls(parameters.callSid).update({
 					method:'POST',
 					url:'/redirectToWait'
