@@ -644,7 +644,7 @@ app.post('/assignment', async function (req, res) {
 				console.log("/assignment: now redirecting caller with wait notification");
 				var notifyCaller=client.calls(parameters.callSid).update({
 					method:'POST',
-					url:'/redirectToWait'
+					url:process.env.APP_BASE_URL+'/redirectToWait'
 				})
 				.then(call=>{
 					console.log("/assignment: call redirected: call.sid "+call.sid);
