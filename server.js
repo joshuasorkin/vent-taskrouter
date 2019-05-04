@@ -290,26 +290,6 @@ app.get('/conferenceAnnounceTime',function(req,res){
 	res.send(response.toString());
 });
 
-
-//does this actually get called anywhere?
-app.post('/conferenceEnd_timesUp',function(req,res){
-	const response=new VoiceResponse();
-	twimlBuilder.say(response,"Time's up!  Thanks for participating.  Good-bye!");
-	response.hangup();
-
-	clientWorkspace
-	.tasks(parameters.taskSid)
-	.update({
-		assignmentStatus:'completed'
-	})
-	.then(task=>{
-		console.log("task status: "+task.assignmentStatus);
-	})
-	.catch(err=>console.log("/conferenceEnd_timesUp: update task to completed: error: "+err));
-
-	res.send(response.toString());
-});
-
 app.get('/processGatherConferenceMinutes',async function(req,res){
 	console.log("/processGatherConferenceMinutes: req.body: "+JSON.stringify(req.body));
 	const digits=req.query.Digits;
