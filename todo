@@ -3,11 +3,13 @@ high: needed for first prototype release
 (high)
 is there a way to avoid that initial "please wait..." before jumping to
 "no one is available"?  maybe the "please wait..." should be an interrupt to the caller's callSid
-right before generating each outbound call, saying "please wait, we are now calling a potential receiver"
+
 
 (high)
-set worker to offline after they hang up
-set caller to offline after call ends
+set worker to offline after they hang up, with an indicating SMS
+set caller to offline after call ends, with an indicating SMS
+
+(high)
 
 (high)
 add SMS commands:
@@ -179,3 +181,6 @@ code added but still need to test
  when the task is enqueued
 -add target worker expression to workflow configuration:
  worker.sid not in task.do_not_contact
+
+ (high)
+ right before generating each outbound call, saying "please wait, we are now calling a potential receiver"

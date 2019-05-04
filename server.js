@@ -322,6 +322,8 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 			minutes:digitsInt,
 			do_not_contact:do_not_contact
 		}
+		twimlBuilder.say(response,'Thank you.  While I find a receiver, you will hear randomly selected text.');
+		response.play(process.env.WAIT_URL);
 		response.enqueue({
 			workflowSid:workflowSid,
 			callerWorkerSid:parameters.workerSid,
@@ -334,6 +336,7 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 
 app.post('/redirectToWait',function(req,res){
 	response=new VoiceResponse();
+
 	twimlBuilder.say(response,"Now contacting a potential receiver.  Please continue to wait.");
 	response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
@@ -383,8 +386,8 @@ app.post('/randomWordLoop',function(req,res){
 
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
-	twimlBuilder.say(response,'Please wait while I find a receiver.  In the meantime you will hear randomly selected text.');
-	response.play(process.env.WAIT_URL);
+	//twimlBuilder.say(response,'Please wait while I find a receiver.  In the meantime you will hear randomly selected text.');
+	//response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 });
