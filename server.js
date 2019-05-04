@@ -645,6 +645,12 @@ app.post('/assignment', async function (req, res) {
 				var notifyCaller=client.calls(parameters.callSid).update({
 					method:'POST',
 					url:'/redirectToWait'
+				})
+				.then(call=>{
+					console.log("/assignment: call redirected: call.sid "+call.sid);
+				})
+				.catch(err=>{
+					console.log("/assignment: call redirect error: "+err);
 				});
 
 				var call=await client.calls.create({
