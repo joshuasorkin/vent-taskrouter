@@ -28,6 +28,7 @@ class Sms{
         this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,false,this.changeName.bind(this));
         this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,true,this.changeNumber.bind(this));
         this.addCommand(commandList,"helpme","Gets help for a command.","helpme [command name]",2,false,this.help.bind(this));
+        this.addCommand(commandList,"systemstatus","Gets the count of currently available listeners.","systemstatus",1,false,this.systemstatus.bind(this));
         return commandList;
     }
 
