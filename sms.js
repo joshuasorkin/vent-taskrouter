@@ -6,7 +6,8 @@ class Sms{
     constructor(worker){
         this.worker=worker;
         this.commandList=this.createCommandList();
-        this.commandListKeysString=this.commandList.keys().join(" ");
+        var commandListKeys=this.commandList.keys();
+        this.commandListKeysString=commandListKeys.join(" ");
     }
 
     createParameterObj(bodyArray,from){
