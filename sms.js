@@ -21,6 +21,7 @@ class Sms{
         addCommand(commandList,"on","Enables the user to receive calls.","on",1,false,this.on);
         addCommand(commandList,"off","Disables the user from receiving calls.","off",1,false,this.off);
         addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,false,this.off);
+        return commandListObj;
     }
 
     addCommand(commandList,commandName,helpMessage,parameterUsage,parameterCount,isAdmin,commandFunction){
@@ -161,11 +162,11 @@ class Sms{
         var responseValue;
         var command;
         if(commandName in commandList){
-            command=commandList[commandName];
+            command=this.commandList[commandName];
            
         }
         else{
-            command=commandList["default"]; 
+            command=this.commandList["default"]; 
         }
         responseValue=await command.commandFunction(parameterObj);
 
