@@ -137,11 +137,11 @@ class Sms{
     }
 
 
-    processCommand(command,parameterObj){
+    async processCommand(command,parameterObj){
         var responseValue;
         switch(command){
             case "on":
-                responseValue=this.on(parameterObj);
+                responseValue=await this.on(parameterObj);
 			    break;
             case "add":
                 responseValue=this.add(parameterObj);
