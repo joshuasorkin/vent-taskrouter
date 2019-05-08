@@ -11,15 +11,18 @@ var workerObj=new Worker(clientWorkspace);
 var args=process.argv.slice(2);
 var workerSid=args[0];
 
+async function getCount(){
+    var result=await workerObj.getCountOfIdleWorkers();
+    console.log(result);
+}
 
+getCount();
 
 async function select(callSid){
     var result=await workerObj.getWorkerSidFromCallSid(callSid);
     console.log(result);
 }
 
-select("123435");
-select("laksjdfl;kasdfj");
 
 async function insert(callSid,workerSid){
     var result=await workerObj.insertCallSidWorkerSid(callSid,workerSid);

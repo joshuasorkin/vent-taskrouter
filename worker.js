@@ -214,6 +214,14 @@ class Worker{
 
 	}
 
+	async getCountOfIdleWorkers(){
+		var workers=await this.workspace.workers
+							.list({
+								activitySid:process.env.TWILIO_IDLE_SID
+							});
+		return workers.length;
+	}
+
 	async addToDoNotContact(workerSid,otherWorkerSid){
 		var workerEntity=await this.workspace
 								.workers(workerSid)
