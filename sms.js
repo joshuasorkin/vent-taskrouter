@@ -26,7 +26,7 @@ class Sms{
         this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,true,this.add.bind(this));
         this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,false,this.changeName.bind(this));
         this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,true,this.changeNumber.bind(this));
-        this.addCommand(commandList,"help","Gets help for a command.","help [command name]",2,false,this.help.bind(this));
+        this.addCommand(commandList,"helpme","Gets help for a command.","helpme [command name]",2,false,this.help.bind(this));
         return commandList;
     }
 
@@ -188,7 +188,7 @@ class Sms{
     }
 
     parameterCountMatch(command,parameterObj){
-        if ((parameterObj.bodyArray.length==1)&&(command.commandName=="help")){
+        if ((parameterObj.bodyArray.length==1)&&(command.commandName=="helpme")){
             return true;
         }
         else{
@@ -217,27 +217,6 @@ class Sms{
         }
         responseValue=await command.commandFunction(parameterObj);
 
-        /*
-        switch(command){
-            case "on":
-                responseValue=await this.on(parameterObj);
-                break;
-            case "off":
-                responseValue=await this.off(parameterObj);
-                break;
-            case "add":
-                responseValue=await this.add(parameterObj);
-                break;
-            case "changename":
-                responseValue=await this.changeName(parameterObj);
-                break;
-            case "changenumber":
-                responseValue=await this.changeNumber(parameterObj);
-                break;
-            default:
-                responseValue=await this.off(parameterObj);
-        }
-        */
         return responseValue;
     }
 }
