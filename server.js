@@ -80,7 +80,7 @@ app.post('/sms',async function(req,res){
 	else{
 		var parameterObj=sms.createParameterObj(bodyArray,fromNumber);
 		const command=bodyArray[0].toLowerCase();
-		responseValue=sms.processCommand(command,parameterObj);
+		responseValue=await sms.processCommand(command,parameterObj);
 	}
 	console.log('/sms: response value: '+responseValue);
 	response.message(responseValue);
