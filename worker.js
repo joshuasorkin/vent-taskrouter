@@ -225,11 +225,13 @@ class Worker{
 	}
 
 	//todo: this will need to get filtered by the requester's do_not_contact list of workerSids
-	async getCountOfIdleWorkers(){
+	async getCountOfIdleWorkers(do_not_contact){
+		console.log("getCountOfIdleWorkers: do_not_contact: "+do_not_contact);
 		var workers=await this.workspace.workers
 							.list({
 								activitySid:process.env.TWILIO_IDLE_SID,
-								taskQueueSid:process.env.TWILIO_TASKQUEUE_SID
+								taskQueueSid:process.env.TWILIO_TASKQUEUE_SID,
+								targetWorkersExpression:"sid not in "+do_not_contact
 							});
 		return workers.length;
 	}
