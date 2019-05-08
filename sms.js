@@ -171,6 +171,7 @@ class Sms{
     async systemstatus(parameterObj){
         var attributes=JSON.parse(parameterObj.workerEntity.attributes);
         var do_not_contact=attributes.do_not_contact;
+        console.log("systemstatus: do_not_contact: "+do_not_contact);
         var workerCount=await this.worker.getCountOfIdleWorkers(do_not_contact);
         var responseValue=workerCount+" listeners are waiting for your call.";
         return responseValue;
