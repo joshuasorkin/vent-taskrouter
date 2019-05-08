@@ -17,11 +17,11 @@ class Sms{
     }
 
     createCommandList(){
-        var commandListObj=[];
-        addCommand(commandList,"on","Enables the user to receive calls.","on",1,false,this.on);
-        addCommand(commandList,"off","Disables the user from receiving calls.","off",1,false,this.off);
-        addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,false,this.off);
-        return commandListObj;
+        var commandList=[];
+        this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,false,this.on);
+        this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,false,this.off);
+        this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,false,this.off);
+        return commandList;
     }
 
     addCommand(commandList,commandName,helpMessage,parameterUsage,parameterCount,isAdmin,commandFunction){
