@@ -206,7 +206,7 @@ class Sms{
                     return responseValue;
                 }
             }
-            if (!parameterCountMatch(command,parameterObj)){
+            if (!this.parameterCountMatch(command,parameterObj)){
                 responseValue="Incorrect syntax for '"+command.commandName+"': "+command.parameterUsage;
                 return responseValue;
             }
