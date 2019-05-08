@@ -10,10 +10,11 @@ class Sms{
         this.commandListKeysString=commandListKeys.join(" ");
     }
 
-    createParameterObj(bodyArray,from){
+    createParameterObj(bodyArray,from,workerEntity){
         var parameterObj={
             bodyArray:bodyArray,
-            from:from
+            from:from,
+            workerEntity:workerEntity
         }
         return parameterObj;
     }
@@ -164,6 +165,11 @@ class Sms{
             responseValue=err;
         }
         return responseValue;
+    }
+
+    async systemstatus(parameterObj){
+        var attributes=JSON.parse(parameterObj.workerEntity.attributes);
+        var do_not_contact=attributes.do_not_contact;
     }
 
     helpResponse(command){

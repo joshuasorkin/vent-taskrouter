@@ -128,6 +128,16 @@ class Worker{
 	}
 
 
+	async getWorkerEntityFromContact_uri(contact_uri){
+		var workerSid=await database.getWorkerSid(contact_uri);
+		if (workerSid==null){
+			throw("getWorkerEntityFromContact_uri: error: workerSid not found for "+contact_uri);
+		}
+		var workerEntity=await this.workspace.workers(workerSid).fetch();
+		console.log("getWorkerEntityFromContact_uri: friendlyName: "+workerEntity.friendlyName);
+		return workerEntity;
+	}
+
 	async updateContact_uri(oldContact_uri,newContact_uri){
 		console.log("updateWorkerName: getting workerSid from database");
 		var workerSid=await database.getWorkerSid(oldContact_uri);

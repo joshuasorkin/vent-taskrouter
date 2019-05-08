@@ -49,12 +49,6 @@ function exitErrorHandler(error) {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/testHeroku',function(req,res){
-	var response=new VoiceResponse();
-	twimlBuilder.say(response,"Heroku");
-	res.send(response.toString());
-});
-
 app.get('/admin',function(req,res){
 	res.sendFile(path.join(__dirname+'/admin.html'));
 });
@@ -79,7 +73,8 @@ app.post('/sms',async function(req,res){
 		responseValue="You are not recognized as an authorized user.  Please register with an administrator and try again.";
 	}
 	else{
-		var parameterObj=sms.createParameterObj(bodyArray,fromNumber);
+		var workerEntity=await worker.getWorkerEntityFromContact_uri(fromNumber);
+		var parameterObj=sms.createParameterObj(bodyArray,fromNumber,workerEntity);
 		const command=bodyArray[0].toLowerCase();
 		responseValue=await sms.processCommand(command,parameterObj);
 	}
