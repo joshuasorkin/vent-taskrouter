@@ -144,16 +144,16 @@ class Sms{
                 responseValue=await this.on(parameterObj);
 			    break;
             case "add":
-                responseValue=this.add(parameterObj);
+                responseValue=await this.add(parameterObj);
                 break;
             case "changename":
-                responseValue=this.changeName(parameterObj);
+                responseValue=await this.changeName(parameterObj);
                 break;
             case "changenumber":
-                responseValue=this.changeNumber(parameterObj);
+                responseValue=await this.changeNumber(parameterObj);
                 break;
             default:
-                responseValue=this.off(parameterObj);
+                responseValue=await this.off(parameterObj);
         }
         return responseValue;
     }
