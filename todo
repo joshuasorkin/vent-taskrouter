@@ -35,6 +35,9 @@ add SMS commands:
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
 (medium)
+solve audio caching issue, using etag maybe?
+
+(medium)
 implement control panel for conference participants that doesn't require them
 to temporarily exit conference with "*":
 -SMS (e.g. texting "exit" will remove the participant from 

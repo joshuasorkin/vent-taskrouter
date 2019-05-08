@@ -23,12 +23,14 @@ const Wait=require('./wait');
 const ObjectUpdater=require('./objectUpdater');
 const Textsplitter=require('./textsplitter');
 const AvailableNotifier=require('./availableNotifier');
+const Sms=require('./sms');
 var availableNotifier=new AvailableNotifier();
 var textsplitter=new Textsplitter();
 var clientWorkspace;
 var urlSerializer=new UrlSerializer();
 var conference;
 var worker;
+var sms;
 var twimlBuilder=new TwimlBuilder();
 var router=express.Router();
 var wait=new Wait();
@@ -63,133 +65,22 @@ app.post('/sms',async function(req,res){
 	console.log(body);
 	//replace multiple spaces with single space
 	body = body.replace(/\s\s+/g, ' ');
+	if (body==" "){
+		body="";
+	}
 	fromNumber=req.body.From;
-	
-
 	bodyArray=body.split(" ");
-	var responseBody;
-	var activitySid=process.env.TWILIO_OFFLINE_SID;
+	var responseValue;
 	const response=new MessagingResponse();
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	console.log("/sms: contact_uriExists: "+contact_uriExists);
 	if (!contact_uriExists){
-		response.message("You are not recognized as an authorized user.  Please register with an administrator and try again.");	
-		res.writeHead(200, {'Content-Type': 'text/xml'});
-		res.end(response.toString());
-		return;
+		responseValue="You are not recognized as an authorized user.  Please register with an administrator and try again.";
 	}
-	
-	var promise;
-	switch (bodyArray[0].toLowerCase()){
-		case "on":
-			console.log("on request made");
-			//todo: this try-catch is duplicate of the default,
-			//both need to be refactored into single function
-			try{
-				if(bodyArray.length>1){
-					responseValue="Too many parameters for 'on'";
-				}
-				else{
-					if(worker==null){
-						console.log("Worker is null, what's going on?");
-					}
-					else{
-						workerEntity=await worker.updateWorkerActivity(req.body.From,process.env.TWILIO_IDLE_SID,false);
-						responseValue=workerEntity.friendlyName+", you are now active, receiving calls.";
-					}
-				}
-				console.log(responseValue);
-			}
-			catch(err){
-				console.log("/sms error: "+err);
-				responseValue=err;
-			}
-			break;
-		case "add":
-			if (bodyArray.length!=4){
-				responseValue="Incorrect number of parameters for 'add': add [password] [contact_uri] [username]";
-				break;
-			}
-			if (bodyArray[1]==process.env.ADMIN_PASSWORD){
-				contact_uri=bodyArray[2];
-				friendlyName=bodyArray[3];
-				contact_uriExists=await worker.contact_uriExists(contact_uri);
-				if (contact_uriExists){
-						responseValue="Worker with contact_uri "+contact_uri+" already exists.";
-				}
-				else{
-					responseValue=await worker.createWorker(contact_uri,friendlyName);
-					//todo: this is a hack until I can figure out what the problem
-					//is with the return value from worker.create
-					if (responseValue==",1"){
-						confirmMessageBody="You have been added as a Vent worker, username "+friendlyName+
-																".  If you did not request to be added, please contact the administrator to request removal.";
-						client.messages
-						.create({
-							from:process.env.TWILIO_PHONE_NUMBER,
-							body:confirmMessageBody,
-							to:contact_uri
-						})
-						.then(message=>console.log("/sms: sent message to added worker: "+message.sid))
-						.catch(err=>console.log("/sms: Error sending message to added worker: "+err));
-
-						responseValue="Worker "+bodyArray[3]+" successfully created.";
-					}
-				}
-			}
-			else{
-				responseValue="You entered an incorrect admin password.";
-			}
-			
-			break;
-		case "changename":
-			try{
-				if (bodyArray.length!=2){
-
-				}
-				newFriendlyName=bodyArray[1];
-				var workerEntity=await worker.updateWorkerName(req.body.From,newFriendlyName);
-				responseValue="Your new name is "+workerEntity.friendlyName+".";
-			}
-			catch(err){
-				responseValue=err;
-			}
-			break;
-		case "changenumber":
-			try{
-				if (bodyArray.length!=3){
-					responseValue="invalid command.  use 'changenumber [old number] [new number]'";
-				}
-				else{
-					oldNumber=bodyArray[1];
-					newNumber=bodyArray[2];
-					var workerEntity=await worker.updateContact_uri(oldNumber,newNumber);
-					if (workerEntity==null){
-						responseValue="Error updating number.";
-					}
-					else{
-						responseValue="Number updated."
-					}
-				}
-			}
-			catch(err){
-					responseValue=err;
-			}
-			break;
-
-		default:
-			console.log("/sms: default, setting worker to offline");
-			//should refactor this to its own function, as it's good to do that with
-			//a try-catch block
-			try{
-				workerEntity=await worker.updateWorkerActivity(req.body.From,process.env.TWILIO_OFFLINE_SID,false);
-				responseValue=workerEntity.friendlyName+", you are inactive, not receiving calls.";
-				console.log(responseValue);
-			}
-			catch(err){
-				console.log("/sms error: "+err);
-				responseValue=err;
-			}
+	else{
+		var parameterObj=sms.createParameterObj(bodyArray,fromNumber);
+		const command=bodyArray[0].toLowerCase();
+		responseValue=sms.processCommand(command,parameterObj);
 	}
 	console.log('response value: '+responseValue);
 	response.message(responseValue);
@@ -382,6 +273,13 @@ app.post('/randomWordLoop',function(req,res){
 	//response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
+})
+
+//etag control per https://stackoverflow.com/a/48404148/619177
+app.set('etag', 'strong');
+
+app.get('/waitSound',function(req,res){
+	res.append('Last-Modified', (new Date(lastModifiedStringDate)).toUTCString());
 })
 
 app.post('/wait',function(req,res){
@@ -751,30 +649,27 @@ app.post('/workspaceEvent',async function(req,res){
 	res.status(204).send({error:'error occurred in processing workspace event callback'});
 });
 
-app.listen(http_port,()=>{
+app.listen(http_port,async ()=>{
 	console.log(`app listening on port ${http_port}`);
 	console.log("Configuring incoming call urls...");
-	
 	baseUrl=process.env.APP_BASE_URL;
-	client.incomingPhoneNumbers(process.env.TWILIO_PHONE_NUMBER_SID)
-		.update({
-			smsUrl:baseUrl+"/sms",
-			voiceUrl:baseUrl+"/voice",
-			statusCallback:baseUrl+"/incomingCallEvents"
-		})
-		.then(incoming_phone_number=>console.log(incoming_phone_number.friendlyName))
-		.done();
+	incoming_phone_number=await client.incomingPhoneNumbers(process.env.TWILIO_PHONE_NUMBER_SID)
+															.update({
+																smsUrl:baseUrl+"/sms",
+																voiceUrl:baseUrl+"/voice",
+																statusCallback:baseUrl+"/incomingCallEvents"
+															});
+	console.log(incoming_phone_number.friendlyName);
 		
 	console.log("Configuring workspace...");
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	worker=new Worker(clientWorkspace);
+	sms=new Sms(worker);
 	taskrouter=new Taskrouter(clientWorkspace);
 	conference=new Conference(client,clientWorkspace);
 	taskrouter.configureWorkspace();
-	taskrouter.configureWorkflow()
-				.then(workflow=>console.log("returned from configureWorkflow"))
-				.done();
-	textsplitter.splitTextFromFile("critiqueofpurereason.txt");
-	
+	workflow=await taskrouter.configureWorkflow();
+	console.log("returned from configureWorkflow");
+	textsplitter.splitTextFromFile("critiqueofpurereason.txt");	
 });
 
