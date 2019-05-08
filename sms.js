@@ -18,7 +18,7 @@ class Sms{
 
     createCommandList(){
         var commandList=[];
-        this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,false,this.on);
+        this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,false,this.on.bind(this));
         this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,false,this.off);
         this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,false,this.off);
         return commandList;
