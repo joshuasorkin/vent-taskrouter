@@ -6,6 +6,7 @@ class Sms{
     constructor(worker){
         this.worker=worker;
         this.commandList=this.createCommandList();
+        this.commandListKeysString=this.commandList.keys().join(" ");
     }
 
     createParameterObj(bodyArray,from){
@@ -24,6 +25,7 @@ class Sms{
         this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,true,this.add.bind(this));
         this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,false,this.changeName.bind(this));
         this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,true,this.changeNumber.bind(this));
+        this.addCommand(commandList,"help","Gets help for a command.","help [command name]",2,false,this.help.bind(this));
         return commandList;
     }
 
@@ -163,7 +165,35 @@ class Sms{
         return responseValue;
     }
 
+    helpResponse(command){
+        return command.helpMessage+" Usage: "+command.parameterUsage;
+    }
 
+    help(parameterObj){
+        var responseValue;
+        var commandName=parameterObj.bodyArray[1];
+        if(parameterObj.bodyArray.length==1){
+            responseValue="Command list: "+this.commandListKeysString;
+        }
+        else if(commandName in this.commandList){
+            var command=this.commandList[commandName];
+            responseValue=this.helpResponse(command);
+        }
+        else{
+            var defaultCommand=this.commandList["default"];
+            responseValue="Command '"+commandName+"' not recognized. "+this.helpResponse(defaultCommand);
+        }
+        return responseValue;
+    }
+
+    parameterCountMatch(command,parameterObj){
+        if ((parameterObj.bodyArray.length==1)&&(command.commandName=="help")){
+            return true;
+        }
+        else{
+            return (parameterObj.bodyArray.length!=command.parameterCount);
+        }
+    }
     async processCommand(commandName,parameterObj){
         var responseValue;
         var command;
@@ -175,8 +205,8 @@ class Sms{
                     return responseValue;
                 }
             }
-            if (parameterObj.bodyArray.length!=command.parameterCount){
-                responseValue="Incorrect syntax for '"+command.commandName+"': "+parameterUsage;
+            if (!parameterCountMatch(command,parameterObj)){
+                responseValue="Incorrect syntax for '"+command.commandName+"': "+command.parameterUsage;
                 return responseValue;
             }
 
