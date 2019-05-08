@@ -161,7 +161,7 @@ class Sms{
     async processCommand(commandName,parameterObj){
         var responseValue;
         var command;
-        if(commandName in commandList){
+        if(commandName in this.commandList){
             command=this.commandList[commandName];
            
         }
