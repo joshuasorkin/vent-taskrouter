@@ -5,6 +5,7 @@ class Sms{
 
     constructor(worker){
         this.worker=worker;
+        this.commandList=this.createCommandList();
     }
 
     createParameterObj(bodyArray,from){
@@ -13,6 +14,25 @@ class Sms{
             from:from
         }
         return parameterObj;
+    }
+
+    createCommandList(){
+        var commandListObj=[];
+        addCommand(commandList,"on","Enables the user to receive calls.","on",1,false,this.on);
+        addCommand(commandList,"off","Disables the user from receiving calls.","off",1,false,this.off);
+        addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,false,this.off);
+    }
+
+    addCommand(commandList,commandName,helpMessage,parameterUsage,parameterCount,isAdmin,commandFunction){
+        var command={
+            commandName:commandName,
+            helpMessage:helpMessage,
+            parameterUsage:parameterUsage,
+            parameterCount:parameterCount,
+            isAdmin:isAdmin,
+            commandFunction:commandFunction
+        }
+        commandList[commandName]=command;
     }
 
     async on(parameterObj){
@@ -137,12 +157,26 @@ class Sms{
     }
 
 
-    async processCommand(command,parameterObj){
+    async processCommand(commandName,parameterObj){
         var responseValue;
+        var command;
+        if(commandName in commandList){
+            command=commandList[commandName];
+           
+        }
+        else{
+            command=commandList["default"]; 
+        }
+        responseValue=await command.commandFunction(parameterObj);
+
+        /*
         switch(command){
             case "on":
                 responseValue=await this.on(parameterObj);
-			    break;
+                break;
+            case "off":
+                responseValue=await this.off(parameterObj);
+                break;
             case "add":
                 responseValue=await this.add(parameterObj);
                 break;
@@ -155,6 +189,7 @@ class Sms{
             default:
                 responseValue=await this.off(parameterObj);
         }
+        */
         return responseValue;
     }
 }
