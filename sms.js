@@ -170,13 +170,21 @@ class Sms{
 
     async systemstatus(parameterObj){
         var attributes=JSON.parse(parameterObj.workerEntity.attributes);
-        console.log("systemstatus: attributes pre-parse: "+parameterObj.workerEntity.attributes);
-        console.log("systemstatus: attributes post-parse: "+attributes);
         var do_not_contact=attributes.do_not_contact;
-        console.log("systemstatus: do_not_contact: "+do_not_contact.toString());
-        var workerCount=await this.worker.getCountOfIdleWorkers(do_not_contact);
+
+        var do_not_contact_toString=formatDoNotContact(do_not_contact);
+        var workerCount=await this.worker.getCountOfIdleWorkers(do_not_contact_toString);
         var responseValue=workerCount+" listeners are waiting for your call.";
         return responseValue;
+    }
+
+    formatDoNotContact(do_not_contact){
+        var index;
+        var output=do_not_contact;
+        for(index=0;index<output.length;index++){
+            output[index]="'"+output[index]+"'";
+        }
+        return "["+output.toString()+"]";
     }
 
     helpResponse(command){
