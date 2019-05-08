@@ -82,7 +82,7 @@ app.post('/sms',async function(req,res){
 		const command=bodyArray[0].toLowerCase();
 		responseValue=sms.processCommand(command,parameterObj);
 	}
-	console.log('response value: '+responseValue);
+	console.log('/sms: response value: '+responseValue);
 	response.message(responseValue);
 	res.writeHead(200, {'Content-Type': 'text/xml'});
 	res.end(response.toString());
