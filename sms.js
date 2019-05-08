@@ -19,8 +19,11 @@ class Sms{
     createCommandList(){
         var commandList=[];
         this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,false,this.on.bind(this));
-        this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,false,this.off);
-        this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,false,this.off);
+        this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,false,this.off.bind(this));
+        this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,false,this.off.bind(this));
+        this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,true,this.add.bind(this));
+        this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,false,this.changeName.bind(this));
+        this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,true,this.changeNumber.bind(this));
         return commandList;
     }
 
@@ -166,7 +169,17 @@ class Sms{
         var command;
         if(commandName in this.commandList){
             command=this.commandList[commandName];
-           
+            if(command.isAdmin){
+                if (parameterObj.bodyArray[1]!=process.env.ADMIN_PASSWORD){
+                    responseValue="You entered an incorrect admin password."
+                    return responseValue;
+                }
+            }
+            if (parameterObj.bodyArray.length!=command.parameterCount){
+                responseValue="Incorrect syntax for '"+command.commandName+"': "+parameterUsage;
+                return responseValue;
+            }
+
         }
         else{
             command=this.commandList["default"]; 
