@@ -230,8 +230,8 @@ class Worker{
 		var workers=await this.workspace.workers
 							.list({
 								activitySid:process.env.TWILIO_IDLE_SID,
-								taskQueueSid:process.env.TWILIO_TASKQUEUE_SID,
-								targetWorkersExpression:"sid not in "+do_not_contact
+								taskQueueSid:process.env.TWILIO_TASKQUEUE_SID
+								//targetWorkersExpression:"sid not in "+do_not_contact
 							});
 		return workers.length;
 	}
