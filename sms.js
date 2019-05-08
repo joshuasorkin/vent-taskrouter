@@ -173,7 +173,7 @@ class Sms{
         console.log("systemstatus: attributes pre-parse: "+parameterObj.workerEntity.attributes);
         console.log("systemstatus: attributes post-parse: "+attributes);
         var do_not_contact=attributes.do_not_contact;
-        console.log("systemstatus: do_not_contact: "+do_not_contact);
+        console.log("systemstatus: do_not_contact: "+do_not_contact.toString());
         var workerCount=await this.worker.getCountOfIdleWorkers(do_not_contact);
         var responseValue=workerCount+" listeners are waiting for your call.";
         return responseValue;
