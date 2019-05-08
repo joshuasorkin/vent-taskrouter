@@ -214,10 +214,12 @@ class Worker{
 
 	}
 
+	//todo: this will need to get filtered by the requester's do_not_contact list of workerSids
 	async getCountOfIdleWorkers(){
 		var workers=await this.workspace.workers
 							.list({
-								activitySid:process.env.TWILIO_IDLE_SID
+								activitySid:process.env.TWILIO_IDLE_SID,
+								taskQueueSid:process.env.TWILIO_TASKQUEUE_SID
 							});
 		return workers.length;
 	}

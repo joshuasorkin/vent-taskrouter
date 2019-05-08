@@ -10,11 +10,10 @@ set worker to offline after they hang up, with an indicating SMS
 set caller to offline after call ends, with an indicating SMS
 
 (high)
-
-(high)
 add SMS commands:
 -"systemstatus" command that returns the following:
  "There are [number] available listeners waiting for your call."
+  uses getCountOfIdleWorkers
 -"help"
  lists each command and its syntax
 
