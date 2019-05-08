@@ -141,7 +141,7 @@ class Sms{
         var responseValue;
         switch(command){
             case "on":
-                responseValue=await this.on(parameterObj);
+                responseValue=this.on(parameterObj);
 			    break;
             case "add":
                 responseValue=this.add(parameterObj);
