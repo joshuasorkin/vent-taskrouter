@@ -192,7 +192,7 @@ class Sms{
             return true;
         }
         else{
-            return (parameterObj.bodyArray.length!=command.parameterCount);
+            return (parameterObj.bodyArray.length==command.parameterCount);
         }
     }
     async processCommand(commandName,parameterObj){
