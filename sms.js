@@ -8,7 +8,7 @@ class Sms{
     }
 
     createParameterObj(bodyArray,from){
-        parameterObj={
+        var parameterObj={
             bodyArray:bodyArray,
             from:from
         }
@@ -40,7 +40,7 @@ class Sms{
     async off(parameterObj){
         var responseValue;
         try{
-            workerEntity=await this.worker.updateWorkerActivity(parameterObj.from,process.env.TWILIO_OFFLINE_SID,false);
+            var workerEntity=await this.worker.updateWorkerActivity(parameterObj.from,process.env.TWILIO_OFFLINE_SID,false);
             responseValue=workerEntity.friendlyName+", you are inactive, not receiving calls.";
             console.log(responseValue);
         }
@@ -57,9 +57,9 @@ class Sms{
             responseValue="Incorrect number of parameters for 'add': add [password] [contact_uri] [username]";
         }
         else if (parameterObj.bodyArray[1]==process.env.ADMIN_PASSWORD){
-            contact_uri=bodyArray[2];
-            friendlyName=bodyArray[3];
-            contact_uriExists=await this.worker.contact_uriExists(contact_uri);
+            var contact_uri=bodyArray[2];
+            var friendlyName=bodyArray[3];
+            var contact_uriExists=await this.worker.contact_uriExists(contact_uri);
             if (contact_uriExists){
                     responseValue="Worker with contact_uri "+contact_uri+" already exists.";
             }
@@ -68,7 +68,7 @@ class Sms{
                 //todo: this is a hack until I can figure out what the problem
                 //is with the return value from worker.create
                 if (responseValue==",1"){
-                    confirmMessageBody="You have been added as a Vent worker, username "+friendlyName+
+                    var confirmMessageBody="You have been added as a Vent worker, username "+friendlyName+
                                                             ".  If you did not request to be added, please contact the administrator to request removal.";
                     client.messages
                     .create({
@@ -96,8 +96,8 @@ class Sms{
                 responseValue="Incorrect number of parameters for 'changename': changename [new name (no spaces)]";
             }
             else{
-                newFriendlyName=bodyArray[1];
-                var workerEntity=await worker.updateWorkerName(req.body.From,newFriendlyName);
+                var newFriendlyName=bodyArray[1];
+                var workerEntity=await worker.updateWorkerName(parameterObj.from,newFriendlyName);
                 responseValue="Your new name is "+workerEntity.friendlyName+".";
             }
         }
@@ -115,8 +115,8 @@ class Sms{
                     responseValue="Incorrect number of parameters for 'changenumber': changenumber [password] [old number] [new number]";
                 }
                 else{
-                    oldNumber=bodyArray[2];
-                    newNumber=bodyArray[3];
+                    var oldNumber=bodyArray[2];
+                    var newNumber=bodyArray[3];
                     var workerEntity=await this.worker.updateContact_uri(oldNumber,newNumber);
                     if (workerEntity==null){
                         responseValue="Error updating number.";
