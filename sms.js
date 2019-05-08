@@ -63,7 +63,7 @@ class Sms{
         try{
             var workerEntity=await this.worker.updateWorkerActivity(parameterObj.from,process.env.TWILIO_OFFLINE_SID,false);
             responseValue=workerEntity.friendlyName+", you are inactive, not receiving calls.";
-            console.log(responseValue);
+            console.log("SMS.off(): responseValue: "+responseValue);
         }
         catch(err){
             console.log("Sms.off() error: "+err);
@@ -73,6 +73,8 @@ class Sms{
     }
 
     async add(parameterObj){
+        console.log("add: parameterObj.from: "+parameterObj.from);
+
         var responseValue;
         if (parameterObj.bodyArray.length!=4){
             responseValue="Incorrect number of parameters for 'add': add [password] [contact_uri] [username]";
