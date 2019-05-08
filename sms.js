@@ -37,6 +37,7 @@ class Sms{
     }
 
     async on(parameterObj){
+        console.log("on: parameterObj.from: "+parameterObj.from);
         var responseValue;
         console.log("on request made");
         //todo: this try-catch is duplicate of the default,
@@ -73,7 +74,7 @@ class Sms{
     }
 
     async add(parameterObj){
-        console.log("add: parameterObj.from: "+parameterObj.from);
+
 
         var responseValue;
         if (parameterObj.bodyArray.length!=4){
