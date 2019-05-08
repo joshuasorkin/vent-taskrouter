@@ -7,7 +7,7 @@ class Sms{
         this.worker=worker;
         this.commandList=this.createCommandList();
         var commandListKeys=this.commandList.keys();
-        this.commandListKeysString=commandListKeys.join(" ");
+        this.commandListKeysString=this.commandListKeys.join(" ");
     }
 
     createParameterObj(bodyArray,from){
