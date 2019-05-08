@@ -62,6 +62,7 @@ app.get('/admin',function(req,res){
 
 app.post('/sms',async function(req,res){
 	var body=req.body.Body;
+	console.log("/sms: message SID "+req.body.sid);
 	console.log(body);
 	//replace multiple spaces with single space
 	body = body.replace(/\s\s+/g, ' ');
