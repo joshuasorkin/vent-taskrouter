@@ -171,7 +171,7 @@ class Sms{
     async systemstatus(parameterObj){
         var attributes=JSON.parse(parameterObj.workerEntity.attributes);
         var do_not_contact=attributes.do_not_contact;
-        var workerSid=workerEntity.sid;
+        var workerSid=parameterObj.workerEntity.sid;
         var workerSidArray=[workerSid];
         var sids_to_exclude=do_not_contact.concat(workerSidArray);
         //var do_not_contact_toString=this.formatDoNotContact(do_not_contact);
