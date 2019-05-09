@@ -251,7 +251,7 @@ class Sms{
             body="";
         }
         body=body.trim();
-        commandArray=body.split(" ");
+        var commandArray=body.split(" ");
         return commandArray;
     }
 }
