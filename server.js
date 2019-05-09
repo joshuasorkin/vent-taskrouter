@@ -64,6 +64,11 @@ app.post('/sms',async function(req,res){
 	
 	var responseValue;
 	const response=new MessagingResponse();
+
+	//todo: the contact_uriExists check should get moved to sms.js,
+	//as should the workerEntity retrieval.
+	//basically, /sms should just extract the body and fromNumber parameters, then pass
+	//them along to sms.processCommand() which will then create the parameterObj internally
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	console.log("/sms: contact_uriExists: "+contact_uriExists);
 	if (!contact_uriExists){

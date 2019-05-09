@@ -220,7 +220,7 @@ class Sms{
     }
     async processCommand(body,parameterObj){
         var responseValue;
-        var commandArray=bodyToCommandArray(parameterObj.body);
+        var commandArray=this.bodyToCommandArray(parameterObj.body);
         const commandName=commandArray[0].toLowerCase();
         parameterObj.commandArray=commandArray;
         if(commandName in this.commandList){
