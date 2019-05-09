@@ -7,7 +7,7 @@ class Sms{
         this.worker=worker;
         this.commandList=this.createCommandList();
         var commandListKeys=Object.keys(this.commandList);
-        this.commandListKeysString=commandListKeys.join("\n");
+        this.commandListKeysString=commandListKeys.sort().join("\n");
     }
 
     createParameterObj(body,from,workerEntity){
@@ -207,7 +207,7 @@ class Sms{
         var responseValue;
         var commandName=parameterObj.commandArray[1];
         if(parameterObj.commandArray.length==1){
-            responseValue="Command list: "+this.commandListKeysString;
+            responseValue="--Command list--\n"+this.commandListKeysString;
         }
         else if(commandName in this.commandList){
             var command=this.commandList[commandName];
