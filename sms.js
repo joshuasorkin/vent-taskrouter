@@ -221,7 +221,7 @@ class Sms{
     }
 
     parameterCountMatch(command,parameterObj){
-        if ((parameterObj.commandArray.length==1)&&(command.commandName=="helpme")){
+        if ((parameterObj.commandArray.length==1)&&(command.commandName=="manual")){
             return true;
         }
         else{
