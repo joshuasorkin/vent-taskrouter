@@ -172,7 +172,7 @@ class Sms{
         var attributes=JSON.parse(parameterObj.workerEntity.attributes);
         var do_not_contact=attributes.do_not_contact;
 
-        var do_not_contact_toString=this.formatDoNotContact(do_not_contact);
+        //var do_not_contact_toString=this.formatDoNotContact(do_not_contact);
         var workerCount=await this.worker.getCountOfIdleWorkers(do_not_contact);
         var responseValue=workerCount+" listeners are waiting for your call.";
         return responseValue;
