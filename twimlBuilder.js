@@ -12,7 +12,7 @@ var urlSerializer=new UrlSerializer();
 class TwimlBuilder{
     constructor(){
         this.voice=process.env.TWILIO_SAY_VOICE;
-        this.language=process.env.TWILIO_SAY_LANGUAGE;
+        //this.language=process.env.TWILIO_SAY_LANGUAGE;
     }
 
     //add a say() in the configured voice and language
