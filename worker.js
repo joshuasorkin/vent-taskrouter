@@ -225,9 +225,9 @@ class Worker{
 	}
 
 	//todo: return to stringified do_not_contact after issue gets resolved with targetWorkersExpression in API
-	async getCountOfIdleWorkers(do_not_contact){
+	async getCountOfIdleWorkers(sids_to_exclude){
 		try{
-			console.log("getCountOfIdleWorkers: do_not_contact: "+do_not_contact);
+			console.log("getCountOfIdleWorkers: sids_to_exclude: "+sids_to_exclude);
 			var workers=await this.workspace.workers
 								.list({
 									activitySid:process.env.TWILIO_IDLE_SID,
@@ -239,8 +239,8 @@ class Worker{
 			for(index=0;index<workers.length;index++){
 				workerEntity=workers[index];
 				console.log("getCountOfIdleWorkers: workerEntity sid: "+workerEntity.sid);
-				if(!do_not_contact.includes(workerEntity.sid)){
-					console.log("getCountOfIdleWorkers: workerEntity.sid "+workerEntity.sid+" not found in do_not_contact");
+				if(!sids_to_exclude.includes(workerEntity.sid)){
+					console.log("getCountOfIdleWorkers: workerEntity.sid "+workerEntity.sid+" not found in sids_to_exclude");
 					filteredWorkers.push(workerEntity);
 				}
 			}
