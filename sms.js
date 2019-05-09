@@ -178,7 +178,7 @@ class Sms{
         //var do_not_contact_toString=this.formatDoNotContact(do_not_contact);
         var workerCount=await this.worker.getCountOfIdleWorkers(sids_to_exclude);
         var activity;
-        switch(workerEntity.activitySid){
+        switch(parameterObj.workerEntity.activitySid){
             case process.env.TWILIO_IDLE_SID:
                 activity="You are available to receive calls.";
                 break;
