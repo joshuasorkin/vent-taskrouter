@@ -4,19 +4,20 @@ high: needed for first prototype release
 is there a way to avoid that initial "please wait..." before jumping to
 "no one is available"?  maybe the "please wait..." should be an interrupt to the caller's callSid
 
-
 (high)
-set worker to offline after they hang up, with an indicating SMS
+set worker to offline after they hang up, with an indicating SMS, then reset them to Idle after 0.5 min unless they text "off"
 set caller to offline after call ends, with an indicating SMS
 
 (high)
-add SMS commands:
--"systemstatus" command that returns the following:
+add SMS commands (make sure not to use reserved command):
+-"status" command that returns the following:
  "There are [number] available listeners waiting for your call."
   uses getCountOfIdleWorkers
--"help"
+-"directory"
  lists each command and its syntax
 
+(high)
+send "directory" along with initial welcome message to new user
 
 (high) get domain so test users can see whether server is up
 
@@ -52,25 +53,12 @@ instead it sets "active:false" attribute
 so that they will not be included 
 in any communication (e.g. group SMS with system notification)
 
-(medium)
-refactor /sms into sms.js
 
-(medium)
-password encryption checksum:
-each character [A-Za-z0-9] has an ascii value "n" and array position "x",
-represent character as ((nth prime number) ^ x).  multiplying all these
-character values together gives password's hash value.
-e.g. "abc" would be
-(97th ^ 1) * (98th ^ 2) * (99th ^ 3)
-=(509^1)*(521^2)*(523^3)
-=19765067212828824
+
+
 
 (medium)
 continuously update state in database so that when/if server reboots, in-progress conversations remain uninterrupted
-
-(medium)
-change voice to something warmer
-
 
 (medium)
 give people each other's numbers if they both opt in?
@@ -95,6 +83,16 @@ how do I add an alias?  can I write to .bashrc?
 and have workflow order by this number
 
 (medium) use md5 hash to check password, no plaintext
+
+(medium)
+password encryption checksum:
+each character [A-Za-z0-9] has an ascii value "n" and array position "x",
+represent character as ((nth prime number) ^ x).  multiplying all these
+character values together gives password's hash value.
+e.g. "abc" would be
+(97th ^ 1) * (98th ^ 2) * (99th ^ 3)
+=(509^1)*(521^2)*(523^3)
+=19765067212828824
 
 (medium)
 chat coaching:
@@ -186,3 +184,9 @@ code added but still need to test
 
  (high)
  right before generating each outbound call, saying "please wait, we are now calling a potential receiver"
+
+ (medium)
+refactor /sms into sms.js
+
+(medium)
+change voice to something warmer

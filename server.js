@@ -210,7 +210,7 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 			do_not_contact:do_not_contact
 		}
 		twimlBuilder.say(response,'Thank you.  Please enjoy randomly selected text while you wait.');
-		response.play(process.env.WAIT_URL);
+		response.play(process.env.CHIME_URL);
 		response.enqueue({
 			workflowSid:workflowSid,
 			callerWorkerSid:parameters.workerSid,
@@ -223,9 +223,9 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 
 app.post('/redirectToWait',function(req,res){
 	response=new VoiceResponse();
-	response.play(process.env.WAIT_URL);
+	response.play(process.env.CHIME_URL);
 	twimlBuilder.say(response,"Now calling a potential receiver.  Please continue to wait.");
-	response.play(process.env.WAIT_URL);
+	response.play(process.env.CHIME_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 });
@@ -583,7 +583,7 @@ app.get('/automatic',async function(req,res){
 	var response=new VoiceResponse();
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
 	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  I will notify you by text message when a receiver becomes available.  You will now hear randomly selected text until you hang up.");
-	response.play(process.env.WAIT_URL);
+	response.play(process.env.CHIME_URL);
 	response.redirect('/randomWordLoop')
 	workerSid=await worker.getWorkerSid(parameters.fromNumber);
 	console.log("/automatic: workerSid: "+workerSid);
