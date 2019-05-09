@@ -223,6 +223,7 @@ class Sms{
         var commandArray=this.bodyToCommandArray(parameterObj.body);
         const commandName=commandArray[0].toLowerCase();
         parameterObj.commandArray=commandArray;
+        var command;
         if(commandName in this.commandList){
             command=this.commandList[commandName];
             if(command.isAdmin){
