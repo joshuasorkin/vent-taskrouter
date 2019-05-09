@@ -27,8 +27,8 @@ class Sms{
         this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,true,this.add.bind(this));
         this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,false,this.changeName.bind(this));
         this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,true,this.changeNumber.bind(this));
-        this.addCommand(commandList,"helpme","Gets help for a command.","helpme [command name]",2,false,this.help.bind(this));
-        this.addCommand(commandList,"systemstatus","Gets the count of currently available listeners.","systemstatus",1,false,this.systemstatus.bind(this));
+        this.addCommand(commandList,"manual","Gets help manual for a command, or lists all commands if used by itself.","manual [command name]",2,false,this.manual.bind(this));
+        this.addCommand(commandList,"status","Gets status for user and system.","status",1,false,this.status.bind(this));
         return commandList;
     }
 
@@ -100,7 +100,8 @@ class Sms{
                 //todo: this is a hack until I can figure out what the problem
                 //is with the return value from worker.create
                 if (responseValue==",1"){
-                    var confirmMessageBody="You have been added as a Vent worker, username "+friendlyName+
+                    //todo: need to allow user to remove themselves by texting "remove"
+                    var confirmMessageBody="You have been added as a Vent user, username "+friendlyName+
                                                             ".  If you did not request to be added, please contact the administrator to request removal.";
                     client.messages
                     .create({
@@ -168,7 +169,7 @@ class Sms{
         return responseValue;
     }
 
-    async systemstatus(parameterObj){
+    async status(parameterObj){
         var attributes=JSON.parse(parameterObj.workerEntity.attributes);
         var do_not_contact=attributes.do_not_contact;
         var workerSid=parameterObj.workerEntity.sid;
@@ -176,7 +177,15 @@ class Sms{
         var sids_to_exclude=do_not_contact.concat(workerSidArray);
         //var do_not_contact_toString=this.formatDoNotContact(do_not_contact);
         var workerCount=await this.worker.getCountOfIdleWorkers(sids_to_exclude);
-        var responseValue=workerCount+" "+(workerCount==1 ? "listener is" : "listeners are")+" waiting for your call.";
+        var activity;
+        switch(workerEntity.activitySid){
+            case process.env.TWILIO_IDLE_SID:
+                activity="You are available to receive calls.";
+                break;
+            default:
+                activity="You are not available to receive calls.";
+        }
+        var responseValue=workerCount+" "+(workerCount==1 ? "listener is" : "listeners are")+" waiting for your call.\n"+activity;
         return responseValue;
     }
 
@@ -189,11 +198,12 @@ class Sms{
         return "["+output.toString()+"]";
     }
 
-    helpResponse(command){
+    manualResponse(command){
         return command.helpMessage+" Usage: "+command.parameterUsage;
     }
 
-    help(parameterObj){
+    //todo: add STOP reserved commands to manual()
+    manual(parameterObj){
         var responseValue;
         var commandName=parameterObj.commandArray[1];
         if(parameterObj.commandArray.length==1){
@@ -201,7 +211,7 @@ class Sms{
         }
         else if(commandName in this.commandList){
             var command=this.commandList[commandName];
-            responseValue=this.helpResponse(command);
+            responseValue=this.manualResponse(command);
         }
         else{
             var defaultCommand=this.commandList["default"];

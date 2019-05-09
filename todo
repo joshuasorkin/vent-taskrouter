@@ -34,6 +34,7 @@ send "directory" along with initial welcome message to new user
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
+
 (medium)
 solve audio caching issue, using etag maybe?
 
@@ -45,6 +46,9 @@ to temporarily exit conference with "*":
 -Single page web app.  not ideal given that my Android chrome browser tends to reload pages, but we could leave cookies
  to keep it stateful.  good for people whose mobile OS doesn't allow SMS during phone call.  at this point might as well just
  go over to an API that's better suited for TCP/IP voice conversations (whatever Facebook is using for their phone calls) 
+
+(medium)
+allow erroneously created user to remove themselves by texting "remove"
 
 (medium)
 enable worker to deactivate themselves
