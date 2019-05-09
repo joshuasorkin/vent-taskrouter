@@ -232,7 +232,7 @@ class Worker{
 								.list({
 									activitySid:process.env.TWILIO_IDLE_SID,
 									taskQueueSid:process.env.TWILIO_TASKQUEUE_SID,
-									targetWorkersExpression:"worker.sid not in "+do_not_contact
+									TargetWorkersExpression:"worker.sid not in "+do_not_contact
 								});
 			return workers.length;
 		}
