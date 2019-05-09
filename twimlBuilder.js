@@ -38,7 +38,7 @@ class TwimlBuilder{
             action:url,
             method:'GET'
         });
-        this.say(gather,'How many minutes of conversation would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
+        this.say(gather,'How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
         this.say(response,"I didn't receive any input.  Good-bye.");
     }
 

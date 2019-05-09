@@ -209,7 +209,7 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 			minutes:digitsInt,
 			do_not_contact:do_not_contact
 		}
-		twimlBuilder.say(response,'Thank you.  While I find a receiver, you will hear randomly selected text.');
+		twimlBuilder.say(response,'Thank you.  Please enjoy randomly selected text while you wait.');
 		response.play(process.env.WAIT_URL);
 		response.enqueue({
 			workflowSid:workflowSid,
@@ -223,8 +223,8 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 
 app.post('/redirectToWait',function(req,res){
 	response=new VoiceResponse();
-
-	twimlBuilder.say(response,"Now contacting a potential receiver.  Please continue to wait.");
+	response.play(process.env.WAIT_URL);
+	twimlBuilder.say(response,"Now calling a potential receiver.  Please continue to wait.");
 	response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
@@ -266,7 +266,6 @@ app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
 	var word=textsplitter.randomSentenceFromFiletextArray();
 	twimlBuilder.say(response,word);
-	//response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 })
@@ -280,8 +279,6 @@ app.get('/waitSound',function(req,res){
 
 app.post('/wait',function(req,res){
 	const response=new VoiceResponse();
-	//twimlBuilder.say(response,'Please wait while I find a receiver.  In the meantime you will hear randomly selected text.');
-	//response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 });
@@ -348,7 +345,7 @@ app.get('/agent_answer',async function(req,res){
 			method:'GET',
 			timeout:5
 		});
-		twimlBuilder.say(gather,'Hello, thanks for answering.  You have a call from Vent, requested length '+minutes+'minutes.  Press 1 to accept, or 2 to refuse.');
+		twimlBuilder.say(gather,'Hello! Would you like a Vent call for '+minutes+'minutes?  Press 1 to accept, or 2 to refuse.');
 		response.redirect({method:'GET'},redirectUrl);
 	}
 	res.send(response.toString());
@@ -585,7 +582,7 @@ app.get('/automatic',async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	var response=new VoiceResponse();
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
-	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  I will notify you by text message when a receiver becomes available.  You will now hear random text until you hang up.");
+	twimlBuilder.say(response,"We're sorry, no one is available to take your call.  I will notify you by text message when a receiver becomes available.  You will now hear randomly selected text until you hang up.");
 	response.play(process.env.WAIT_URL);
 	response.redirect('/randomWordLoop')
 	workerSid=await worker.getWorkerSid(parameters.fromNumber);
