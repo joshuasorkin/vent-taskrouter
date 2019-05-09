@@ -218,7 +218,7 @@ class Sms{
             return (parameterObj.commandArray.length==command.parameterCount);
         }
     }
-    async processCommand(body,parameterObj){
+    async processCommand(parameterObj){
         var responseValue;
         var commandArray=this.bodyToCommandArray(parameterObj.body);
         const commandName=commandArray[0].toLowerCase();
