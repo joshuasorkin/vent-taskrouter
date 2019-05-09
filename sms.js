@@ -176,7 +176,7 @@ class Sms{
         var sids_to_exclude=do_not_contact.concat(workerSidArray);
         //var do_not_contact_toString=this.formatDoNotContact(do_not_contact);
         var workerCount=await this.worker.getCountOfIdleWorkers(sids_to_exclude);
-        var responseValue=workerCount+" listeners are waiting for your call.";
+        var responseValue=workerCount+" "+(workerCount>1 ? "listeners are" : "listener is")+" waiting for your call.";
         return responseValue;
     }
 
