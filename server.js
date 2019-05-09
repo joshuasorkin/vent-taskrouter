@@ -59,12 +59,9 @@ app.post('/sms',async function(req,res){
 	console.log("/sms: message SID "+req.body.sid);
 	console.log(body);
 	//replace multiple spaces with single space
-	body = body.replace(/\s\s+/g, ' ');
-	if (body==" "){
-		body="";
-	}
+	
 	fromNumber=req.body.From;
-	bodyArray=body.split(" ");
+	
 	var responseValue;
 	const response=new MessagingResponse();
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
@@ -74,9 +71,8 @@ app.post('/sms',async function(req,res){
 	}
 	else{
 		var workerEntity=await worker.getWorkerEntityFromContact_uri(fromNumber);
-		var parameterObj=sms.createParameterObj(bodyArray,fromNumber,workerEntity);
-		const command=bodyArray[0].toLowerCase();
-		responseValue=await sms.processCommand(command,parameterObj);
+		var parameterObj=sms.createParameterObj(body,fromNumber,workerEntity);
+		responseValue=await sms.processCommand(parameterObj);
 	}
 	console.log('/sms: response value: '+responseValue);
 	response.message(responseValue);

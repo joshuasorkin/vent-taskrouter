@@ -10,9 +10,9 @@ class Sms{
         this.commandListKeysString=commandListKeys.join(" ");
     }
 
-    createParameterObj(bodyArray,from,workerEntity){
+    createParameterObj(body,from,workerEntity){
         var parameterObj={
-            bodyArray:bodyArray,
+            body:body,
             from:from,
             workerEntity:workerEntity
         }
@@ -51,7 +51,7 @@ class Sms{
         //todo: this try-catch is duplicate of the default,
         //both need to be refactored into single function
         try{
-            if(parameterObj.bodyArray.length>1){
+            if(parameterObj.commandArray.length>1){
                 responseValue="Too many parameters for 'on'";
             }
             else{
@@ -85,12 +85,12 @@ class Sms{
 
 
         var responseValue;
-        if (parameterObj.bodyArray.length!=4){
+        if (parameterObj.commandArray.length!=4){
             responseValue="Incorrect number of parameters for 'add': add [password] [contact_uri] [username]";
         }
-        else if (parameterObj.bodyArray[1]==process.env.ADMIN_PASSWORD){
-            var contact_uri=bodyArray[2];
-            var friendlyName=bodyArray[3];
+        else if (parameterObj.commandArray[1]==process.env.ADMIN_PASSWORD){
+            var contact_uri=commandArray[2];
+            var friendlyName=commandArray[3];
             var contact_uriExists=await this.worker.contact_uriExists(contact_uri);
             if (contact_uriExists){
                     responseValue="Worker with contact_uri "+contact_uri+" already exists.";
@@ -111,7 +111,7 @@ class Sms{
                     .then(message=>console.log("Sms.add(): sent message to added worker: "+message.sid))
                     .catch(err=>console.log("Sms.add(): Error sending message to added worker: "+err));
 
-                    responseValue="Worker "+parameterObj.bodyArray[3]+" successfully created.";
+                    responseValue="Worker "+parameterObj.commandArray[3]+" successfully created.";
                 }
             }
         }
@@ -124,11 +124,11 @@ class Sms{
     async changeName(parameterObj){
         var responseValue;
         try{
-            if (parameterObj.bodyArray.length!=2){
+            if (parameterObj.commandArray.length!=2){
                 responseValue="Incorrect number of parameters for 'changename': changename [new name (no spaces)]";
             }
             else{
-                var newFriendlyName=bodyArray[1];
+                var newFriendlyName=commandArray[1];
                 var workerEntity=await worker.updateWorkerName(parameterObj.from,newFriendlyName);
                 responseValue="Your new name is "+workerEntity.friendlyName+".";
             }
@@ -142,13 +142,13 @@ class Sms{
     async changeNumber(parameterObj){
         var responseValue;
         try{
-            if (parameterObj.bodyArray[1]==process.env.ADMIN_PASSWORD){
-                if (bodyArray.length!=4){
+            if (parameterObj.commandArray[1]==process.env.ADMIN_PASSWORD){
+                if (commandArray.length!=4){
                     responseValue="Incorrect number of parameters for 'changenumber': changenumber [password] [old number] [new number]";
                 }
                 else{
-                    var oldNumber=bodyArray[2];
-                    var newNumber=bodyArray[3];
+                    var oldNumber=commandArray[2];
+                    var newNumber=commandArray[3];
                     var workerEntity=await this.worker.updateContact_uri(oldNumber,newNumber);
                     if (workerEntity==null){
                         responseValue="Error updating number.";
@@ -176,7 +176,7 @@ class Sms{
         var sids_to_exclude=do_not_contact.concat(workerSidArray);
         //var do_not_contact_toString=this.formatDoNotContact(do_not_contact);
         var workerCount=await this.worker.getCountOfIdleWorkers(sids_to_exclude);
-        var responseValue=workerCount+" "+(workerCount>1 ? "listeners are" : "listener is")+" waiting for your call.";
+        var responseValue=workerCount+" "+(workerCount==1 ? "listener is" : "listeners are")+" waiting for your call.";
         return responseValue;
     }
 
@@ -195,8 +195,8 @@ class Sms{
 
     help(parameterObj){
         var responseValue;
-        var commandName=parameterObj.bodyArray[1];
-        if(parameterObj.bodyArray.length==1){
+        var commandName=parameterObj.commandArray[1];
+        if(parameterObj.commandArray.length==1){
             responseValue="Command list: "+this.commandListKeysString;
         }
         else if(commandName in this.commandList){
@@ -211,20 +211,22 @@ class Sms{
     }
 
     parameterCountMatch(command,parameterObj){
-        if ((parameterObj.bodyArray.length==1)&&(command.commandName=="helpme")){
+        if ((parameterObj.commandArray.length==1)&&(command.commandName=="helpme")){
             return true;
         }
         else{
-            return (parameterObj.bodyArray.length==command.parameterCount);
+            return (parameterObj.commandArray.length==command.parameterCount);
         }
     }
-    async processCommand(commandName,parameterObj){
+    async processCommand(body,parameterObj){
         var responseValue;
-        var command;
+        var commandArray=bodyToCommandArray(parameterObj.body);
+        const commandName=commandArray[0].toLowerCase();
+        parameterObj.commandArray=commandArray;
         if(commandName in this.commandList){
             command=this.commandList[commandName];
             if(command.isAdmin){
-                if (parameterObj.bodyArray[1]!=process.env.ADMIN_PASSWORD){
+                if (parameterObj.commandArray[1]!=process.env.ADMIN_PASSWORD){
                     responseValue="You entered an incorrect admin password."
                     return responseValue;
                 }
@@ -241,6 +243,16 @@ class Sms{
         responseValue=await command.commandFunction(parameterObj);
 
         return responseValue;
+    }
+
+    bodyToCommandArray(body){
+        body = body.replace(/\s\s+/g, ' ');
+        if (body==" "){
+            body="";
+        }
+        body=body.trim();
+        commandArray=body.split(" ");
+        return commandArray;
     }
 }
 
