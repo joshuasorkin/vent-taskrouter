@@ -224,7 +224,7 @@ class Worker{
 
 	}
 
-	//todo: this will need to get filtered by the requester's do_not_contact list of workerSids
+	//todo: return to stringified do_not_contact after issue gets resolved with targetWorkersExpression in API
 	async getCountOfIdleWorkers(do_not_contact){
 		try{
 			console.log("getCountOfIdleWorkers: do_not_contact: "+do_not_contact);
@@ -232,9 +232,18 @@ class Worker{
 								.list({
 									activitySid:process.env.TWILIO_IDLE_SID,
 									taskQueueSid:process.env.TWILIO_TASKQUEUE_SID,
-									TargetWorkersExpression:"sid not in "+do_not_contact
 								});
-			return workers.length;
+			var filteredWorkers=[];
+			var workerEntity;
+			var index;
+			for(index=0;index<workers.length;index++){
+				workerEntity=workers[index];
+				console.log("getCountOfIdleWorkers: workerEntity sid: "+workerEntity.sid);
+				if(!do_not_contact.includes(workerEntity.sid)){
+					filteredWorkers.push(workerEntity);
+				}
+			}
+			return filteredWorkers.length;
 		}
 		catch(err){
 			return err;
