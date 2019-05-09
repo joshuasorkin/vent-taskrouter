@@ -239,7 +239,7 @@ class Worker{
 			for(index=0;index<workers.length;index++){
 				workerEntity=workers[index];
 				console.log("getCountOfIdleWorkers: workerEntity sid: "+workerEntity.sid);
-				if(!do_not_contact.includes(workerEntity.sid)){
+				if(!do_not_contact.contains(workerEntity.sid)){
 					filteredWorkers.push(workerEntity);
 				}
 			}
