@@ -133,7 +133,7 @@ class Database{
 		return sequelize.query("insert into adminPassword "+
 								"(workerId,passwordHash,adminTaskId) "+
 								"values "+
-								"(?,?,?,?)",{
+								"(?,?,?)",{
 									replacements:[workerId,passwordHash,adminTaskId],
 									type:sequelize.QueryTypes.INSERT
 								});
