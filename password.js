@@ -34,6 +34,27 @@ class Password{
         var insertResult=await database.insertAdminPassword(workerId,salt,passwordHash,adminTaskId);
         console.log("insertPassword: insertResult: "+insertResult);
     }
+
+    async verifyPassword(workerSid,password,adminTask){
+        var passwordHash;
+        var workerId;
+        var adminTaskId;
+        const promiseResults=await Promise.all([
+            database.getWorkerIdFromSid(workerSid),
+            database.getAdminTaskId(adminTask)
+        ]);
+        workerId=promiseResults[0];
+        adminTaskId=promiseResults[1];
+        console.log("verifyPassword: workerId: "+workerId);
+        console.log("verifyPassword: adminTaskId: "+adminTaskId);
+        try{
+            passwordHash=database.getPasswordHash(workerId,adminTaskId);
+        }
+        catch(err){
+            console.log("verifyPassword: getPasswordHash error: "+err);
+        }
+        return Bcrypt.compare(password,passwordHash);
+    }
 }
 
 module.exports=Password;

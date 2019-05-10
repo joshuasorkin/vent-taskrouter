@@ -156,6 +156,24 @@ class Database{
 		}
 
 	}
+
+	//todo: this will need to get updated after we establish the 'canceled' unique constraint
+	async getPasswordHash(workerId,adminTaskId){
+		var selectResult=await sequelize.query("select * from adminPassword "+
+									"where workerId=? and adminTaskId=?",{
+										replacements:[workerId,adminTaskId],
+										type:sequelize.QueryTypes.SELECT
+									});
+		if (selectResult.length==0){
+			return null;
+		}
+		else{
+			console.log("getPasswordHash: selectResult[0]: "+selectResult[0]);
+			var passwordHash=selectResult[0].passwordHash;
+			return passwordHash;
+		}
+	}
+
 	async updateNotificationToSent(workerSid){
 		var id=await this.getWorkerIdFromSid(workerSid);
 		if (id==null){

@@ -9,22 +9,9 @@ set worker to offline after they hang up, with an indicating SMS, then reset the
 set caller to offline after call ends, with an indicating SMS
 
 (high)
-add SMS commands (make sure not to use reserved command):
--"status" command that returns the following:
- "There are [number] available listeners waiting for your call."
-  uses getCountOfIdleWorkers
--"directory"
- lists each command and its syntax
-
-(high)
-send "directory" along with initial welcome message to new user
+send "directory" along with initial welcome message to new user (done, but need to test with new user)
 
 (high) get domain so test users can see whether server is up
-
-(high) deal with space parsing in sms commands
--spaces between items
--too many items in sms command
--how to have a space in username?  for now let's have no spaces
 
 (high) document all configuration:
 --toroid.org git hook
@@ -33,6 +20,16 @@ send "directory" along with initial welcome message to new user
 --twilio configuration
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
+
+(medium)
+until I transition to ORM, I can probably refactor all those SELECT functions
+into one generalized function that gets arrays of column names and values passed to it
+essentially i'm building my own ORM at that point, though
+
+(medium)
+set up unique constraint on adminPassword:workerId,adminTaskId,canceled=false
+that way we can have many canceled but only one active password
+and don't have to delete rows when we're creating a new password for that worker
 
 
 (medium)
@@ -114,6 +111,9 @@ the receiver, maybe a fraction of the payment goes to the expert
 (medium)
 if both caller and receiver opt in, they can connect their call to a third participant,
 and then if all three opt in, they can add a fourth, and so on...
+
+(medium)
+spaces in usernames?
 
 
 ---done---
@@ -201,3 +201,16 @@ refactor /sms into sms.js
 
 (medium)
 change voice to something warmer
+
+(high) deal with space parsing in sms commands
+-spaces between items
+-too many items in sms command
+-how to have a space in username?  for now let's have no spaces
+
+(high)
+add SMS commands (make sure not to use reserved command):
+-"status" command that returns the following:
+ "There are [number] available listeners waiting for your call."
+  uses getCountOfIdleWorkers
+-"directory"
+ lists each command and its syntax
