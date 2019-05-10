@@ -129,17 +129,17 @@ class Database{
 								
 	}
 
-	insertAdminPassword(workerId,salt,passwordHash,adminTaskId){
+	insertAdminPassword(workerId,passwordHash,adminTaskId){
 		return sequelize.query("insert into adminPassword "+
-								"(workerId,salt,passwordHash,adminTaskId) "+
+								"(workerId,passwordHash,adminTaskId) "+
 								"values "+
 								"(?,?,?,?)",{
-									replacements:[workerId,salt,passwordHash,adminTaskId],
+									replacements:[workerId,passwordHash,adminTaskId],
 									type:sequelize.QueryTypes.INSERT
 								});
 	}
 
-	updateAdminPassword(workerId,salt,passwordHash,adminTaskId){
+	updateAdminPassword(workerId,passwordHash,adminTaskId){
 		return sequelize.query("update adminPassword "+
 								"set passwordHash=? "+
 								"where workerId=? "+
