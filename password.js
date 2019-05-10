@@ -82,7 +82,7 @@ class Password{
             throw "updatePassword: hash error: "+err;
         }
         var updateResult=await database.updateAdminPassword(workerId,passwordHash,adminTaskId);
-        console.log("updatePassword: updateResult: "+insertResult);
+        console.log("updatePassword: updateResult: "+updateResult);
     }
 }
 
