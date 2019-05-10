@@ -121,7 +121,7 @@ class Sms{
         var responseValue;
         var contact_uri=parameterObj.commandArray[2];
         var friendlyName=parameterObj.commandArray[3];
-        if(!this.phoneNumberPattern.test(contact_uri)){
+        if(!(/^[+]\d+$/.test(contact_uri))){
             responseValue=contact_uri+" is an invalid phone number.  Must be format: +12345678 (any # of digits)";
             return responseValue;
         }
