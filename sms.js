@@ -104,7 +104,7 @@ class Sms{
                 //is with the return value from worker.create
                 if (responseValue==",1"){
                     //todo: need to allow user to remove themselves by texting "remove"
-                    sendAddNotification(friendlyName,contact_uri);
+                    this.sendAddNotification(friendlyName,contact_uri);
                     responseValue="Worker "+parameterObj.commandArray[3]+" successfully created.";
                 }
             }
