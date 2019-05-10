@@ -4,13 +4,17 @@ var database=new Database();
 
 class Password{
 
+    constructor(){
+        this.saltRounds=10;
+    }
+
     async insertPassword(workerSid,password,adminTask){
         var salt;
         var passwordHash;
         var workerId;
         var adminTaskId;
         const promiseResults=await Promise.all([
-            Bcrypt.genSalt(),
+            Bcrypt.genSalt(this.saltRounds),
             database.getWorkerIdFromSid(workerSid),
             database.getAdminTaskId(adminTask)
         ]);
@@ -27,7 +31,7 @@ class Password{
         catch(err){
             throw "insertPassword: hash error: "+err;
         }
-        var insertResult=await database.insertAdminPassword(workerId,salt,passwordHash,taskId);
+        var insertResult=await database.insertAdminPassword(workerId,salt,passwordHash,adminTaskId);
         console.log("insertPassword: insertResult: "+insertResult);
     }
 }
