@@ -9,11 +9,11 @@ class Password{
         var passwordHash;
         var workerId;
         var adminTaskId;
-        const promiseResults=await Promise.all(
+        const promiseResults=await Promise.all([
             Bcrypt.genSalt(),
             database.getWorkerIdFromSid(workerSid),
             database.getAdminTaskId(adminTask)
-        );
+        ]);
         salt=promiseResults[0];
         workerId=promiseResults[1];
         adminTaskId=promiseResults[2];
