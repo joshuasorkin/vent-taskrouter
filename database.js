@@ -129,6 +129,16 @@ class Database{
 								
 	}
 
+	insertAdminPassword(workerId,salt,passwordHash,taskId){
+		return sequelize.query("insert into adminPassword "+
+								"(workerId,salt,passwordHash) "+
+								"values "+
+								"(?,?,?)",{
+									replacements:[workerId,salt,passwordHash],
+									type:sequelize.QueryTypes.INSERT
+								});
+	}
+
 	async updateNotificationToSent(workerSid){
 		var id=await this.getWorkerIdFromSid(workerSid);
 		if (id==null){
