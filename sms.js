@@ -265,7 +265,7 @@ class Sms{
             if(command.adminTask!=null){
                 var workerSid=parameterObj.workerEntity.sid;
                 var passwordString=parameterObj.commandArray[1];
-                var passwordMatch=this.password.verifyPassword(workerSid,passwordString,command.adminTask);
+                var passwordMatch=await this.password.verifyPassword(workerSid,passwordString,command.adminTask);
                 if (!passwordMatch){
                     responseValue="You entered an incorrect admin password."
                     return responseValue;
