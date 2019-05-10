@@ -169,7 +169,7 @@ class Database{
 		}
 		else{
 			console.log("getPasswordHash: selectResult[0]: "+selectResult[0]);
-			var passwordHash=selectResult[0].passwordHash;
+			var passwordHash=selectResult[0].passwordhash;
 			return passwordHash;
 		}
 	}
