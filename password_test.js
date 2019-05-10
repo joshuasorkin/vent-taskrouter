@@ -8,7 +8,7 @@ var password1=args[2];
 var password2=args[3];
 
 
-async function test(workerSid,password,adminTask){
+async function test(workerSid,password1,password2,adminTask){
     
     var insertResult=await passwordObj.insertPassword(workerSid,password1,adminTask);
     var updateResult=await passwordObj.updatePassword(workerSid,password2,adminTask);
@@ -17,4 +17,4 @@ async function test(workerSid,password,adminTask){
     matchResult=await passwordObj.verifyPassword(workerSid,password1,adminTask);
     console.log("matchResult (bogus): "+matchResult);
 }
-matchResult=test(workerSid,password,adminTask);
+matchResult=test(workerSid,password1,password2,adminTask);
