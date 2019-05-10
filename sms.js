@@ -133,14 +133,9 @@ class Sms{
     async changeName(parameterObj){
         var responseValue;
         try{
-            if (parameterObj.commandArray.length!=2){
-                responseValue="Incorrect number of parameters for 'changename': changename [new name (no spaces)]";
-            }
-            else{
-                var newFriendlyName=commandArray[1];
-                var workerEntity=await worker.updateWorkerName(parameterObj.from,newFriendlyName);
-                responseValue="Your new name is "+workerEntity.friendlyName+".";
-            }
+            var newFriendlyName=parameterObj.commandArray[1];
+            var workerEntity=await worker.updateWorkerName(parameterObj.from,newFriendlyName);
+            responseValue="Your new name is "+workerEntity.friendlyName+".";
         }
         catch(err){
             responseValue=err;
@@ -148,28 +143,19 @@ class Sms{
         return responseValue;
     }
 
+    //todo: validate oldNumber and newNumber as "\+\d+"
     async changeNumber(parameterObj){
         var responseValue;
         try{
-            if (parameterObj.commandArray[1]==process.env.ADMIN_PASSWORD){
-                if (commandArray.length!=4){
-                    responseValue="Incorrect number of parameters for 'changenumber': changenumber [password] [old number] [new number]";
-                }
-                else{
-                    var oldNumber=commandArray[2];
-                    var newNumber=commandArray[3];
-                    var workerEntity=await this.worker.updateContact_uri(oldNumber,newNumber);
-                    if (workerEntity==null){
-                        responseValue="Error updating number.";
-                    }
-                    else{
-                        responseValue="Number updated."
-                    }
-                }
+            var oldNumber=parameterObj.commandArray[2];
+            var newNumber=parameterObj.commandArray[3];
+            var workerEntity=await this.worker.updateContact_uri(oldNumber,newNumber);
+            if (workerEntity==null){
+                responseValue="Error updating number.";
             }
             else{
-                responseValue="You entered an incorrect admin password.";
-            }
+                responseValue="Number updated."
+            }            
         }
         catch(err){
             responseValue=err;
