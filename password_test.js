@@ -6,7 +6,7 @@ var workerSid=args[0];
 var password=args[1];
 var adminTask=args[2];
 //passwordObj.insertPassword(workerSid,password,adminTask);
-function test(workerSid,password,adminTask){
+async function test(workerSid,password,adminTask){
     var matchResult=await passwordObj.verifyPassword(workerSid,password,adminTask);
     return matchResult;
 }
