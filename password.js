@@ -48,7 +48,7 @@ class Password{
         console.log("verifyPassword: workerId: "+workerId);
         console.log("verifyPassword: adminTaskId: "+adminTaskId);
         try{
-            passwordHash=database.getPasswordHash(workerId,adminTaskId);
+            passwordHash=await database.getPasswordHash(workerId,adminTaskId);
         }
         catch(err){
             console.log("verifyPassword: getPasswordHash error: "+err);
