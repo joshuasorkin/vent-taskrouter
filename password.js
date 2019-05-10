@@ -31,7 +31,7 @@ class Password{
         catch(err){
             throw "insertPassword: hash error: "+err;
         }
-        var insertResult=await database.insertAdminPassword(workerId,salt,passwordHash,adminTaskId);
+        var insertResult=await database.insertAdminPassword(workerId,passwordHash,adminTaskId);
         console.log("insertPassword: insertResult: "+insertResult);
     }
 
@@ -55,6 +55,34 @@ class Password{
             console.log("verifyPassword: getPasswordHash error: "+err);
         }
         return Bcrypt.compare(password,passwordHash);
+    }
+
+    //todo: this is nearly identical to updatePassword, obviously needs refactoring
+    async updatePassword(workerSid,password,adminTask){
+        var salt;
+        var passwordHash;
+        var workerId;
+        var adminTaskId;
+        const promiseResults=await Promise.all([
+            Bcrypt.genSalt(this.saltRounds),
+            database.getWorkerIdFromSid(workerSid),
+            database.getAdminTaskId(adminTask)
+        ]);
+        salt=promiseResults[0];
+        workerId=promiseResults[1];
+        adminTaskId=promiseResults[2];
+        console.log("updatePassword: salt: "+salt);
+        console.log("updatePassword: workerId: "+workerId);
+        console.log("updatePassword: adminTaskId: "+adminTaskId);
+        try{
+            passwordHash=await Bcrypt.hash(password,salt);
+            console.log("updatePassword: passwordHash "+passwordHash);
+        }
+        catch(err){
+            throw "updatePassword: hash error: "+err;
+        }
+        var updateResult=await database.updateAdminPassword(workerId,passwordHash,adminTaskId);
+        console.log("updatePassword: updateResult: "+insertResult);
     }
 }
 

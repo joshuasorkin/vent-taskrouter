@@ -1,6 +1,10 @@
 high: needed for first prototype release
  
 (high)
+add event logging table to database,
+populate from event handler
+
+(high)
 is there a way to avoid that initial "please wait..." before jumping to
 "no one is available"?  maybe the "please wait..." should be an interrupt to the caller's callSid
 

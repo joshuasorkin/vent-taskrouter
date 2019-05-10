@@ -138,6 +138,20 @@ class Worker{
 		return workerEntity;
 	}
 
+	async getWorkerEntityFromFriendlyName(friendlyName){
+		var workerList=await this.workspace.workers.list({
+			friendlyName:friendlyName
+		});
+		if(workerList.length==0){
+			return null;
+		}
+		if(workerList.length>1){
+			throw "Duplicate workers with friendlyName "+friendlyName;
+		}
+		var workerEntity=workerList[0];
+		return workerEntity;
+	}
+
 	async updateContact_uri(oldContact_uri,newContact_uri){
 		console.log("updateWorkerName: getting workerSid from database");
 		var workerSid=await database.getWorkerSid(oldContact_uri);

@@ -139,6 +139,16 @@ class Database{
 								});
 	}
 
+	updateAdminPassword(workerId,salt,passwordHash,adminTaskId){
+		return sequelize.query("update adminPassword "+
+								"set passwordHash=? "+
+								"where workerId=? "+
+								"and adminTaskId=?",{
+									replacements:[passwordHash,workerId,adminTaskId],
+									type:sequelize.QueryTypes.UPDATE
+								});
+	}
+
 	async getAdminTaskId(adminTask){
 		var selectResult=await sequelize.query("select * from adminTask "+
 									"where adminTask=?",{
