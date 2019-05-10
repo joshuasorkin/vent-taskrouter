@@ -134,7 +134,7 @@ class Sms{
         var responseValue;
         try{
             var newFriendlyName=parameterObj.commandArray[1];
-            var workerEntity=await worker.updateWorkerName(parameterObj.from,newFriendlyName);
+            var workerEntity=await this.worker.updateWorkerName(parameterObj.from,newFriendlyName);
             responseValue="Your new name is "+workerEntity.friendlyName+".";
         }
         catch(err){
