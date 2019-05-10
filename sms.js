@@ -1,4 +1,7 @@
 require('env2')('.env');
+const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
+const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
+const client=require('twilio')(accountSid,authToken);
 
 class Sms{
 
@@ -101,17 +104,7 @@ class Sms{
                 //is with the return value from worker.create
                 if (responseValue==",1"){
                     //todo: need to allow user to remove themselves by texting "remove"
-                    var confirmMessageBody="You have been added as a Vent user, username "+friendlyName+
-                                                            ".  If you did not request to be added, please contact the administrator to request removal.";
-                    client.messages
-                    .create({
-                        from:process.env.TWILIO_PHONE_NUMBER,
-                        body:confirmMessageBody,
-                        to:contact_uri
-                    })
-                    .then(message=>console.log("Sms.add(): sent message to added worker: "+message.sid))
-                    .catch(err=>console.log("Sms.add(): Error sending message to added worker: "+err));
-
+                    sendAddNotification(friendlyName,contact_uri);
                     responseValue="Worker "+parameterObj.commandArray[3]+" successfully created.";
                 }
             }
@@ -120,6 +113,21 @@ class Sms{
             responseValue="You entered an incorrect admin password.";
         }
         return responseValue;
+    }
+
+    sendAddNotification(friendlyName,contact_uri){
+        var confirmMessageBody="You have been added as a Vent user, username "+friendlyName+
+                                                            ".  If you did not request to be added, please reply 'REMOVE' to this message.";
+        var manualText=this.manual(null);
+        confirmMessageBody+="\n"+manualText;                                        
+        client.messages
+        .create({
+            from:process.env.TWILIO_PHONE_NUMBER,
+            body:confirmMessageBody,
+            to:contact_uri
+        })
+        .then(message=>console.log("Sms.add(): sent message to added worker: "+message.sid))
+        .catch(err=>console.log("Sms.add(): Error sending message to added worker: "+err));
     }
 
     async changeName(parameterObj){
@@ -199,12 +207,16 @@ class Sms{
     }
 
     manualResponse(command){
-        return command.helpMessage+" Usage: "+command.parameterUsage;
+        return command.helpMessage+"\nUsage: "+command.parameterUsage;
     }
 
     //todo: add STOP reserved commands to manual()
     manual(parameterObj){
         var responseValue;
+        if(parameterObj==null){
+            responseValue="--Command list--\n"+this.commandListKeysString;
+            return responseValue;
+        }
         var commandName=parameterObj.commandArray[1];
         if(parameterObj.commandArray.length==1){
             responseValue="--Command list--\n"+this.commandListKeysString;
