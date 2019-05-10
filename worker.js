@@ -264,6 +264,10 @@ class Worker{
 		this.addToDoNotContact(workerSid,otherWorkerSid);
 		this.addToDoNotContact(otherWorkerSid,workerSid);
 	}
+
+	removeWorker(workerEntity,contact_uri){
+		
+	}
 	
 }
 

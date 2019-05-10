@@ -86,10 +86,10 @@ how do I add an alias?  can I write to .bashrc?
 (medium) on startup, assign random number property to each worker,
 and have workflow order by this number
 
-(medium) use md5 hash to check password, no plaintext
+(medium) use md5 hash to check password and contact_uri, no plaintext
 
 (medium)
-password encryption checksum:
+encryption checksum (not sure if this is strong enough for password)
 each character [A-Za-z0-9] has an ascii value "n" and array position "x",
 represent character as ((nth prime number) ^ x).  multiplying all these
 character values together gives password's hash value.
@@ -97,6 +97,13 @@ e.g. "abc" would be
 (97th ^ 1) * (98th ^ 2) * (99th ^ 3)
 =(509^1)*(521^2)*(523^3)
 =19765067212828824
+
+(medium)
+sequelize: really need to move on to using ORM instead of raw queries, could clean up
+the database class a lot
+
+(medium)
+do hashing in db instead of server, maybe faster that way
 
 (medium)
 chat coaching:

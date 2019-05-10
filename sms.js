@@ -241,7 +241,7 @@ class Sms{
                 }
             }
             if (!this.parameterCountMatch(command,parameterObj)){
-                responseValue="Incorrect syntax for '"+command.commandName+"': "+command.parameterUsage;
+                responseValue="Incorrect syntax for '"+command.commandName+"':\n"+command.parameterUsage;
                 return responseValue;
             }
 
