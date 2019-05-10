@@ -139,6 +139,23 @@ class Database{
 								});
 	}
 
+	async getAdminTaskId(adminTask){
+		var selectResult=await sequelize.query("select * from adminTask "+
+									"where adminTask=?",{
+										replacements:[adminTask],
+										type:sequelize.QueryTypes.SELECT
+									});
+		if (selectResult.length==0){
+			return null;
+		}
+		else{
+			console.log("getAdminTaskId: selectResult[0]: "+selectResult[0]);
+			var id=selectResult[0].id;
+			console.log("getAdminTaskId: id is "+id);
+			return id;
+		}
+
+	}
 	async updateNotificationToSent(workerSid){
 		var id=await this.getWorkerIdFromSid(workerSid);
 		if (id==null){
