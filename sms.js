@@ -2,7 +2,7 @@ require('env2')('.env');
 const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 const client=require('twilio')(accountSid,authToken);
-
+const Password=require('./password');
 class Sms{
 
 
@@ -11,6 +11,8 @@ class Sms{
         this.commandList=this.createCommandList();
         var commandListKeys=Object.keys(this.commandList);
         this.commandListKeysString=commandListKeys.sort().join("\n");
+        this.password=new Password();
+        this.phoneNumberPattern="^[+]\d+$";
     }
 
     createParameterObj(body,from,workerEntity){
@@ -22,30 +24,61 @@ class Sms{
         return parameterObj;
     }
 
+    //todo: this needs to be refactored into a JSON config file
     createCommandList(){
         var commandList=[];
-        this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,false,this.on.bind(this));
-        this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,false,this.off.bind(this));
-        this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,false,this.off.bind(this));
-        this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,true,this.add.bind(this));
-        this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,false,this.changeName.bind(this));
-        this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,true,this.changeNumber.bind(this));
-        this.addCommand(commandList,"manual","Gets help manual for a command, or lists all commands if used by itself.","manual [command name]",2,false,this.manual.bind(this));
-        this.addCommand(commandList,"status","Gets status for user and system.","status",1,false,this.status.bind(this));
+        this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,null,this.on.bind(this));
+        this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,null,this.off.bind(this));
+        this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,null,this.off.bind(this));
+        this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,"addUser",this.add.bind(this));
+        this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,null,this.changeName.bind(this));
+        this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,"update",this.changeNumber.bind(this));
+        this.addCommand(commandList,"manual","Gets help manual for a command, or lists all commands if used by itself.","manual [command name]",2,null,this.manual.bind(this));
+        this.addCommand(commandList,"status","Gets status for user and system.","status",1,null,this.status.bind(this));
+        this.addCommand(commandList,"setadminpassword","Authorizes specified user for admin task and sets initial password.","setadminpassword "+
+                                    "[username] [admin task] [password]",4,"identity",this.setAdminPassword.bind(this));
         return commandList;
     }
 
-    addCommand(commandList,commandName,helpMessage,parameterUsage,parameterCount,isAdmin,commandFunction){
+    addCommand(commandList,commandName,helpMessage,parameterUsage,parameterCount,adminTask,commandFunction){
         var command={
             commandName:commandName,
             helpMessage:helpMessage,
             parameterUsage:parameterUsage,
             parameterCount:parameterCount,
-            isAdmin:isAdmin,
+            adminTask:adminTask,
             commandFunction:commandFunction
         }
         commandList[commandName]=command;
     }
+
+    async setAdminPassword(parameterObj){
+        var friendlyName=parameterObj.bodyArray[1];
+        var adminTask=parameterObj.bodyArray[2];
+        var passwordString=parameterObj.bodyArray[3];
+        var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(friendlyName);
+        var result=await this.password.insertPassword(workerEntity.sid,passwordString,adminTask);
+        if (result==",1"){
+            return "Admin password set."
+        }
+        else{
+            return "Error: "+result;
+        }
+    }
+
+    async changeAdminPassword(parameterObj){
+        var passwordString_old=parameterObj.bodyArray[1];
+        var passwordString_new=parameterObj.bodyArray[2];
+        var adminTask=parameterObj.bodyArray[3];
+        var passwordMatch=await this.password.verifyPassword(parameterObj.workerEntity.sid,passwordString_old,adminTask);
+        if(!passwordMatch){
+            return "Incorrect password.";
+        }
+        else{
+            this.password.updatePassword(parameterObj.workerEntity.sid,passwordString_new,adminTask);
+        }
+    }
+    
 
     async on(parameterObj){
         console.log("on: parameterObj.from: "+parameterObj.from);
@@ -85,32 +118,27 @@ class Sms{
     }
 
     async add(parameterObj){
-
-
         var responseValue;
-        if (parameterObj.commandArray.length!=4){
-            responseValue="Incorrect number of parameters for 'add': add [password] [contact_uri] [username]";
+        var contact_uri=parameterObj.commandArray[2];
+        var friendlyName=parameterObj.commandArray[3];
+        if(!this.phoneNumberPattern.test(contact_uri)){
+            responseValue=contact_uri+" is an invalid phone number.  Must be format: +12345678 (any # of digits)";
+            return responseValue;
         }
-        else if (parameterObj.commandArray[1]==process.env.ADMIN_PASSWORD){
-            var contact_uri=commandArray[2];
-            var friendlyName=commandArray[3];
-            var contact_uriExists=await this.worker.contact_uriExists(contact_uri);
-            if (contact_uriExists){
-                    responseValue="Worker with contact_uri "+contact_uri+" already exists.";
-            }
-            else{
-                responseValue=await this.worker.createWorker(contact_uri,friendlyName);
-                //todo: this is a hack until I can figure out what the problem
-                //is with the return value from worker.create
-                if (responseValue==",1"){
-                    //todo: need to allow user to remove themselves by texting "remove"
-                    this.sendAddNotification(friendlyName,contact_uri);
-                    responseValue="Worker "+parameterObj.commandArray[3]+" successfully created.";
-                }
-            }
+
+        var contact_uriExists=await this.worker.contact_uriExists(contact_uri);
+        if (contact_uriExists){
+                responseValue="Worker with contact_uri "+contact_uri+" already exists.";
         }
         else{
-            responseValue="You entered an incorrect admin password.";
+            responseValue=await this.worker.createWorker(contact_uri,friendlyName);
+            //todo: this is a hack until I can figure out what the problem
+            //is with the return value from worker.create
+            if (responseValue==",1"){
+                //todo: need to allow user to remove themselves by texting "remove"
+                this.sendAddNotification(friendlyName,contact_uri);
+                responseValue="Worker "+parameterObj.commandArray[3]+" successfully created.";
+            }
         }
         return responseValue;
     }
@@ -234,8 +262,11 @@ class Sms{
         var command;
         if(commandName in this.commandList){
             command=this.commandList[commandName];
-            if(command.isAdmin){
-                if (parameterObj.commandArray[1]!=process.env.ADMIN_PASSWORD){
+            if(command.adminTask!=null){
+                var workerSid=parameterObj.workerEntity.sid;
+                var passwordString=parameter.commandArray[1];
+                var passwordMatch=this.password.verifyPassword(workerSid,passwordString,command.adminTask);
+                if (!passwordMatch){
                     responseValue="You entered an incorrect admin password."
                     return responseValue;
                 }

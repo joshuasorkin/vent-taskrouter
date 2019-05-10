@@ -1,5 +1,8 @@
 high: needed for first prototype release
- 
+
+(high)
+test admin password sms commands
+
 (high)
 add event logging table to database,
 populate from event handler
