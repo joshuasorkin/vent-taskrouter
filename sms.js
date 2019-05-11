@@ -145,7 +145,7 @@ class Sms{
 
     sendAddNotification(friendlyName,contact_uri){
         var confirmMessageBody="You have been added as a Vent user, username "+friendlyName+
-                                                            ".  If you did not request to be added, please reply 'REMOVE' to this message.";
+                                                            ".  If you did not request to be added, please contact an administrator at "+process.env.testgoodphoonenumber+" for removal.";
         var manualText=this.manual(null);
         confirmMessageBody+="\n"+manualText;                                        
         client.messages
