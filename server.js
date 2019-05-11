@@ -266,7 +266,7 @@ app.post('/voice',async function(req,res){
 app.post('/randomWordLoop',function(req,res){
 	const response=new VoiceResponse();
 	var word=textsplitter.randomSentenceFromFiletextArray();
-	twimlBuilder.say(response,word);
+	twimlBuilder.sayReading(response,word);
 	response.redirect('/randomWordLoop');
 	res.send(response.toString());
 })

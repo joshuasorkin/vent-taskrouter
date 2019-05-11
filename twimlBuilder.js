@@ -28,6 +28,17 @@ class TwimlBuilder{
 
     }
 
+    sayReading(response,message){
+        const sayObj=response.say({
+            voice:process.env.TWILIO_SAY_VOICE_READING
+            //language:this.language
+        });
+        sayObj.ssmlProsody({
+            rate:this.rate
+        },message);
+
+    }
+
     //add a gather input that gets a number of minutes
     //and passes them to /processGatherConferenceMinutes
     gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters){
