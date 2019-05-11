@@ -36,7 +36,7 @@ class Sms{
         this.addCommand(commandList,"manual","Gets help manual for a command, or lists all commands if used by itself.","manual [command name]",2,null,this.manual.bind(this));
         this.addCommand(commandList,"status","Gets status for user and system.","status",1,null,this.status.bind(this));
         this.addCommand(commandList,"setadminpassword","Authorizes specified user for admin task and sets initial password.","setadminpassword "+
-                                    "[username] [admin task] [password]",4,"identity",this.setAdminPassword.bind(this));
+                                    "[username] [password] [admin task] [initial password]",4,"identity",this.setAdminPassword.bind(this));
         return commandList;
     }
 
@@ -263,6 +263,10 @@ class Sms{
         var command;
         if(commandName in this.commandList){
             command=this.commandList[commandName];
+            if (!this.parameterCountMatch(command,parameterObj)){
+                responseValue="Incorrect syntax for '"+command.commandName+"':\n"+command.parameterUsage;
+                return responseValue;
+            }
             if(command.adminTask!=null){
                 var workerSid=parameterObj.workerEntity.sid;
                 var passwordString=parameterObj.commandArray[1];
@@ -271,10 +275,6 @@ class Sms{
                     responseValue="You entered an incorrect admin password."
                     return responseValue;
                 }
-            }
-            if (!this.parameterCountMatch(command,parameterObj)){
-                responseValue="Incorrect syntax for '"+command.commandName+"':\n"+command.parameterUsage;
-                return responseValue;
             }
 
         }
