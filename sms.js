@@ -54,7 +54,9 @@ class Sms{
 
     async setAdminPassword(parameterObj){
         var friendlyName=parameterObj.bodyArray[2];
+        console.log("setAdminPassword: friendlyName: "+friendlyName);
         var adminTask=parameterObj.bodyArray[3];
+        console.log("setAdminPassword: adminTask: "+adminTask);
         var passwordString=parameterObj.bodyArray[4];
         var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(friendlyName);
         var result=await this.password.insertPassword(workerEntity.sid,passwordString,adminTask);
@@ -227,7 +229,9 @@ class Sms{
     //todo: add STOP reserved commands to manual()
     manual(parameterObj){
         var responseValue;
-        var commandListResponse="--Command list--\n"+this.commandListKeysString+"\n\nSend MANUAL [command name] for instructions\n\nTo Vent: call the phone number that sent this text";
+        var commandListResponse="--Command list--\n"+this.commandListKeysString+"\n\nSend MANUAL [command name] for instructions\n\n"+
+                                "To Vent: call the phone number that sent this text\n"
+                                +"To receive Vents: send ON";
         if(parameterObj==null){
             responseValue=commandListResponse
             return responseValue;
