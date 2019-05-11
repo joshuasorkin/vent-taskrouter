@@ -49,7 +49,7 @@ class TwimlBuilder{
             action:url,
             method:'GET'
         });
-        this.play(process.env.CHIME_URL);
+        gather.play(process.env.CHIME_URL);
         this.say(gather,'How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
         this.say(response,"I didn't receive any input.  Good-bye.");
     }
