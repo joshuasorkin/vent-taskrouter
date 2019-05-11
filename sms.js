@@ -227,6 +227,7 @@ class Sms{
     //todo: add STOP reserved commands to manual()
     manual(parameterObj){
         var responseValue;
+        commandListResponse="--Command list--\n"+this.commandListKeysString+"\n\nSend MANUAL [command name] for instructions";
         if(parameterObj==null){
             responseValue="--Command list--\n"+this.commandListKeysString;
             return responseValue;
