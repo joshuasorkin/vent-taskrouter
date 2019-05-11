@@ -229,12 +229,12 @@ class Sms{
         var responseValue;
         commandListResponse="--Command list--\n"+this.commandListKeysString+"\n\nSend MANUAL [command name] for instructions";
         if(parameterObj==null){
-            responseValue="--Command list--\n"+this.commandListKeysString;
+            responseValue=commandListResponse
             return responseValue;
         }
         var commandName=parameterObj.commandArray[1];
         if(parameterObj.commandArray.length==1){
-            responseValue="--Command list--\n"+this.commandListKeysString;
+            responseValue=commandListResponse;
         }
         else if(commandName in this.commandList){
             var command=this.commandList[commandName];
