@@ -53,11 +53,11 @@ class Sms{
     }
 
     async setAdminPassword(parameterObj){
-        var friendlyName=parameterObj.bodyArray[2];
+        var friendlyName=parameterObj.commandArray[2];
         console.log("setAdminPassword: friendlyName: "+friendlyName);
-        var adminTask=parameterObj.bodyArray[3];
+        var adminTask=parameterObj.commandArray[3];
         console.log("setAdminPassword: adminTask: "+adminTask);
-        var passwordString=parameterObj.bodyArray[4];
+        var passwordString=parameterObj.commandArray[4];
         var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(friendlyName);
         var result=await this.password.insertPassword(workerEntity.sid,passwordString,adminTask);
         if (result==",1"){
