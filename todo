@@ -30,7 +30,10 @@ send "directory" along with initial welcome message to new user (done, but need 
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
 (medium)
-change MANUAL text to be clearer about entering commands
+code commenting
+
+(medium)
+change MANUAL text to be clearer about entering commands, e.g. "To enter a command, send a text to this number"
 
 (medium)
 until I transition to ORM, I can probably refactor all those SELECT functions
