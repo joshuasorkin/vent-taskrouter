@@ -36,7 +36,7 @@ class Sms{
         this.addCommand(commandList,"manual","Gets help manual for a command, or lists all commands if used by itself.","manual [command name]",2,null,this.manual.bind(this));
         this.addCommand(commandList,"status","Gets status for user and system.","status",1,null,this.status.bind(this));
         this.addCommand(commandList,"setadminpassword","Authorizes specified user for admin task and sets initial password.","setadminpassword "+
-                                    "[username] [password] [admin task] [initial password]",4,"identity",this.setAdminPassword.bind(this));
+                                    "[username] [password] [username] [admin task] [initial password]",5,"identity",this.setAdminPassword.bind(this));
         return commandList;
     }
 
@@ -53,9 +53,9 @@ class Sms{
     }
 
     async setAdminPassword(parameterObj){
-        var friendlyName=parameterObj.bodyArray[1];
-        var adminTask=parameterObj.bodyArray[2];
-        var passwordString=parameterObj.bodyArray[3];
+        var friendlyName=parameterObj.bodyArray[2];
+        var adminTask=parameterObj.bodyArray[3];
+        var passwordString=parameterObj.bodyArray[4];
         var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(friendlyName);
         var result=await this.password.insertPassword(workerEntity.sid,passwordString,adminTask);
         if (result==",1"){
