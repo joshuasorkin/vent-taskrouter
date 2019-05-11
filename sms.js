@@ -227,7 +227,7 @@ class Sms{
     //todo: add STOP reserved commands to manual()
     manual(parameterObj){
         var responseValue;
-        var commandListResponse="--Command list--\n"+this.commandListKeysString+"\n\nSend MANUAL [command name] for instructions";
+        var commandListResponse="--Command list--\n"+this.commandListKeysString+"\n\nSend MANUAL [command name] for instructions\n\nTo Vent: call the phone number that sent this text";
         if(parameterObj==null){
             responseValue=commandListResponse
             return responseValue;
