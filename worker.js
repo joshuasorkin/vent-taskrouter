@@ -30,7 +30,7 @@ class Worker{
 				database.createWorker(worker);
 			});
 	}
-	
+
 	
 	async updateWorkerActivity(contact_uri,activitySid,rejectPendingReservations){
 		console.log("updateWorkerActivity: getting workerSid from database");
