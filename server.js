@@ -225,9 +225,9 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 
 app.post('/redirectToWait',function(req,res){
 	response=new VoiceResponse();
-	response.play(process.env.CHIME_URL);
+	//response.play(process.env.CHIME_URL);
 	twimlBuilder.say(response,"Now calling a potential receiver.  Please continue to wait.");
-	response.play(process.env.CHIME_URL);
+	//response.play(process.env.CHIME_URL);
 	response.redirect('/randomSoundLoop');
 	res.send(response.toString());
 });
