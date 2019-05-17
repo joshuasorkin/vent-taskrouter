@@ -120,11 +120,11 @@ app.get('/postConferenceIVR',function(req,res){
 	var url=urlSerializer.serialize('process_postConferenceIVR',parameters);
 	const gather=response.gather({
 		input:'dtmf',
-		timeout:5,
+		timeout:3,
 		action:url,
 		method:'GET'
   });
-	twimlBuilder.say(gather,"Would you like to be connected to this person on future calls?  Press 1 for yes, 2 for no.");
+	twimlBuilder.say(gather,"Would you like to be connected to this person on future calls?  Press 1 for yes, 2 for no, followed by pound.");
 	res.send(response.toString());
 });
 

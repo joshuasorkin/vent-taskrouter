@@ -13,7 +13,7 @@ var workerSid=args[0];
 
 async function getCount(){
     var result=await workerObj.getCountOfIdleWorkers();
-    console.log(result);
+    console.log("count of idle workers: "+result);
 }
 
 getCount();
