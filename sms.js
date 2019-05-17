@@ -123,10 +123,12 @@ class Sms{
         var responseValue;
         var contact_uri=parameterObj.commandArray[2];
         var friendlyName=parameterObj.commandArray[3];
+        /*
         if(!(/^[+]\d+$/.test(contact_uri))){
             responseValue=contact_uri+" is an invalid phone number.  Must be format: +12345678 (any # of digits)";
             return responseValue;
         }
+        */
 
         var contact_uriExists=await this.worker.contact_uriExists(contact_uri);
         if (contact_uriExists){
