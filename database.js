@@ -268,13 +268,13 @@ class Database{
 								"values "+
 								"(?,?,?,?,?,?,?)",{
 									replacements:[
-										reqBody.eventType,
-										reqBody.eventDescription,
-										reqBody.eventDate,
-										reqBody.resourceType,
-										reqBody.resourceSid,
-										reqBody.workerSid,
-										reqBody.data
+										reqBody.EventType,
+										reqBody.EventDescription,
+										reqBody.EventDate,
+										reqBody.ResourceType,
+										reqBody.ResourceSid,
+										reqBody.WorkerSid,
+										reqBody.Data
 									],
 									type:sequelize.QueryTypes.INSERT
 								});
