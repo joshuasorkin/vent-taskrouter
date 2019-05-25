@@ -653,7 +653,7 @@ app.post('/workspaceEvent',async function(req,res){
 	
 	if(taskrouter!=null){
 		try{
-			taskrouter.logEvent(reqBody);
+			taskrouter.logEvent(req.body);
 		}
 		catch(err){
 			console.log("/workspaceEvent: Event logging error: "+err);
