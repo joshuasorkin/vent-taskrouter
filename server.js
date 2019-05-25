@@ -31,6 +31,7 @@ var urlSerializer=new UrlSerializer();
 var conference;
 var worker;
 var sms;
+var taskrouter=null;
 var twimlBuilder=new TwimlBuilder();
 var router=express.Router();
 var wait=new Wait();
@@ -647,6 +648,9 @@ app.post('/workspaceEvent',async function(req,res){
 				availableNotifier.iterateSend(workerSid);
 			}
 			break;
+	}
+	if(taskrouter!=null){
+		taskrouter.logEvent(reqBody);
 	}
 
 	res.type('application/json');

@@ -1,4 +1,7 @@
 require('env2')('.env');
+const Database=require('./database');
+//todo: this class is too general.  It should be
+//broken out into workspace.js, workflow.js, etc
 
 const WorkflowConfigurer=require('./workflowConfigurer');
 
@@ -7,6 +10,9 @@ class Taskrouter{
 	constructor(workspace){
 		this.workspace=workspace;
 		this.workflowConfigurer=new WorkflowConfigurer();
+		//todo: should database be passed in instead of
+		//creating a new connection here?
+		this.database=new Database();
 	}
 	
 	configureWorkspace(){
@@ -36,6 +42,12 @@ class Taskrouter{
 				 .catch(err=>console.log("Error during workflow update: "+err));
 	}
 	
+	logEvent(reqBody){
+		this.database.logEvent(reqBody);
+	}
+	
+
+	//todo: this should be moved into worker.js
 	updateWorker(contact_uri){
 		activitySid=process.env.TWILIO_IDLE_SID;
 		return workspace.workers

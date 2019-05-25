@@ -16,10 +16,8 @@ is there a way to avoid that initial "please wait..." before jumping to
 set worker to offline after they hang up, with an indicating SMS, then reset them to Idle after 0.5 min unless they text "off"
 set caller to offline after call ends, with an indicating SMS
 
-(high)
-send "directory" along with initial welcome message to new user (done, but need to test with new user)
 
-(high) get domain so test users can see whether server is up
+
 
 (high) document all configuration:
 --toroid.org git hook
@@ -30,7 +28,13 @@ send "directory" along with initial welcome message to new user (done, but need 
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
 (medium)
+sendall: text message to all users who have not opted out of alerts
+
+(medium)
 code commenting
+
+(medium)
+document Twilio's built-in commands in manual (e.g. HELP)
 
 (medium)
 change MANUAL text to be clearer about entering commands, e.g. "To enter a command, send a text to this number"
@@ -228,3 +232,8 @@ add SMS commands (make sure not to use reserved command):
   uses getCountOfIdleWorkers
 -"directory"
  lists each command and its syntax
+
+(high)
+send "directory" along with initial welcome message to new user (done, but need to test with new user)
+
+(high) get domain so test users can see whether server is up
