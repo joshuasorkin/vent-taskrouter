@@ -650,7 +650,15 @@ app.post('/workspaceEvent',async function(req,res){
 			break;
 	}
 	if(taskrouter!=null){
-		taskrouter.logEvent(reqBody);
+		try{
+			taskrouter.logEvent(reqBody);
+		}
+		catch(err){
+			console.log("/workspaceEvent: Event logging error: "+err);
+		}
+	}
+	else{
+		console.log("/workspaceEvent: taskrouter is null, no event logged");
 	}
 
 	res.type('application/json');

@@ -42,10 +42,11 @@ class Taskrouter{
 				 .catch(err=>console.log("Error during workflow update: "+err));
 	}
 	
-	logEvent(reqBody){
-		this.database.logEvent(reqBody);
+	async logEvent(reqBody){
+		var result=await this.database.logEvent(reqBody);
+		return result;
 	}
-	
+
 
 	//todo: this should be moved into worker.js
 	updateWorker(contact_uri){
