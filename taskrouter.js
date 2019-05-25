@@ -43,7 +43,7 @@ class Taskrouter{
 	}
 	
 	async logEvent(reqBody){
-		var result=await this.database.logEvent(reqBody);
+		var result=await this.database.insertEvent(reqBody);
 		return result;
 	}
 
