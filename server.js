@@ -470,27 +470,34 @@ app.get('/agent_answer_process',async function(req,res){
 			twimlBuilder.say(response,'Thanks for letting me know that you\'re not available.  Goodbye!');
 			response.hangup();
 			console.log("worker rejected call");
-			clientWorkspace
-							//.tasks(parameters.taskSid)
-							.workers(parameters.workerSid)
-							.reservations(parameters.reservationSid)
-							.update({
-								reservationStatus:'rejected'
-							})
-							.then(reservation=>{
-								console.log("reservation status: "+reservation.reservationStatus);
-								console.log("worker name: "+reservation.workerName);
-								var updateResult=await worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
-								if (updateResult!=null){
-									client.messages.create({
-										from:process.env.TWILIO_PHONE_NUMBER,
-										body:sms.offMessage(reservation.workerName),
-										to:parameters.contact_uri
-									})
-									.then(message=>console.log("/agent_answer_process: message sid: "+message.sid))
-									.catch(err=>console.log("/agent_answer_process: error sending message: "+err));
-								}
-							});
+			try{
+				var reservation= await clientWorkspace
+												.workers(parameters.workerSid)
+												.reservations(parameters.reservationSid)
+												.update({
+													reservationStatus:'rejected'
+												});
+								
+				console.log("reservation status: "+reservation.reservationStatus);
+				console.log("worker name: "+reservation.workerName);
+				var updateResult=await worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
+				if (updateResult!=null){
+					try{
+						message=await client.messages.create({
+														from:process.env.TWILIO_PHONE_NUMBER,
+														body:sms.offMessage(reservation.workerName),
+														to:parameters.contact_uri
+													});
+						console.log("/agent_answer_process: message sid: "+message.sid);
+					}
+					catch(err){
+						console.log("/agent_answer_process: error sending message: "+err);
+					}
+				}
+			}
+			catch(err){
+				console.log("/agent_answer_process: error updating reservation to rejected: "+err);
+			}
 			break;
 		default:
 			twimlBuilder.say(response,'I\'m sorry, I didn\'t understand your response.');
