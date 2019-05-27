@@ -264,7 +264,7 @@ class Database{
 
 	insertEvent(reqBody){
 		return sequelize.query("insert into event "+
-								"(eventType,eventDescription,eventDate,resourceType,resourceSid,workerSid,data) "+
+								"(eventType,eventDescription,timestamp,resourceType,resourceSid,workerSid,data) "+
 								"values "+
 								"(?,?,?,?,?,?,?)",{
 									replacements:[
