@@ -430,7 +430,7 @@ app.get('/updateCallToConference',function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/agent_answer_process',function(req,res){
+app.get('/agent_answer_process',async function(req,res){
 	console.log("endpoint: agent_answer_process");
 	parameters=urlSerializer.deserialize(req);
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
