@@ -43,7 +43,6 @@ class Taskrouter{
 	}
 	
 	async logEvent(reqBody){
-		console.log("logEvent: JSON stringify reqBody: "+JSON.stringify(reqBody));
 		var result=await this.database.insertEvent(reqBody);
 		return result;
 	}

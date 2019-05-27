@@ -481,8 +481,10 @@ app.get('/agent_answer_process',async function(req,res){
 				console.log("reservation status: "+reservation.reservationStatus);
 				console.log("worker name: "+reservation.workerName);
 				var updateResult=await worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
+				console.log("/agent_answer_process: checking for null updateResult...");
 				if (updateResult!=null){
 					try{
+						console.log("/agent_answer_process: sending message to worker...");
 						message=await client.messages.create({
 														from:process.env.TWILIO_PHONE_NUMBER,
 														body:sms.offMessage(reservation.workerName),
