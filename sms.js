@@ -108,7 +108,7 @@ class Sms{
     //todo: there should probably be a separate class for building all these messages
     offMessage(friendlyName){
         var responseValue=friendlyName+", you are _not available_ to receive calls."
-        return offMessage;
+        return responseValue;
     }
 
     async off(parameterObj){
