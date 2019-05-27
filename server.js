@@ -483,18 +483,7 @@ app.get('/agent_answer_process',async function(req,res){
 				var updateResult=await worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
 				console.log("/agent_answer_process: checking for null updateResult...");
 				if (updateResult!=null){
-					try{
-						console.log("/agent_answer_process: sending message to worker...");
-						message=await client.messages.create({
-														from:process.env.TWILIO_PHONE_NUMBER,
-														body:sms.offMessage(reservation.workerName),
-														to:parameters.contact_uri
-													});
-						console.log("/agent_answer_process: message sid: "+message.sid);
-					}
-					catch(err){
-						console.log("/agent_answer_process: error sending message: "+err);
-					}
+					worker.messageWorkerUnavailable(reservation.workerName,parameters.contact_uri);
 				}
 			}
 			catch(err){
@@ -661,13 +650,7 @@ app.post('/workspaceEvent',async function(req,res){
 			console.log("/workspaceEvent: workerSid "+workerSid+" now being set to offline");
 			var updateResult=await worker.updateWorkerActivityFromSid(workerSid,process.env.TWILIO_OFFLINE_SID,true);
 			if (updateResult!=null){
-				client.messages.create({
-					from:process.env.TWILIO_PHONE_NUMBER,
-					body:sms.offMessage(updateResult.friendlyName),
-					to:updateResult.contact_uri
-				})
-				.then(message=>console.log("/workspaceEvent: message sid: "+message.sid))
-				.catch(err=>console.log("/workspaceEvent: error sending message: "+err));
+				worker.messageWorkerUnavailable(updateResult.friendlyName,updateResult.contact_uri);
 			}
 			break;
 		case "worker.activity.update":

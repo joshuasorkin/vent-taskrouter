@@ -1,10 +1,12 @@
 require('env2')('.env');
 const Database=require('./database')
 var database=new Database();
+const Sms=require('./sms');
 
 class Worker{
 	constructor(workspace){
 		this.workspace=workspace;
+		this.sms=new Sms();
 	}
 
 	createWorker(contact_uri,friendlyName){
@@ -126,6 +128,22 @@ class Worker{
 		}
 
 	}
+
+	async messageWorkerUnavailable(workerName,contact_uri){
+		try{
+			console.log("messageWorkerUnavailable: sending message to worker...");
+			message=await client.messages.create({
+											from:process.env.TWILIO_PHONE_NUMBER,
+											body:this.sms.offMessage(workerName),
+											to:contact_uri
+										});
+			console.log("messageWorkerUnavailable: message sid: "+message.sid);
+		}
+		catch(err){
+			console.log("messageWorkerUnavailable: error sending message: "+err);
+		}
+	}
+
 
 
 	async getWorkerEntityFromContact_uri(contact_uri){

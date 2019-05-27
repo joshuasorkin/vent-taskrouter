@@ -1,20 +1,31 @@
 high: needed for first prototype release
 
+(high)
+change wrap-up message to "do you want to add this person to your do-not-contact list?"
+
+(high)
+if call ends prematurely, send text message to caller with "do-not-contact" option
 
 (high)
 test admin password sms commands
 
 (high)
-add event logging table to database,
-populate from event handler
+set worker to offline after they hang up, with an indicating SMS, then reset them to Idle after 0.5 min unless they text "off"
+set caller to offline after call ends, with an indicating SMS
+other times when text message of user status should be sent:
+-caller/agent hangs up (actually, maybe just the call disconnect event should be captured and then that's the only event
+ we need to send this message)
+    this is identified in req.body for incomingCallEvent as "CallStatus":"completed"
+    for outbound calls, can set up a statusCallbackEvent handler url as described at:
+    https://www.twilio.com/docs/voice/api/call#statuscallbackevent
+
 
 (high)
 is there a way to avoid that initial "please wait..." before jumping to
 "no one is available"?  maybe the "please wait..." should be an interrupt to the caller's callSid
 
 (high)
-set worker to offline after they hang up, with an indicating SMS, then reset them to Idle after 0.5 min unless they text "off"
-set caller to offline after call ends, with an indicating SMS
+
 
 
 
@@ -26,6 +37,10 @@ set caller to offline after call ends, with an indicating SMS
 --twilio configuration
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
+
+
+(medium)
+soft chime before each time warning, to make the voice less jarring
 
 (medium)
 sendall: text message to all users who have not opted out of alerts
@@ -237,3 +252,7 @@ add SMS commands (make sure not to use reserved command):
 send "directory" along with initial welcome message to new user (done, but need to test with new user)
 
 (high) get domain so test users can see whether server is up
+
+(high)
+add event logging table to database,
+populate from event handler
