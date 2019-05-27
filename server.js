@@ -480,7 +480,16 @@ app.get('/agent_answer_process',function(req,res){
 							.then(reservation=>{
 								console.log("reservation status: "+reservation.reservationStatus);
 								console.log("worker name: "+reservation.workerName);
-								var updateResult=worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
+								var updateResult=await worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
+								if (updateResult!=null){
+									client.messages.create({
+										from:process.env.TWILIO_PHONE_NUMBER,
+										body:sms.offMessage(reservation.workerName),
+										to:parameters.contact_uri
+									})
+									.then(message=>console.log("/agent_answer_process: message sid: "+message.sid))
+									.catch(err=>console.log("/agent_answer_process: error sending message: "+err));
+								}
 							});
 			break;
 		default:
@@ -518,7 +527,8 @@ app.post('/assignment', async function (req, res) {
 		taskQueueSid:taskQueueSid,
 		minutes:minutes,
 		fromNumber:fromNumber,
-		callerWorkerSid:callerWorkerSid
+		callerWorkerSid:callerWorkerSid,
+		contact_uri:contact_uri
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 
@@ -641,6 +651,15 @@ app.post('/workspaceEvent',async function(req,res){
 			workerSid=req.body.WorkerSid;
 			console.log("/workspaceEvent: workerSid "+workerSid+" now being set to offline");
 			var updateResult=await worker.updateWorkerActivityFromSid(workerSid,process.env.TWILIO_OFFLINE_SID,true);
+			if (updateResult!=null){
+				client.messages.create({
+					from:process.env.TWILIO_PHONE_NUMBER,
+					body:sms.offMessage(updateResult.friendlyName),
+					to:updateResult.contact_uri
+				})
+				.then(message=>console.log("/workspaceEvent: message sid: "+message.sid))
+				.catch(err=>console.log("/workspaceEvent: error sending message: "+err));
+			}
 			break;
 		case "worker.activity.update":
 			if (eventDescription.includes("updated to Idle Activity")){

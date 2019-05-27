@@ -94,7 +94,7 @@ class Sms{
             }
             else{
                 var workerEntity=await this.worker.updateWorkerActivity(parameterObj.from,process.env.TWILIO_IDLE_SID,false);
-                responseValue=workerEntity.friendlyName+", you are now active, receiving calls.";
+                responseValue=workerEntity.friendlyName+", you are _available_ to receive calls.";
             }
             console.log("SMS.on(): responseValue: "+responseValue);
         }
@@ -105,11 +105,17 @@ class Sms{
         return responseValue;
     }
 
+    //todo: there should probably be a separate class for building all these messages
+    offMessage(friendlyName){
+        var responseValue=friendlyName+", you are _not available_ to receive calls."
+        return offMessage;
+    }
+
     async off(parameterObj){
         var responseValue;
         try{
             var workerEntity=await this.worker.updateWorkerActivity(parameterObj.from,process.env.TWILIO_OFFLINE_SID,false);
-            responseValue=workerEntity.friendlyName+", you are inactive, not receiving calls.";
+            responseValue=this.offMessage(workerEntity.friendlyName);
             console.log("SMS.off(): responseValue: "+responseValue);
         }
         catch(err){

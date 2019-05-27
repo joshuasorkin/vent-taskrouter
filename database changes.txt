@@ -1,1 +1,3 @@
 added table "event" for event logging
+
+eventdate field name changed to "timestamp"

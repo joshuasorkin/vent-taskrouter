@@ -270,7 +270,7 @@ class Database{
 									replacements:[
 										reqBody.EventType,
 										reqBody.EventDescription,
-										reqBody.EventDate,
+										reqBody.Timestamp,
 										reqBody.ResourceType,
 										reqBody.ResourceSid,
 										reqBody.WorkerSid,
