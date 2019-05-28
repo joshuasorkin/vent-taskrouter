@@ -21,7 +21,7 @@ test admin password sms commands
 
 (high)
 set worker to offline after they hang up, with an indicating SMS
-set caller to offline after call ends, with an indicating SMS
+
 other times when text message of user status should be sent:
 -caller/agent hangs up (actually, maybe just the call disconnect event should be captured and then that's the only event
  we need to send this message)
@@ -280,3 +280,5 @@ populate from event handler
 (high)
 change wrap-up message to "do you want to add this person to your do-not-contact list?"
 
+(high)
+set caller to offline after call ends, with an indicating SMS

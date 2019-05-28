@@ -535,7 +535,7 @@ app.post('/assignment', async function (req, res) {
 		contact_uri:contact_uri
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
-
+	outboundUrl=urlSerializer.serialize('outboundCallEvent',parameters);
 	switch(taskQueueSid){
 		case process.env.TWILIO_TASKQUEUE_SID:
 			var call;
@@ -556,7 +556,10 @@ app.post('/assignment', async function (req, res) {
 					url:url,
 					to: contact_uri,
 					from: process.env.TWILIO_PHONE_NUMBER,
-					method: 'GET'
+					method: 'GET',
+					statusCallback:outboundUrl,
+					statusCallbackMethod:'GET',
+					statusCallbackEvent:['completed']
 				});
 				console.log("/assignment: logging return value of client calls create, 'to' value "+call.to);
 				var outboundCallSid=call.sid;
@@ -592,6 +595,20 @@ app.post('/assignment', async function (req, res) {
 	
 	res.type('application/json');
     res.status(200).send({error:'an error occurred in sending response to assignment callback'});
+});
+
+app.get('/outboundCallEvent',async function(req,res){
+	var response=new VoiceResponse();
+	parameters=urlSerializer.deserialize(req);
+	switch(req.query.CallStatus){
+		case "completed":
+		case "busy":
+		case "no-answer":
+			var workerEntity=await worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
+			worker.messageWorkerUnavailable(workerEntity.friendlyName,req.query.To);
+			break;
+	}
+	res.send(response.toString());
 });
 
 app.get('/endCall_automatic',function(req,res){
