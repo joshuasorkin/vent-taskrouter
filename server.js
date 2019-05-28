@@ -362,10 +362,16 @@ app.get('/agent_answer',async function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/incomingCallEvents',function(req,res){
+app.post('/incomingCallEvents',async function(req,res){
 	event=req.body.StatusCallbackEvent;
 	console.log("/incomingCallEvents:");
 	console.log(JSON.stringify(req.body));
+	
+	if((req.body.CallStatus=="completed")&&(req.body.From!=process.env.TWILIO_PHONE_NUMBER)){
+		var workerEntity=await worker.getWorkerEntityFromContact_uri(req.body.From);
+		var updateResult=await worker.updateWorkerActivityFromSid(workerEntity.sid,process.env.TWILIO_OFFLINE_SID);
+		worker.messageWorkerUnavailable(workerEntity.friendlyName,req.body.From);
+	}
 });
 
 
