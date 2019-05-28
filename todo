@@ -1,16 +1,26 @@
 high: needed for first prototype release
 
-(high)
-change wrap-up message to "do you want to add this person to your do-not-contact list?"
 
 (high)
 if call ends prematurely, send text message to caller with "do-not-contact" option
+to implement this:
+--add "conference" table to db
+--include field "do_not_contact_result", for now this can be boolean with nulls allowed
+  and it will be populated when user responds to do_not_contact prompt
+--include fields "inboundCallSid","outboundCallSid"
+--add row when both parties join conference
+--if incomingCallEvent has "CallStatus":"completed" and "do_not_contact_result" is not populated
+  (note, will need to change the addBothToDoNotContact() to an await in process_postConferenceIVR
+   so that it completes before hanging up on user) then send SMS to user prompting them to respond with
+   ADDTODONOTCONTACT, for simplicity right now let's just have it only affect their most recent call if they
+   didn't send it on a previous call)
+
 
 (high)
 test admin password sms commands
 
 (high)
-set worker to offline after they hang up, with an indicating SMS, then reset them to Idle after 0.5 min unless they text "off"
+set worker to offline after they hang up, with an indicating SMS
 set caller to offline after call ends, with an indicating SMS
 other times when text message of user status should be sent:
 -caller/agent hangs up (actually, maybe just the call disconnect event should be captured and then that's the only event
@@ -18,6 +28,14 @@ other times when text message of user status should be sent:
     this is identified in req.body for incomingCallEvent as "CallStatus":"completed"
     for outbound calls, can set up a statusCallbackEvent handler url as described at:
     https://www.twilio.com/docs/voice/api/call#statuscallbackevent
+once i set this up for the call status event changes, can remove from agent_answer_process...or can i?
+technically it needs to happen after the status change occurs, though in practice the status change
+for both parties occurred at the beginning of their call and they would have thrown an error at that time.
+so probably safe to send the SMS when the call terminates
+
+(high)
+let user exit conference early by pressing "*"
+add this to pre-conference instructions
 
 
 (high)
@@ -38,6 +56,8 @@ is there a way to avoid that initial "please wait..." before jumping to
 
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
+(medium)
+need to block certain sms commands from users who have calls in progress, e.g. "on" and "off"
 
 (medium)
 soft chime before each time warning, to make the voice less jarring
@@ -256,3 +276,7 @@ send "directory" along with initial welcome message to new user (done, but need 
 (high)
 add event logging table to database,
 populate from event handler
+
+(high)
+change wrap-up message to "do you want to add this person to your do-not-contact list?"
+

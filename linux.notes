@@ -13,6 +13,9 @@ systemctl --user start vent
 #to see service log
 journalctl --user -f
 
+#to see entire log history
+journalctl --user -u vent
+
 #stop service
 systemctl --user stop vent
 

@@ -125,7 +125,7 @@ app.get('/postConferenceIVR',function(req,res){
 		action:url,
 		method:'GET'
   });
-	twimlBuilder.say(gather,"Would you like to be connected to this person on future calls?  Press 1 for yes, 2 for no, followed by pound.");
+	twimlBuilder.say(gather,"Do you need to add this person to your do-not-contact list?  Press 1 for yes, 2 for no, followed by pound.");
 	res.send(response.toString());
 });
 
@@ -134,11 +134,11 @@ app.get('/process_postConferenceIVR',async function(req,res){
 	const digits=req.query.Digits;
 	const response=new VoiceResponse();
 	switch(digits){
-		case '1':
+		case '2':
 			twimlBuilder.say(response,"I'm glad you enjoyed your conversation.  Good-bye.");
 			response.hangup;
 			break;
-		case '2':
+		case '1':
 			twimlBuilder.say(response,"I'm sorry you didn't enjoy your conversation.  I'll make sure "+
 																	"you're not connected to them on any future calls.  Good-bye.");
 			response.hangup();
