@@ -137,7 +137,7 @@ class Worker{
 	async messageWorkerUnavailable(workerName,contact_uri){
 		try{
 			console.log("messageWorkerUnavailable: sending message to worker...");
-			message=await client.messages.create({
+			var message=await client.messages.create({
 											from:process.env.TWILIO_PHONE_NUMBER,
 											body:this.sms.offMessage(workerName),
 											to:contact_uri
