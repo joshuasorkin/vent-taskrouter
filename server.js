@@ -486,11 +486,6 @@ app.get('/agent_answer_process',async function(req,res){
 								
 				console.log("reservation status: "+reservation.reservationStatus);
 				console.log("worker name: "+reservation.workerName);
-				var updateResult=await worker.updateWorkerActivityFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID,true);
-				console.log("/agent_answer_process: checking for null updateResult...");
-				if (updateResult!=null){
-					worker.messageWorkerUnavailable(reservation.workerName,parameters.contact_uri);
-				}
 			}
 			catch(err){
 				console.log("/agent_answer_process: error updating reservation to rejected: "+err);

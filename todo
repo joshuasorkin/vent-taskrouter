@@ -19,19 +19,7 @@ to implement this:
 (high)
 test admin password sms commands
 
-(high)
-set worker to offline after they hang up, with an indicating SMS
 
-other times when text message of user status should be sent:
--caller/agent hangs up (actually, maybe just the call disconnect event should be captured and then that's the only event
- we need to send this message)
-    this is identified in req.body for incomingCallEvent as "CallStatus":"completed"
-    for outbound calls, can set up a statusCallbackEvent handler url as described at:
-    https://www.twilio.com/docs/voice/api/call#statuscallbackevent
-once i set this up for the call status event changes, can remove from agent_answer_process...or can i?
-technically it needs to happen after the status change occurs, though in practice the status change
-for both parties occurred at the beginning of their call and they would have thrown an error at that time.
-so probably safe to send the SMS when the call terminates
 
 (high)
 let user exit conference early by pressing "*"
@@ -282,3 +270,16 @@ change wrap-up message to "do you want to add this person to your do-not-contact
 
 (high)
 set caller to offline after call ends, with an indicating SMS
+
+(high)
+set worker to offline after they hang up, with an indicating SMS
+other times when text message of user status should be sent:
+-caller/agent hangs up (actually, maybe just the call disconnect event should be captured and then that's the only event
+ we need to send this message)
+    this is identified in req.body for incomingCallEvent as "CallStatus":"completed"
+    for outbound calls, can set up a statusCallbackEvent handler url as described at:
+    https://www.twilio.com/docs/voice/api/call#statuscallbackevent
+once i set this up for the call status event changes, can remove from agent_answer_process...or can i?
+technically it needs to happen after the status change occurs, though in practice the status change
+for both parties occurred at the beginning of their call and they would have thrown an error at that time.
+so probably safe to send the SMS when the call terminates
