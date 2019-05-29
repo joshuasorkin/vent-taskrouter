@@ -39,7 +39,7 @@ class Conference{
 
 	async getParticipants(conferenceSid){
 		var participants=await this.client.conferences(conferenceSid)
-							.participants.fetch();
+							.participants.list();
 		return participants;
 	}
 
