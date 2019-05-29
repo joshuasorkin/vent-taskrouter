@@ -177,6 +177,11 @@ class Conference{
 		}
 	}
 
+	async insertConference(inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid){
+		var result=await this.database.insertConference(inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid);
+		return result;
+	}
+
 
 	
 }

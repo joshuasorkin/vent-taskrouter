@@ -402,7 +402,7 @@ app.get('/conferenceEvents',async function(req,res){
 			if (initialMinutes>3){
 				conference.setTimedAnnounce(initialMinutes,initialMinutes-1,conferenceSid);
 			}
-			database.insertConference(parameters.callSid,outboundCallSid,parameters.callerWorkerSid,parameters.workerSid,conferenceSid);
+			conference.insertConference(parameters.callSid,outboundCallSid,parameters.callerWorkerSid,parameters.workerSid,conferenceSid);
 			break;
 		case "participant-join":
 			//todo:add participant's callSid and workerSid to conference_participant
