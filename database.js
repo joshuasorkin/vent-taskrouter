@@ -284,7 +284,10 @@ class Database{
 		return sequelize.query("insert into conference "+
 								"(inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid) "+
 								"values "+
-								"(?,?,?,?,?)",{
+								"(?,?,"+
+								"(select id from worker where sid=?),"+
+								"(select id from worker where sid=?),"+
+								"?,?)",{
 									replacements:[inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid],
 									type:sequelize.QueryTypes.INSERT
 								});
