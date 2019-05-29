@@ -280,6 +280,16 @@ class Database{
 								});
 	}
 
+	insertConference(inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid){
+		return sequelize.query("insert into conference "+
+								"(inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid) "+
+								"values "+
+								"(?,?,?,?,?)",{
+									replacements:[inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid],
+									type:sequelize.QueryTypes.INSERT
+								});
+	}
+
 	
 	                                                           
 }

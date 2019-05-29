@@ -383,7 +383,14 @@ app.get('/conferenceEvents',async function(req,res){
 	console.log("/conferenceEvents: conference event: "+event);
 	console.log("/conferenceEvents: now listing conference participants' callSids:");
 	var participants=await conference.getParticipants(conferenceSid);
-	console.log("/conferenceEvents: participants: "+participants);
+	var outboundCallSid;
+	for(index=0;index<participants.length;index++){
+		var participant=participants[index];
+		console.log("/conferenceEvents: participant callSid: "+participant.callSid);
+		if (participant.callSid!=parameters.callSid){
+			outboundCallSid=participant.callSid;
+		}
+	}
 	parameters.conferenceSid=conferenceSid;
 	var responseValue="";
 	switch(event){
@@ -395,6 +402,7 @@ app.get('/conferenceEvents',async function(req,res){
 			if (initialMinutes>3){
 				conference.setTimedAnnounce(initialMinutes,initialMinutes-1,conferenceSid);
 			}
+			database.insertConference(parameters.callSid,outboundCallSid,parameters.callerWorkerSid,parameters.workerSid,conferenceSid);
 			break;
 		case "participant-join":
 			//todo:add participant's callSid and workerSid to conference_participant
