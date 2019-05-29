@@ -287,7 +287,7 @@ class Database{
 								"(?,?,"+
 								"(select id from worker where sid=?),"+
 								"(select id from worker where sid=?),"+
-								"?,?)",{
+								"?)",{
 									replacements:[inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid],
 									type:sequelize.QueryTypes.INSERT
 								});
