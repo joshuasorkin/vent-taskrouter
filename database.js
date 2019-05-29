@@ -282,7 +282,7 @@ class Database{
 
 	insertConference(inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid){
 		return sequelize.query("insert into conference "+
-								"(inboundCallSid,outboundCallSid,inboundWorkerSid,outboundWorkerSid,conferenceSid) "+
+								"(inboundCallSid,outboundCallSid,inboundWorkerId,outboundWorkerId,conferenceSid) "+
 								"values "+
 								"(?,?,"+
 								"(select id from worker where sid=?),"+
