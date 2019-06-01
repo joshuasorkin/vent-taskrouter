@@ -92,7 +92,7 @@ class Taskrouter{
 	//todo: this function doesn't really belong in Taskrouter,
 	//need to create a separate class for db admin functions
 	async getFunctionalityStatus(functionality){
-		var result=await database.getFunctionalityStatus(functionality);
+		var result=await this.database.getFunctionalityStatus(functionality);
 		var logResult;
 		switch(result){
 			case null:
