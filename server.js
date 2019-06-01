@@ -247,6 +247,8 @@ app.post('/voice',async function(req,res){
 	if(contact_uriExists){
 		workerEntity=await worker.updateWorkerActivity(fromNumber,process.env.TWILIO_BUSY_SID,false);
 		console.log("/voice: worker's sid is "+workerEntity.sid);
+		friendlyName=workerEntity.friendlyName;
+		console.log("/voice: worker's friendlyName is "+friendlyName);
 		workerSid=workerEntity.sid;
 		var result=await worker.insertCallSidWorkerSid(callSid,workerSid);
 		if (result!=null){
@@ -256,7 +258,8 @@ app.post('/voice',async function(req,res){
 		do_not_contact=attributes.do_not_contact;
 		parameters={
 			do_not_contact:do_not_contact,
-			workerSid:workerSid
+			workerSid:workerSid,
+			friendlyName:friendlyName
 		}
 		twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters);
 	}
