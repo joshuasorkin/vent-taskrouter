@@ -106,7 +106,10 @@ app.get('/conferenceAnnounceEnd_timeUp',function(req,res){
 	url=urlSerializer.serialize('endConference_update',parameters);
 	const response=new VoiceResponse();
 	console.log("/conferenceAnnounceEnd_timeUp: running conferenceAnnounceEnd");
-	twimlBuilder.say(response,'Time\'s up.  Thanks for participating.  I\'ll end the conference now.');
+	twimlBuilder.say(response,'Time\'s up.  The conference will end in a few seconds.');
+	response.pause({
+		length:5
+	})
 	response.redirect({
 		method:'GET'
 	},url);
@@ -402,7 +405,7 @@ app.get('/conferenceEvents',async function(req,res){
 			if (initialMinutes>3){
 				conference.setTimedAnnounce(initialMinutes,initialMinutes-1,conferenceSid);
 			}
-			conference.insertConference(parameters.callSid,outboundCallSid,parameters.callerWorkerSid,parameters.workerSid,conferenceSid);
+			//conference.insertConference(parameters.callSid,outboundCallSid,parameters.callerWorkerSid,parameters.workerSid,conferenceSid);
 			break;
 		case "participant-join":
 			//todo:add participant's callSid and workerSid to conference_participant
