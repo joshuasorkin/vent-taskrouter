@@ -248,8 +248,18 @@ app.get('/gatherConferenceMinutes',function(req,res){
 });
 
 app.post('/voice',async function(req,res){
-	const fromNumber=req.body.From;
+
 	const response=new VoiceResponse();
+
+	var generalStatus=await taskrouter.getFunctionalityStatus("general");
+	if (!generalStatus){
+		twimlBuilder.say(response,"The system is unavailable right now.  Please try your call again later.");
+		res.send(response.toString());
+		return;
+	}
+
+	const fromNumber=req.body.From;
+	
 	const callSid=req.body.CallSid;
 	console.log("/voice: callSid: "+callSid);
 	contact_uriExists=await worker.contact_uriExists(fromNumber);

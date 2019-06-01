@@ -3,3 +3,5 @@ added table "event" for event logging
 eventdate field name changed to "timestamp"
 
 added table "conference" for do_not_call_result management
+
+added table "systemstatus" for functionality on/off switching

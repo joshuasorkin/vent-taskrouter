@@ -90,6 +90,21 @@ class Database{
 		}
 	}
 
+	async getFunctionalityStatus(functionality){
+		var selectResult=await sequelize.query("select * from systemstatus where function=?",{
+			replacements:[functionality],
+			type:sequelize.QueryTypes.SELECT
+		});
+		if(selectResult.length==0){
+			return null;
+		}
+		else{
+			console.log("getFunctionalityStatus: selectResult[0]: "+selectResult[0]);
+			var available=selectResult[0].available;
+			return available;
+		}
+	}
+
 	insertAvailableNotificationRequest(worker_id){
 		console.log("insertAvailableNotificationRequest");
 		return sequelize.query("insert into available_notification_request (worker_id) values ("+worker_id+")")
