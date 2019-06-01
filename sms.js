@@ -336,7 +336,7 @@ class Sms{
     bodyToCommandArray(body){
         var commandArray;
         if (body.includes('"')){
-            commandArray=bodyToCommandArray_quotedString(body);
+            commandArray=this.bodyToCommandArray_quotedString(body);
             return commandArray;
         }
         body = body.replace(/\s\s+/g, ' ');
