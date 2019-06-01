@@ -37,9 +37,9 @@ class Sms{
         this.addCommand(commandList,"status","Gets status for user and system.","status",1,null,this.status.bind(this));
         this.addCommand(commandList,"setadminpassword","Authorizes specified user for admin task and sets initial password.","setadminpassword "+
                                     "[username] [password] [username] [admin task] [initial password]",5,"identity",this.setAdminPassword.bind(this));
-        this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall \"[message]\"",2,"sendmessage",this.sendAll.bind(this));
+        this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall [password] \"[message]\"",3,"sendmessage",this.sendAll.bind(this));
         this.addCommand(commandList,"sendusername","Sends a text message to a user by name.","sendusername "+
-                                    "[username] \"[message]\"",3,"sendmessage",this.sendUsername.bind(this));
+                                    "[password] [username] \"[message]\"",4,"sendmessage",this.sendUsername.bind(this));
         return commandList;
     }
 
