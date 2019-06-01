@@ -71,6 +71,7 @@ class Sms{
         var friendlyName=parameterObj.commandArray[2];
         var messageBody=parameterObj.commandArray[3];
         var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(friendlyName);
+        console.log("sendUsername: check testing worker attributes: "+workerEntity.contact_uri);
         this.sendMessageToWorkerEntity(workerEntity,messageBody);
     }
 
