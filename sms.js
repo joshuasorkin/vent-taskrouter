@@ -62,6 +62,7 @@ class Sms{
         var workerEntity;
         for(index=0;index<workerList.length;index++){
             workerEntity=workerList[index];
+            console.log("sendAll: workerEntity contact_uri: "+workerEntity.contact_uri);
             if(workerEntity.contact_uri=="+19257251305"){
                 console.log("sending a message to Moreau");
             }
