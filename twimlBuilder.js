@@ -54,7 +54,7 @@ class TwimlBuilder{
         response.pause({
             length:0.5
         });
-        this.say('How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
+        this.say(response,'How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
         this.say(response,"I didn't receive any input.  Good-bye.");
     }
 
