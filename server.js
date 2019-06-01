@@ -127,7 +127,8 @@ app.get('/postConferenceIVR',function(req,res){
 		timeout:3,
 		action:url,
 		method:'GET'
-  });
+	});
+	twimlBuilder.playChime(response);
 	twimlBuilder.say(gather,"Do you need to add this person to your do-not-contact list?  Press 1 for yes, 2 for no, followed by pound.");
 	res.send(response.toString());
 });
