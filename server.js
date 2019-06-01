@@ -364,7 +364,11 @@ app.get('/agent_answer',async function(req,res){
 			method:'GET',
 			timeout:5
 		});
-		twimlBuilder.say(gather,'Hello! Would you like a Vent call for '+minutes+'minutes?  Press 1 to accept, or 2 to refuse.');
+		twimlBuilder.say(response,"Hello, "+parameters.friendlyName);
+		response.pause({
+			length:0.5
+		});
+		twimlBuilder.say(gather,'Would you like a Vent call for '+minutes+'minutes?  Press 1 to accept, or 2 to refuse.');
 		response.redirect({method:'GET'},redirectUrl);
 	}
 	res.send(response.toString());
@@ -534,6 +538,7 @@ app.post('/assignment', async function (req, res) {
 	contact_uri=WorkerAttributes.contact_uri;
 	workerSid=req.body.WorkerSid;
 	taskQueueSid=req.body.TaskQueueSid;
+	friendlyName=WorkerAttributes.friendlyName;
 	console.log("contact_uri: "+contact_uri);
 	parameters={
 		taskSid:taskSid,
@@ -544,7 +549,8 @@ app.post('/assignment', async function (req, res) {
 		minutes:minutes,
 		fromNumber:fromNumber,
 		callerWorkerSid:callerWorkerSid,
-		contact_uri:contact_uri
+		contact_uri:contact_uri,
+		friendlyName:friendlyName
 	}
 	url=urlSerializer.serialize('agent_answer',parameters);	
 	outboundUrl=urlSerializer.serialize('outboundCallEvent',parameters);

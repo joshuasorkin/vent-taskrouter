@@ -50,8 +50,11 @@ class TwimlBuilder{
             method:'GET'
         });
         this.playChime(gather);
-        this.say(gather,'Hello, '+parameters.friendlyName+'.'+
-                'How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
+        this.say(response,"Hello, "+parameters.friendlyName);
+        response.pause({
+            length:0.5
+        });
+        this.say('How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
         this.say(response,"I didn't receive any input.  Good-bye.");
     }
 
