@@ -67,15 +67,17 @@ class Sms{
         var testArray=testListString.split(',');
         for(index=0;index<testArray.length;index++){
             console.log(testArray[index]);
-        }
-        client.messages
+            var phonenum=testArray[index];
+            client.messages
                 .create({
                     from:process.env.TWILIO_PHONE_NUMBER,
                     body:messageBody,
-                    to:process.env.testbadphonenumber
+                    to:phonenum
                 })
                 .then(message=>console.log("Sms.sendMessageToWorkerEntity(): sent message to worker: "+message.sid))
                 .catch(err=>console.log("Sms.sendMessageToWorkerEntity(): Error sending message to worker: "+err));
+        }
+        
 
         /*
         for(index=0;index<workerList.length;index++){
