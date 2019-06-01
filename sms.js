@@ -56,8 +56,8 @@ class Sms{
     }
 
     async sendAll(parameterObj){
-        var messageBody=parameterObj.commandArray[1];
-        var workerList=await worker.getWorkerList();
+        var messageBody=parameterObj.commandArray[2];
+        var workerList=await this.worker.getWorkerList();
         var index;
         var workerEntity;
         for(index=0;index<workerList.length;index++){
