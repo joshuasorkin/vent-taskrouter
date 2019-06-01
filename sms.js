@@ -57,18 +57,33 @@ class Sms{
 
     async sendAll(parameterObj){
         var messageBody=parameterObj.commandArray[2];
-        var workerList=await this.worker.getWorkerList();
+        
+        
+        //var workerList=await this.worker.getWorkerList();
         var index;
-        var workerEntity;
+        //var workerEntity;
+
+        client.messages
+                .create({
+                    from:process.env.TWILIO_PHONE_NUMBER,
+                    body:messageBody,
+                    to:process.env.testbadphonenumber
+                })
+                .then(message=>console.log("Sms.sendMessageToWorkerEntity(): sent message to worker: "+message.sid))
+                .catch(err=>console.log("Sms.sendMessageToWorkerEntity(): Error sending message to worker: "+err));
+
+        /*
         for(index=0;index<workerList.length;index++){
             workerEntity=workerList[index];
             console.log("sendAll: workerEntity contact_uri: "+workerEntity.contact_uri);
+            this.sendMessageToWorkerEntity
             if(workerEntity.contact_uri=="+19257251305"){
-                console.log("sending a message to Moreau");
+                
             }
 
             //return this.sendMessageToWorkerEntity(workerEntity,messageBody);
         }
+        */
     }
 
     //todo: refactor a sendMessageToWorkerEntity(workerEntity,messageBody) function
