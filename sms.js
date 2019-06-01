@@ -37,6 +37,9 @@ class Sms{
         this.addCommand(commandList,"status","Gets status for user and system.","status",1,null,this.status.bind(this));
         this.addCommand(commandList,"setadminpassword","Authorizes specified user for admin task and sets initial password.","setadminpassword "+
                                     "[username] [password] [username] [admin task] [initial password]",5,"identity",this.setAdminPassword.bind(this));
+        this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall \"[message]\"",2,"sendmessage",this.sendAll.bind(this));
+        this.addCommand(commandList,"sendusername","Sends a text message to a user by name.","sendusername "+
+                                    "[username] \"[message]\"",3,"sendmessage",this.sendUsername.bind(this));
         return commandList;
     }
 
@@ -50,6 +53,36 @@ class Sms{
             commandFunction:commandFunction
         }
         commandList[commandName]=command;
+    }
+
+    async sendAll(parameterObj){
+        var messageBody=parameterObj.commandArray[1];
+        var workerList=await worker.getWorkerList();
+        var index;
+        var workerEntity;
+        for(index=0;index<workerList.length;index++){
+            workerEntity=workerList[index];
+            this.sendMessageToWorkerEntity(workerEntity,messageBody);
+        }
+    }
+
+    //todo: refactor a sendMessageToWorkerEntity(workerEntity,messageBody) function
+    async sendUsername(parameterObj){
+        var friendlyName=parameterObj.commandArray[1];
+        var messageBody=parameterObj.commandArray[2];
+        var workerEntity=await worker.getWorkerEntityFromFriendlyName(friendlyName);
+        this.sendMessageToWorkerEntity(workerEntity,messageBody);
+    }
+
+    sendMessageToWorkerEntity(workerEntity,messageBody){
+        client.messages
+        .create({
+            from:process.env.TWILIO_PHONE_NUMBER,
+            body:messageBody,
+            to:workerEntity.contact_uri
+        })
+        .then(message=>console.log("Sms.sendMessageToWorkerEntity(): sent message to worker: "+message.sid))
+        .catch(err=>console.log("Sms.sendMessageToWorkerEntity(): Error sending message to worker: "+err));
     }
 
     async setAdminPassword(parameterObj){
@@ -107,7 +140,7 @@ class Sms{
 
     //todo: there should probably be a separate class for building all these messages
     offMessage(friendlyName){
-        var responseValue=friendlyName+", you are _not available_ to receive calls."
+        var responseValue=friendlyName+", you are _not available_ to receive calls.  Send ON to set yourself available."
         return responseValue;
     }
 
@@ -241,7 +274,7 @@ class Sms{
         var responseValue;
         var commandListResponse="--Command list--\n"+this.commandListKeysString+"\n\nSend MANUAL [command name] for instructions\n\n"+
                                 "To Vent: call the phone number that sent this text\n"
-                                +"To receive Vents: send ON";
+                                +"To make yourself available to receive Vents: send ON";
         if(parameterObj==null){
             responseValue=commandListResponse
             return responseValue;
@@ -301,14 +334,40 @@ class Sms{
     }
 
     bodyToCommandArray(body){
+        var commandArray;
+        if (body.contains('"')){
+            commandArray=bodyToCommandArray_quotedString(body);
+            return commandArray;
+        }
         body = body.replace(/\s\s+/g, ' ');
         if (body==" "){
             body="";
         }
         body=body.trim();
-        var commandArray=body.split(" ");
+        commandArray=body.split(" ");
         return commandArray;
     }
+
+    //taken from https://stackoverflow.com/a/18647776/619177
+    bodyToCommandArray_quotedString(body){
+        //The parenthesis in the regex creates a captured group within the quotes
+        var myRegexp = /[^\s"]+|"([^"]*)"/gi;
+        var myString = body;
+        var myArray = [];
+
+        do {
+            //Each call to exec returns the next regex match as an array
+            var match = myRegexp.exec(myString);
+            if (match != null)
+            {
+                //Index 1 in the array is the captured group if it exists
+                //Index 0 is the matched text, which we use if no captured group exists
+                myArray.push(match[1] ? match[1] : match[0]);
+            }
+        } while (match != null);
+        return myArray;
+    }
+
 }
 
 module.exports=Sms;

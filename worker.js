@@ -161,6 +161,11 @@ class Worker{
 		return workerEntity;
 	}
 
+	async getWorkerList(){
+		var workerList=await this.workspace.workers.list();
+		return workerList;
+	}
+
 	async getWorkerEntityFromFriendlyName(friendlyName){
 		var workerList=await this.workspace.workers.list({
 			friendlyName:friendlyName
