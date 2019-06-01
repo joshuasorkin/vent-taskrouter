@@ -68,8 +68,8 @@ class Sms{
 
     //todo: refactor a sendMessageToWorkerEntity(workerEntity,messageBody) function
     async sendUsername(parameterObj){
-        var friendlyName=parameterObj.commandArray[1];
-        var messageBody=parameterObj.commandArray[2];
+        var friendlyName=parameterObj.commandArray[2];
+        var messageBody=parameterObj.commandArray[3];
         var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(friendlyName);
         this.sendMessageToWorkerEntity(workerEntity,messageBody);
     }
