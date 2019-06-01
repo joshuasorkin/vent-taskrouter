@@ -162,7 +162,9 @@ class Worker{
 	}
 
 	async getWorkerList(){
-		var workerList=await this.workspace.workers.list();
+		var workerList=await this.workspace.workers.list({
+			limit:1000
+		});
 		return workerList;
 	}
 
