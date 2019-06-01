@@ -63,6 +63,11 @@ class Sms{
         var index;
         //var workerEntity;
 
+        var testListString=process.env.TEST_GROUP_LIST;
+        var testArray=testListString.split(',');
+        for(index=0;index<testArray.length;index++){
+            console.log(testArray[index]);
+        }
         client.messages
                 .create({
                     from:process.env.TWILIO_PHONE_NUMBER,
