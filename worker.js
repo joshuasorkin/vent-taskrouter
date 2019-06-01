@@ -161,10 +161,13 @@ class Worker{
 		return workerEntity;
 	}
 
+	//todo: get rid of this limit
 	async getWorkerList(){
-		var workerList=await this.workspace.workers.list({
-			limit:1000
-		});
+		var workerList;
+		var pushResult=await this.workspace.workers
+			.each(worker=>{
+				workerList.push(worker);
+			});
 		return workerList;
 	}
 
