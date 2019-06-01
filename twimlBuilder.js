@@ -55,7 +55,16 @@ class TwimlBuilder{
             length:0.5
         });
         this.say(gather,'How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
-        this.say(response,"I didn't receive any input.  Good-bye.");
+        if (parameters.attempts<2){
+            parameters.attempts++;
+            redirectUrl=urlSerializer.serialize('gatherConferenceMinutes',parameters);
+            response.redirect({
+                method:'GET'
+            },redirectUrl);
+        }
+        else{
+            this.say(response,"I didn't receive any input.  Good-bye.");
+        }
     }
 
     playChime(response){

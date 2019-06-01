@@ -238,6 +238,15 @@ app.post('/redirectToWait',function(req,res){
 	res.send(response.toString());
 });
 
+//used for repeating initial conference minutes gather if user
+//doesn't respond the first time
+app.get('/gatherConferenceMinutes',function(req,res){
+	parameters=urlSerializer.deserialize(req);
+	const response=new VoiceResponse();
+	twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters);
+	res.send(response.toString()); 
+});
+
 app.post('/voice',async function(req,res){
 	const fromNumber=req.body.From;
 	const response=new VoiceResponse();
@@ -259,7 +268,8 @@ app.post('/voice',async function(req,res){
 		parameters={
 			do_not_contact:do_not_contact,
 			workerSid:workerSid,
-			friendlyName:friendlyName
+			friendlyName:friendlyName,
+			attempts:1
 		}
 		twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters);
 	}
