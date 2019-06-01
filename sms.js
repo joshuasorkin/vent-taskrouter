@@ -36,7 +36,7 @@ class Sms{
         this.addCommand(commandList,"manual","Gets help manual for a command, or lists all commands if used by itself.","manual [command name]",2,null,this.manual.bind(this));
         this.addCommand(commandList,"status","Gets status for user and system.","status",1,null,this.status.bind(this));
         this.addCommand(commandList,"setadminpassword","Authorizes specified user for admin task and sets initial password.","setadminpassword "+
-                                    "[username] [password] [username] [admin task] [initial password]",5,"identity",this.setAdminPassword.bind(this));
+                                    "[password] [username] [admin task] [initial password]",5,"identity",this.setAdminPassword.bind(this));
         this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall [password] \"[message]\"",3,"sendmessage",this.sendAll.bind(this));
         this.addCommand(commandList,"sendusername","Sends a text message to a user by name.","sendusername "+
                                     "[password] [username] \"[message]\"",4,"sendmessage",this.sendUsername.bind(this));
@@ -70,7 +70,7 @@ class Sms{
     async sendUsername(parameterObj){
         var friendlyName=parameterObj.commandArray[1];
         var messageBody=parameterObj.commandArray[2];
-        var workerEntity=await worker.getWorkerEntityFromFriendlyName(friendlyName);
+        var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(friendlyName);
         this.sendMessageToWorkerEntity(workerEntity,messageBody);
     }
 

@@ -1,5 +1,7 @@
 high: needed for first prototype release
 
+(high)
+what's going on with the timer messages?
 
 (high)
 if call ends prematurely, send text message to caller with "do-not-contact" option
@@ -18,7 +20,7 @@ to implement this:
 
 (high)
 test admin password sms commands
-
+--why is setadminpassword returning undefined error on success?
 
 
 (high)
