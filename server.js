@@ -179,6 +179,7 @@ app.get('/conferenceAnnounceTime',function(req,res){
 	else{
 		unit="minutes";
 	}
+	twimlBuilder.playChime(response);
 	twimlBuilder.say(response,'You have '+timeRemaining+' '+unit+' remaining.');
 	res.send(response.toString());
 });
