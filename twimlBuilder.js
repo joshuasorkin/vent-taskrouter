@@ -50,9 +50,11 @@ class TwimlBuilder{
             method:'GET'
         });
         this.playChime(gather);
-        this.say(gather,"Hello, "+parameters.friendlyName);
+        if (parameters.attempts<2){
+            this.say(gather,"Hello, "+parameters.friendlyName);
+        }
         gather.pause({
-            length:0.5
+            length:0.25
         });
         this.say(gather,'How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
         if (parameters.attempts<2){

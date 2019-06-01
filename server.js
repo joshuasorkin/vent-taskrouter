@@ -376,7 +376,7 @@ app.get('/agent_answer',async function(req,res){
 		});
 		twimlBuilder.say(response,"Hello, "+parameters.friendlyName);
 		response.pause({
-			length:0.5
+			length:0.25
 		});
 		twimlBuilder.say(gather,'Would you like a Vent call for '+minutes+'minutes?  Press 1 to accept, or 2 to refuse.');
 		response.redirect({method:'GET'},redirectUrl);
