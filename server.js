@@ -253,7 +253,11 @@ app.post('/voice',async function(req,res){
 
 	var generalStatus=await taskrouter.getFunctionalityStatus("general");
 	if (!generalStatus){
+		twimlBuilder.playChime(response);
 		twimlBuilder.say(response,"The system is unavailable right now.  Please try your call again later.");
+		response.pause({
+			length:0.25
+		});
 		res.send(response.toString());
 		return;
 	}
