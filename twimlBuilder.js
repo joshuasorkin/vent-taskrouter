@@ -57,7 +57,7 @@ class TwimlBuilder{
         this.say(gather,'How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
         if (parameters.attempts<2){
             parameters.attempts++;
-            redirectUrl=urlSerializer.serialize('gatherConferenceMinutes',parameters);
+            var redirectUrl=urlSerializer.serialize('gatherConferenceMinutes',parameters);
             response.redirect({
                 method:'GET'
             },redirectUrl);
