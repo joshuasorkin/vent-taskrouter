@@ -62,7 +62,11 @@ class Sms{
         var workerEntity;
         for(index=0;index<workerList.length;index++){
             workerEntity=workerList[index];
-            this.sendMessageToWorkerEntity(workerEntity,messageBody);
+            if(workerEntity.contact_uri=="+19257251305"){
+                console.log("sending a message to Moreau");
+            }
+
+            //return this.sendMessageToWorkerEntity(workerEntity,messageBody);
         }
     }
 
@@ -74,6 +78,7 @@ class Sms{
         console.log("sendUsername: check testing worker attributes: "+workerEntity.contact_uri);
         this.sendMessageToWorkerEntity(workerEntity,messageBody);
     }
+
 
     sendMessageToWorkerEntity(workerEntity,messageBody){
         client.messages
