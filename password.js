@@ -50,6 +50,10 @@ class Password{
         try{
             passwordHash=await database.getPasswordHash(workerId,adminTaskId);
             console.log("verifyPassword: passwordHash: "+passwordHash);
+            //user doesn't have identity entry for this admin task so verification fails
+            if (passwordHash==null){
+                return false;
+            }
         }
         catch(err){
             console.log("verifyPassword: getPasswordHash error: "+err);
