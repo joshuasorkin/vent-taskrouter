@@ -1,9 +1,9 @@
 
 require('env2')('.env');
 
-const Worker;
 try{
-    Worker=require('./worker');
+const Worker=require('./worker');
+console.log("starting test...");
 }
 catch(err){
     console.log("error requiring worker: "+err);
@@ -29,7 +29,6 @@ async function getWorkerList(){
 }
 */
 
-console.log("starting test...");
 //getWorkerList();
 
 
