@@ -19,7 +19,7 @@ async function getWorkerList(){
 }
 
 console.log("starting test...");
-getWorkerList();
+//getWorkerList();
 
 
 
