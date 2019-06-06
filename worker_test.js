@@ -6,7 +6,7 @@ const workspaceSid = process.env.TWILIO_WORKSPACE_SID; //add your workspace sid
 const client=require('twilio')(accountSid,authToken);
 
 
-clientWorkspace=client.taskrouter.workspaces(workspaceSid);
+//clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 
 async function getWorkerList(){
     var index;
