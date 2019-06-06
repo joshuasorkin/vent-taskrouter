@@ -37,6 +37,8 @@ async function getCount(){
 getCount();
 */
 
+
+/*
 async function select(callSid){
     var result=await workerObj.getWorkerSidFromCallSid(callSid);
     console.log(result);
@@ -49,9 +51,6 @@ async function insert(callSid,workerSid){
     console.log("this happens after the result.");
 }
 
-//insert("callsidXIOSFDI",workerSid);
-
-//workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
 async function update(workerSid){
     var result;
     var workerEntity=await clientWorkspace.workers('WK425caf724515f59b5620fba1af1e1fd8')
@@ -59,6 +58,9 @@ async function update(workerSid){
     workerObj.updateWorkerAddAttributeArrayValue(workerEntity,"do_not_contact",workerSid);
 }
 
+//insert("callsidXIOSFDI",workerSid);
+
+//workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
 
 
 //workerObj.createWorker("abcxisiwe","zzyswiew");
@@ -66,3 +68,4 @@ async function update(workerSid){
 
 //worker.addAllWorkersToDatabase();
 //workerObj.updateWorkerAddAttribute(null,null,null);
+*/
