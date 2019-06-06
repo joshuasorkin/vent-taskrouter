@@ -16,12 +16,21 @@ clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 async function getWorkerList(){
     var index;
     console.log("getting worker list...");
+
+    var pushResult=await this.workspace.workers
+			.each(worker=>{
+				workerList.push(worker);
+			});
+	return workerList;
+
+    /*
     var workerList=await clientWorkspace.workers.list();
     var workerObj;
     for(index=0;index<workerList.length;index++){
         workerObj=workerList[index];
         console.log(workerObj.friendlyName+" "+workerObj.sid);
     }
+    */
 }
 
 
