@@ -1,25 +1,21 @@
 
 require('env2')('.env');
 
-try{
+console.log("requiring Worker...");
 const Worker=require('./worker');
-console.log("starting test...");
-}
-catch(err){
-    console.log("error requiring worker: "+err);
-}
-/*
 const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 const workspaceSid = process.env.TWILIO_WORKSPACE_SID; //add your workspace sid
+console.log("requiring Twilio client...");
 const client=require('twilio')(accountSid,authToken);
-*/
 
-//clientWorkspace=client.taskrouter.workspaces(workspaceSid);
+console.log("obtaining workspace...");
+clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 
-/*
+
 async function getWorkerList(){
     var index;
+    console.log("getting worker list...");
     var workerList=await clientWorkspace.workers.list();
     var workerObj;
     for(index=0;index<workerList.length;index++){
@@ -27,9 +23,9 @@ async function getWorkerList(){
         console.log(workerObj.friendlyName+" "+workerObj.sid);
     }
 }
-*/
 
-//getWorkerList();
+
+getWorkerList();
 
 
 
