@@ -1,5 +1,10 @@
 high: needed for first prototype release
 
+
+(high)
+when i add to do not contact from twilio console:
+UnhandledPromiseRejectionWarning: SequelizeDatabaseError: value too long for type character varying(100)
+
 (high)
 what's going on with the timer messages?
 

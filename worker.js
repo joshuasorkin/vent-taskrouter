@@ -163,12 +163,15 @@ class Worker{
 
 	//todo: get rid of this limit
 	async getWorkerList(){
+
+
 		var workerList;
 		var pushResult=await this.workspace.workers
 			.each(worker=>{
 				workerList.push(worker);
 			});
 		return workerList;
+
 	}
 
 	async getWorkerEntityFromFriendlyName(friendlyName){

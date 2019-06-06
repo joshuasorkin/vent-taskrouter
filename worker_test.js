@@ -7,6 +7,23 @@ const client=require('twilio')(accountSid,authToken);
 
 
 clientWorkspace=client.taskrouter.workspaces(workspaceSid);
+
+async function getWorkerList(){
+    var index;
+    var workerList=await clientWorkspace.workers.list();
+    var workerObj;
+    for(index=0;index<workerList.length;index++){
+        workerObj=workerList[index];
+        console.log(workerObj.friendlyName+" "+workerObj.sid);
+    }
+}
+
+getWorkerList();
+
+
+
+
+/*
 var workerObj=new Worker(clientWorkspace);
 var args=process.argv.slice(2);
 var workerSid=args[0];
@@ -17,6 +34,7 @@ async function getCount(){
 }
 
 getCount();
+*/
 
 async function select(callSid){
     var result=await workerObj.getWorkerSidFromCallSid(callSid);
