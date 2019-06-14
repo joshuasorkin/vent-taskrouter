@@ -413,25 +413,36 @@ app.post('/incomingCallEvents',async function(req,res){
 
 
 app.get('/conferenceEvents',async function(req,res){
-	parameters=urlSerializer.deserialize(req);
-	event=req.query.StatusCallbackEvent;
-	conferenceSid=req.query.ConferenceSid;
-	console.log("/conferenceEvents: conference event: "+event);
-	console.log("/conferenceEvents: req.query: "+JSON.stringify(req.query));
-	var callSid=req.query.CallSid;
-	console.log("/conferenceEvents: callSid: "+callSid);
-	console.log("/conferenceEvents: now listing conference participants' callSids:");
-	var participants=await conference.getParticipants(conferenceSid);
-	var outboundCallSid;
-	for(index=0;index<participants.length;index++){
-		var participant=participants[index];
-		console.log("/conferenceEvents: participant callSid: "+participant.callSid);
-		if (participant.callSid!=parameters.callSid){
-			outboundCallSid=participant.callSid;
-		}
-	}
-	parameters.conferenceSid=conferenceSid;
 	var responseValue="";
+	var callSid;
+	var outboundCallSid;
+	var participants;
+	var parameters;
+	var event;
+	var conferenceSid;
+	try{
+		parameters=urlSerializer.deserialize(req);
+		event=req.query.StatusCallbackEvent;
+		conferenceSid=req.query.ConferenceSid;
+		console.log("/conferenceEvents: conference event: "+event);
+		console.log("/conferenceEvents: req.query: "+JSON.stringify(req.query));
+		callSid=req.query.CallSid;
+		console.log("/conferenceEvents: callSid: "+callSid);
+		console.log("/conferenceEvents: now listing conference participants' callSids:");
+		participants=await conference.getParticipants(conferenceSid);
+		
+		for(index=0;index<participants.length;index++){
+			var participant=participants[index];
+			console.log("/conferenceEvents: participant callSid: "+participant.callSid);
+			if (participant.callSid!=parameters.callSid){
+				outboundCallSid=participant.callSid;
+			}
+		}
+		parameters.conferenceSid=conferenceSid;
+	}
+	catch(err){
+		console.log("/conferenceEvents: error during pre-switch code: "+err);
+	}
 	switch(event){
 		case "conference-start":
 			initialMinutes=parameters.minutes;
