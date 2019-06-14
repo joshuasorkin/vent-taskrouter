@@ -456,6 +456,7 @@ app.get('/conferenceEvents',async function(req,res){
 			//conference.endConferenceTask(req.query.ConferenceSid,parameters.taskSid,'conferenceAnnounceEnd_participantLeave');
 			break;
 		case "conference-end":
+			console.log("/conferenceEvents: about to run conference.endConferenceTask");
 			conference.endConferenceTask(parameters.taskSid);
 			responseValue="";
 		default:
