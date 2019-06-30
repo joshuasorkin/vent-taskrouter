@@ -574,7 +574,8 @@ app.post('/assignment', async function (req, res) {
 	contact_uri=WorkerAttributes.contact_uri;
 	workerSid=req.body.WorkerSid;
 	taskQueueSid=req.body.TaskQueueSid;
-	friendlyName=WorkerAttributes.friendlyName;
+	var workerEntity=await clientWorkspace.workers(workerSid).fetch();
+	friendlyName=workerEntity.friendlyName;
 	console.log("contact_uri: "+contact_uri);
 	parameters={
 		taskSid:taskSid,
