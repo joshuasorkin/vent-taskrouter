@@ -388,7 +388,7 @@ app.get('/agent_answer',async function(req,res){
 			method:'GET',
 			timeout:5
 		});
-		twimlBuilder.say(response,"Hello, "+parameters.friendlyName);
+		twimlBuilder.say(gather,"Hello, "+parameters.friendlyName);
 		response.pause({
 			length:1
 		});
