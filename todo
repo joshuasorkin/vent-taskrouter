@@ -1,5 +1,12 @@
 high: needed for first prototype release
 
+(high)
+requests from test group:
+-voice activation
+-change chime
+-change hold music to soothing music
+-change do not contact request message to something clearer: 
+"press 1 to add them to do not contact list, press 2 to contact them again in the future"
 
 (high)
 when i add to do not contact from twilio console:

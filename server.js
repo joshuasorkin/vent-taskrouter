@@ -256,7 +256,7 @@ app.post('/voice',async function(req,res){
 		twimlBuilder.playChime(response);
 		twimlBuilder.say(response,"The system is unavailable right now.  Please try your call again later.");
 		response.pause({
-			length:0.25
+			length:1
 		});
 		res.send(response.toString());
 		return;
@@ -390,7 +390,7 @@ app.get('/agent_answer',async function(req,res){
 		});
 		twimlBuilder.say(response,"Hello, "+parameters.friendlyName);
 		response.pause({
-			length:0.25
+			length:1
 		});
 		twimlBuilder.say(gather,'Would you like a Vent call for '+minutes+'minutes?  Press 1 to accept, or 2 to refuse.');
 		response.redirect({method:'GET'},redirectUrl);
