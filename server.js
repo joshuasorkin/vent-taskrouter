@@ -618,6 +618,7 @@ app.post('/assignment', async function (req, res) {
 				});
 				console.log("/assignment: logging return value of client calls create, 'to' value "+call.to);
 				var outboundCallSid=call.sid;
+				console.log("/assignment: outbound call sid "+outboundCallSid);
 				var result=await worker.insertCallSidWorkerSid(outboundCallSid,workerSid);
 				if (result!=null){
 					console.log("/voice: insertCallSidWorkerSid failed: "+result);
