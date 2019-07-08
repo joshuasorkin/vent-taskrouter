@@ -59,6 +59,11 @@ update vent-dev service to match vent service ExecStart
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
 (medium)
+instead of do_not_contact as a worker attribute, it should instead be in a database table,
+so that the event logging table 'event' doesn't error when event.eventdescription has too many characters
+(as it will when worker's do_not_contact array gets large enough) 
+
+(medium)
 if receiver hangs up during transfer-into-conference, caller gets stuck on hold forever
 
 (medium)
