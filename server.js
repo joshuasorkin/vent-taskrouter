@@ -428,9 +428,9 @@ app.get('/conferenceEvents',async function(req,res){
 		console.log("/conferenceEvents: req.query: "+JSON.stringify(req.query));
 		callSid=req.query.CallSid;
 		console.log("/conferenceEvents: callSid: "+callSid);
-		console.log("/conferenceEvents: now listing conference participants' callSids:");
+		console.log("/conferenceEvents: now listing conference participants' callSids for conferenceSid "+conferenceSid+":");
 		participants=await conference.getParticipants(conferenceSid);
-		
+		console.log("/conferenceEvents: participants length "+participants.length+" for conferenceSid "+conferenceSid);
 		for(index=0;index<participants.length;index++){
 			var participant=participants[index];
 			console.log("/conferenceEvents: participant callSid: "+participant.callSid);
@@ -439,6 +439,7 @@ app.get('/conferenceEvents',async function(req,res){
 			}
 		}
 		parameters.conferenceSid=conferenceSid;
+		console.log("/conferenceEvents: end of try() pre-switch code for conferenceSid "+conferenceSid);
 	}
 	catch(err){
 		console.log("/conferenceEvents: error during pre-switch code: "+err);
@@ -470,6 +471,7 @@ app.get('/conferenceEvents',async function(req,res){
 			console.log("/conferenceEvents: about to run conference.endConferenceTask");
 			conference.endConferenceTask(parameters.taskSid);
 			responseValue="";
+			break;
 		default:
 			responseValue="";
 

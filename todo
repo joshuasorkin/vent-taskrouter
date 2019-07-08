@@ -59,6 +59,9 @@ update vent-dev service to match vent service ExecStart
 (high) when worker answers, sometimes the beginning of the say() is cut off
 
 (medium)
+if receiver hangs up during transfer-into-conference, caller gets stuck on hold forever
+
+(medium)
 need to block certain sms commands from users who have calls in progress, e.g. "on" and "off"
 
 (medium)
