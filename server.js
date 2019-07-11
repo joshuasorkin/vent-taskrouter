@@ -185,7 +185,7 @@ app.get('/conferenceAnnounceTime',function(req,res){
 });
 
 app.get('/processGatherConferenceMinutes',async function(req,res){
-	console.log("/processGatherConferenceMinutes: req.body: "+JSON.stringify(req.body));
+	console.log("/processGatherConferenceMinutes: req.query: "+JSON.stringify(req.query));
 	const digits=req.query.Digits;
 	const response=new VoiceResponse();
 	var parameters=urlSerializer.deserialize(req);
