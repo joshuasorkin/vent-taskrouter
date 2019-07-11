@@ -186,7 +186,16 @@ app.get('/conferenceAnnounceTime',function(req,res){
 
 app.get('/processGatherConferenceMinutes',async function(req,res){
 	console.log("/processGatherConferenceMinutes: req.query: "+JSON.stringify(req.query));
-	const digits=req.query.Digits;
+	var digits;
+	if (req.query.hasOwnProperty('Digits')){
+		digits=req.query.Digits;
+	}
+	else if (req.query.hasOwnProperty('SpeechResult')){
+		digits=req.query.SpeechResult;
+	}
+	else{
+		throw("/processGatherConferenceMinutes: error: no 'Digits' or 'SpeechResult' property present");
+	}
 	const response=new VoiceResponse();
 	var parameters=urlSerializer.deserialize(req);
 	var digitsInt;
