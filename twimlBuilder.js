@@ -44,9 +44,12 @@ class TwimlBuilder{
     gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters){
         var url=urlSerializer.serialize('processGatherConferenceMinutes',parameters);
         const gather=response.gather({
-            input:'dtmf',
+            input:'dtmf speech',
             timeout:5,
             action:url,
+            hints:"1,2,3,4,5,6,7,8,9,10",
+            speechTimeout:"auto",
+            speechModel:"numbers_and_commands",
             method:'GET'
         });
         this.playChime(gather);
@@ -54,9 +57,9 @@ class TwimlBuilder{
             this.say(gather,"Hello, "+parameters.friendlyName);
         }
         gather.pause({
-            length:0.25
+            length:1
         });
-        this.say(gather,'How many minutes would you like?  Enter '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
+        this.say(gather,'How many minutes would you like?  Say, or enter, '+minMinutes+' to '+maxMinutes+', followed by the pound key.');
         if (parameters.attempts<2){
             parameters.attempts++;
             var redirectUrl=urlSerializer.serialize('gatherConferenceMinutes',parameters);
