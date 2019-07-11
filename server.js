@@ -530,7 +530,7 @@ app.get('/agent_answer_process',async function(req,res){
 	}
 	switch(userInput){
 		case '1':
-		case 'yes':
+		case 'Yes.':
 			//prepare twiml to put agent into conference
 			response=conference.generateConference(parameters,'Thank you.  You will now be connected to the caller.');
 			
@@ -560,7 +560,9 @@ app.get('/agent_answer_process',async function(req,res){
 					.catch(err=>console.log("/agent_answer_process: error updating inbound call to conference: "+err));
 			break;
 		case '2':
-		case 'no':
+		case 'No.':
+			//todo:move this into GatherProcessor so the same rejection can be called either if the worker refuses
+			//or there are multiple unclear inputs
 			twimlBuilder.say(response,'Thanks for letting me know that you\'re not available.  Goodbye!');
 			response.hangup();
 			console.log("worker rejected call");
