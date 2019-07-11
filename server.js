@@ -510,11 +510,14 @@ app.get('/updateCallToConference',function(req,res){
 
 app.get('/agent_answer_process',async function(req,res){
 	console.log("endpoint: agent_answer_process");
+	console.log("/agent_answer_process: req.query: "+JSON.stringify(req.query));
 	parameters=urlSerializer.deserialize(req);
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	conferenceUpdateUrl=urlSerializer.serialize('updateCallToConference',parameters);
 	var response=new VoiceResponse();
 	//todo: this digits vs. speechresult should be in its own class since it's also used in processGatherConferenceMinutes
+	//actually, the whole processing gathered speech/text input should be in a GatherProcessor class
+	//similar to the TwimlBuilder
 	var userInput;
 	if (req.query.hasOwnProperty('Digits')){
 		userInput=req.query.Digits;
