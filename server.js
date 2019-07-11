@@ -392,6 +392,10 @@ app.get('/agent_answer',async function(req,res){
 	}
 	else{
 		const gather=response.gather({
+			input:"dtmf speech",
+			hints:"yes,no",
+			speechTimeout:"auto",
+			speechModel:"numbers_and_commands",
 			numDigits:1,
 			action:url,
 			method:'GET',
@@ -401,7 +405,7 @@ app.get('/agent_answer',async function(req,res){
 		response.pause({
 			length:1
 		});
-		twimlBuilder.say(gather,'Would you like a Vent call for '+minutes+'minutes?  Press 1 to accept, or 2 to refuse.');
+		twimlBuilder.say(gather,'Would you like a Vent call for '+minutes+'minutes? Say yes, or press 1, to accept.  Say no, or press 2, to refuse.');
 		response.redirect({method:'GET'},redirectUrl);
 	}
 	res.send(response.toString());
@@ -510,8 +514,20 @@ app.get('/agent_answer_process',async function(req,res){
 	redirectUrl=urlSerializer.serialize('agent_answer',parameters);
 	conferenceUpdateUrl=urlSerializer.serialize('updateCallToConference',parameters);
 	var response=new VoiceResponse();
-	switch(req.query.Digits){
+	//todo: this digits vs. speechresult should be in its own class since it's also used in processGatherConferenceMinutes
+	var userInput;
+	if (req.query.hasOwnProperty('Digits')){
+		userInput=req.query.Digits;
+	}
+	else if (req.query.hasOwnProperty('SpeechResult')){
+		userInput=req.query.SpeechResult;
+	}
+	else{
+		throw("/agent_answer_process: error: no 'Digits' or 'SpeechResult' property present");
+	}
+	switch(userInput){
 		case '1':
+		case 'yes':
 			//prepare twiml to put agent into conference
 			response=conference.generateConference(parameters,'Thank you.  You will now be connected to the caller.');
 			
@@ -541,6 +557,7 @@ app.get('/agent_answer_process',async function(req,res){
 					.catch(err=>console.log("/agent_answer_process: error updating inbound call to conference: "+err));
 			break;
 		case '2':
+		case 'no':
 			twimlBuilder.say(response,'Thanks for letting me know that you\'re not available.  Goodbye!');
 			response.hangup();
 			console.log("worker rejected call");
