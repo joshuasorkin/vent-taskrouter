@@ -123,26 +123,40 @@ app.get('/postConferenceIVR',function(req,res){
 
 	var url=urlSerializer.serialize('process_postConferenceIVR',parameters);
 	const gather=response.gather({
-		input:'dtmf',
+		input:"dtmf speech",
+		hints:"yes,no",
+		speechTimeout:"auto",
+		speechModel:"numbers_and_commands",
 		timeout:3,
 		action:url,
 		method:'GET'
 	});
 	twimlBuilder.playChime(response);
-	twimlBuilder.say(gather,"Do you need to add this person to your do-not-contact list?  Press 1 for yes, 2 for no, followed by pound.");
+	twimlBuilder.say(gather,"Do you need to add this person to your do-not-contact list?  Say 'yes', or press 1, followed by pound, to add them to your do-not-contact list.  Say 'no', or press 2, if you would like to talk to them in the future.");
 	res.send(response.toString());
 });
 
 app.get('/process_postConferenceIVR',async function(req,res){
 	var parameters=urlSerializer.deserialize(req);
-	const digits=req.query.Digits;
+	var userInput;
+	if (req.query.hasOwnProperty('Digits')){
+		userInput=req.query.Digits;
+	}
+	else if (req.query.hasOwnProperty('SpeechResult')){
+		userInput=req.query.SpeechResult;
+	}
+	else{
+		throw("/agent_answer_process: error: no 'Digits' or 'SpeechResult' property present");
+	}
 	const response=new VoiceResponse();
-	switch(digits){
+	switch(userInput){
 		case '2':
+		case 'No.':
 			twimlBuilder.say(response,"I'm glad you enjoyed your conversation.  Good-bye.");
 			response.hangup;
 			break;
 		case '1':
+		case 'Yes.':
 			twimlBuilder.say(response,"I'm sorry you didn't enjoy your conversation.  I'll make sure "+
 																	"you're not connected to them on any future calls.  Good-bye.");
 			response.hangup();
@@ -180,7 +194,7 @@ app.get('/conferenceAnnounceTime',function(req,res){
 		unit="minutes";
 	}
 	twimlBuilder.playChime(response);
-	twimlBuilder.say(response,'You have '+timeRemaining+' '+unit+' remaining.');
+	twimlBuilder.say(response,timeRemaining+' '+unit+' remaining.');
 	res.send(response.toString());
 });
 
