@@ -132,7 +132,7 @@ app.get('/postConferenceIVR',function(req,res){
 		method:'GET'
 	});
 	twimlBuilder.playChime(response);
-	twimlBuilder.say(gather,"Do you need to add this person to your do-not-contact list?  Say 'yes', or press 1, followed by pound, to add them to your do-not-contact list.  Say 'no', or press 2, if you would like to talk to them in the future.");
+	twimlBuilder.say(gather,"Would you like to connect with this person on one of your future calls?");
 	res.send(response.toString());
 });
 
@@ -150,13 +150,13 @@ app.get('/process_postConferenceIVR',async function(req,res){
 	}
 	const response=new VoiceResponse();
 	switch(userInput){
-		case '2':
-		case 'No.':
+		case '1':
+		case 'Yes.':
 			twimlBuilder.say(response,"I'm glad you enjoyed your conversation.  Good-bye.");
 			response.hangup;
 			break;
-		case '1':
-		case 'Yes.':
+		case '2':
+		case 'No.':
 			twimlBuilder.say(response,"I'm sorry you didn't enjoy your conversation.  I'll make sure "+
 																	"you're not connected to them on any future calls.  Good-bye.");
 			response.hangup();
