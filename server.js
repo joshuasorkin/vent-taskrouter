@@ -132,7 +132,7 @@ app.get('/postConferenceIVR',function(req,res){
 		method:'GET'
 	});
 	twimlBuilder.playChime(response);
-	twimlBuilder.say(gather,"Would you like to connect with this person on one of your future calls?");
+	twimlBuilder.say(gather,"Would you like to connect with this person on one of your future calls?  Say 'Yes' or press 1, or say 'No' or press 2.");
 	res.send(response.toString());
 });
 
@@ -194,7 +194,7 @@ app.get('/conferenceAnnounceTime',function(req,res){
 		unit="minutes";
 	}
 	twimlBuilder.playChime(response);
-	twimlBuilder.say(response,timeRemaining+' '+unit+' remaining.');
+	twimlBuilder.say(response,timeRemaining+' '+unit+'.');
 	res.send(response.toString());
 });
 
