@@ -61,7 +61,9 @@ app.get('/',function(req,res){
 app.post('/submit_newuser',function(req,res){
 	var phonenumber=req.body.phonenumber;
 	var username=req.body.username;
-	res.send("you submitted: "+username+" "+phonenumber);
+	var output="you submitted: "+username+" "+phonenumber;
+	console.log("/submit_newuser: text to send back: "+output);
+	res.send(output);
 })
 
 app.post('/sms',async function(req,res){
