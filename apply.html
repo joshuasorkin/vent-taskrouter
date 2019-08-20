@@ -1,0 +1,32 @@
+<h2>Apply to become a Vent user</h2>
+
+<form id="submit_newuser" method="POST" action="/submit_newuser">
+    User name:
+    <input type="text" name="username" />
+    <br>
+    Phone number:
+    <input type="text" name="phonenumber" />
+    <br><br>
+    <input type="submit" />
+</form>
+
+<script>
+document.getElementById("submit_newuser").addEventListener('submit',submit_newuser);
+
+function submit_newuser(event){
+    event.preventDefault();
+    submit_newuserForm=document.getElementById("submit_newuser");
+    formData=new FormData(submit_newuserForm);
+    fetch("/submit_newuser",{
+        body:formData,
+        headers:{
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        method:"post"
+    })
+    .then(response=>console.log(response))
+    .catch(err=>"submit_newuser: error: "+err);
+}
+
+
+</script>

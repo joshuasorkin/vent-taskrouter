@@ -54,6 +54,15 @@ app.get('/admin',function(req,res){
 	res.sendFile(path.join(__dirname+'/admin.html'));
 });
 
+app.get('/',function(req,res){
+	res.sendFile(path.join(__dirname+'/apply.html'));
+})
+
+app.post('/submit_newuser',function(req,res){
+	var phonenumber=req.body.phonenumber;
+	var username=req.body.username;
+	res.send("you submitted: "+username+" "+phonenumber);
+})
 
 app.post('/sms',async function(req,res){
 	var body=req.body.Body;
