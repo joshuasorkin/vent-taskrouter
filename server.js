@@ -59,6 +59,7 @@ app.get('/',function(req,res){
 })
 
 app.post('/submit_newuser',function(req,res){
+	console.log("/submit_newuser: req: "+req);
 	var phonenumber=req.body.phonenumber;
 	var username=req.body.username;
 	var output="you submitted: "+username+" "+phonenumber;
