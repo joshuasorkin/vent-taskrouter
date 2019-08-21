@@ -31,6 +31,10 @@ class Worker{
 					});
 	}
 
+	createWorkerApply(contact_uri,friendlyName,authenticateCode){
+		return database.createWorkerApply(contact_uri,friendlyName,authenticateCode);
+	}
+
 	addAllWorkersToDatabase(){
 		this.workspace.workers
 			.each(worker=>{

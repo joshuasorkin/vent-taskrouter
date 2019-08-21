@@ -40,6 +40,7 @@ class Sms{
         this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall [password] \"[message]\"",3,"sendmessage",this.sendAll.bind(this));
         this.addCommand(commandList,"sendusername","Sends a text message to a user by name.","sendusername "+
                                     "[password] [username] \"[message]\"",4,"sendmessage",this.sendUsername.bind(this));
+        this.addCommand(commandList,"apply","Applies for membership as a new user.","apply [phone number] [username]",3,null,this.apply.bind(this));
         return commandList;
     }
 
@@ -93,7 +94,17 @@ class Sms{
         */
     }
 
-    //todo: refactor a sendMessageToWorkerEntity(workerEntity,messageBody) function
+    async apply(parameterObj){
+        var contact_uri=parameterObj.commandArray[1];
+        var friendlyName=parameterObj.commandArray[2];
+        var authenticateCode=getRndInteger(process.env.AUTHENTICATECODE_MIN,process.env.AUTHENTICATECODE_MAX);
+        var workerApply=await this.worker.createWorkerApply(contact_uri,friendlyName,authenticateCode);
+    }
+
+    getRndInteger(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) ) + min;
+    }
+
     async sendUsername(parameterObj){
         var friendlyName=parameterObj.commandArray[2];
         var messageBody=parameterObj.commandArray[3];
@@ -113,6 +124,8 @@ class Sms{
         .then(message=>console.log("Sms.sendMessageToWorkerEntity(): sent message to worker: "+message.sid))
         .catch(err=>console.log("Sms.sendMessageToWorkerEntity(): Error sending message to worker: "+err));
     }
+
+    
 
     async setAdminPassword(parameterObj){
         var friendlyName=parameterObj.commandArray[2];
