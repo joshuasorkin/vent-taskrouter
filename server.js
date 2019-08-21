@@ -47,7 +47,7 @@ function exitErrorHandler(error) {
   process.exit(1);
 }
 
-
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/admin',function(req,res){
