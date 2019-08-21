@@ -35,11 +35,10 @@ function submit_newuser(event){
         method:"post"
     })
     .then(response=>{
-        console.log(JSON.stringify(response));
-        return response.json();
+        return response.text();
     })
     .then(data=>{
-        console.log(JSON.stringify(data));
+        console.log(data);
         //document.getElementById("result").innerHTML=response.body;
     })
     .catch(err=>"submit_newuser: error: "+err);
