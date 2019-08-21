@@ -37,9 +37,9 @@ function submit_newuser(event){
     .then(response=>{
         return response.text();
     })
-    .then(data=>{
-        console.log(data);
-        //document.getElementById("result").innerHTML=response.body;
+    .then(text=>{
+        console.log(text);
+        document.getElementById("result").innerHTML=text;
     })
     .catch(err=>"submit_newuser: error: "+err);
 }
