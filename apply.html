@@ -20,7 +20,7 @@ function submit_newuser(event){
     fetch("/submit_newuser",{
         body:formData,
         headers:{
-            "Content-Type": "application/json"
+            "Content-Type": "application/x-www-form-urlencoded"
         },
         method:"post"
     })
