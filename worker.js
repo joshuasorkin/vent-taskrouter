@@ -154,7 +154,8 @@ class Worker{
 	}
 
 
-
+	//todo: both of the getWorkerEntity functions should return results the same way,
+	//instead of this one throwing an error if worker not found and the other one returning null
 	async getWorkerEntityFromContact_uri(contact_uri){
 		var workerSid=await database.getWorkerSid(contact_uri);
 		if (workerSid==null){

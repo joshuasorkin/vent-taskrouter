@@ -3,6 +3,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 const client=require('twilio')(accountSid,authToken);
 const Password=require('./password');
+const DataValidator=require('./dataValidator');
 class Sms{
 
 
@@ -13,6 +14,7 @@ class Sms{
         this.commandListKeysString=commandListKeys.sort().join("\n");
         this.password=new Password();
         this.phoneNumberPattern="^[+]\d+$";
+        this.dataValidator=new DataValidator();
     }
 
     createParameterObj(body,from,workerEntity){
@@ -40,7 +42,7 @@ class Sms{
         this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall [password] \"[message]\"",3,"sendmessage",this.sendAll.bind(this));
         this.addCommand(commandList,"sendusername","Sends a text message to a user by name.","sendusername "+
                                     "[password] [username] \"[message]\"",4,"sendmessage",this.sendUsername.bind(this));
-        this.addCommand(commandList,"apply","Applies for membership as a new user.","apply [phone number] [username]",3,null,this.apply.bind(this));
+        //this.addCommand(commandList,"apply","Applies for membership as a new user.","apply [phone number] [username]",3,null,this.apply.bind(this));
         return commandList;
     }
 

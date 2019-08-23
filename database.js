@@ -33,6 +33,14 @@ class Database{
 		console.log("createWorker: now attempting sequelize insert worker");
 		return sequelize.query("insert into worker (contact_uri,sid) values ('"+contact_uri+"','"+worker.sid+"')");
 	}
+
+	createWorkerApply(contact_uri,friendlyName,authenticateCode){
+		console.log("createWorkerApply: now attempting sequelize insert row");
+		return sequelize.query("insert into workerapply (contact_uri,friendlyName,authenticateCode,status) values(?,?,?,'incomplete')",{
+			replacements:[contact_uri,friendlyName,authenticateCode],
+			type:sequelize.QueryTypes.INSERT
+		});
+	}
 	
 	//following select query on Worker table, returns a promise as follows:
 	//callerPhoneNumber found: caller's data row

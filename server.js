@@ -24,9 +24,11 @@ const ObjectUpdater=require('./objectUpdater');
 const Textsplitter=require('./textsplitter');
 const AvailableNotifier=require('./availableNotifier');
 const Sms=require('./sms');
+const MembershipRequester=require('./membershipRequester');
 var availableNotifier=new AvailableNotifier();
 var textsplitter=new Textsplitter();
 var clientWorkspace;
+var membershipRequester;
 var urlSerializer=new UrlSerializer();
 var conference;
 var worker;
@@ -58,12 +60,13 @@ app.get('/',function(req,res){
 	res.sendFile(path.join(__dirname+'/apply.html'));
 })
 
-app.post('/submit_newuser',function(req,res){
+app.post('/submit_newuser',async function(req,res){
 	console.log("/submit_newuser: req.body: "+JSON.stringify(req.body));
 	var phonenumber=req.body.phonenumber;
 	var username=req.body.username;
 	var output="you submitted: "+username+" "+phonenumber;
 	console.log("/submit_newuser: text to send back: "+output);
+	var membershipRequestResult=await membershipRequester.requestNewWorker(phonenumber,username);
 	res.send(output);
 });
 
@@ -833,6 +836,7 @@ app.listen(http_port,async ()=>{
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	worker=new Worker(clientWorkspace);
 	sms=new Sms(worker);
+	membershipRequester=new MembershipRequester(worker);
 	taskrouter=new Taskrouter(clientWorkspace);
 	conference=new Conference(client,clientWorkspace);
 	taskrouter.configureWorkspace();

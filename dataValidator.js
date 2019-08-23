@@ -1,11 +1,12 @@
 class DataValidator{
 
     constructor(){
-        this.phoneNumberPattern="^[+]?\d+$";
+        this.phoneNumberPattern="^[+]\d+$";
     }
 
     validPhoneNumber(contact_uri){
-        return contact_uri.match(this.phoneNumberPattern);
+        var match=contact_uri.match(/^[+]\d+$/g);
+        return (match!=null);
     }
 }
 

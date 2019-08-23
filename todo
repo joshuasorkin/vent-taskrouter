@@ -47,6 +47,8 @@ is there a way to avoid that initial "please wait..." before jumping to
 (high)
 update vent-dev service to match vent service ExecStart
 
+(high)
+really need to mirror state in database so search can be done easily
 
 
 
