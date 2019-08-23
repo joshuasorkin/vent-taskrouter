@@ -27,11 +27,14 @@ class MembershipRequester{
         var workerEntity;
         var notFound;
         var output;
+        console.log("requestNewWorker: validating phone number...");
         if (this.dataValidator.validPhoneNumber(contact_uri)){
+            console.log("requestNewWorker: getting worker by contact_uri...");
             try{
                 workerEntity=await this.worker.getWorkerEntityFromContact_uri(contact_uri);
                 //todo: delete below line, replace with above line when finished testing
                 workerEntity=null;
+
                 if(workerEntity!=null){
                     notFound=false;
                     output="A worker with this phone number already exists.";
@@ -42,19 +45,24 @@ class MembershipRequester{
             catch(err){
                 notFound=true;
                 output=err;
+                console.log("requestNewWorker: "+output);
                 return output;
             }
             if (notFound){
                 try{
+                    console.log("requestNewWorker: getting worker by friendlyname...");
                     workerEntity=this.worker.getWorkerEntityFromFriendlyName(friendlyName);
                     //notFound=(workerEntity==null);
                     //todo: delete below line, replace with above line when finished testing
                     notFound=true;
                     if(notFound){
                         var authenticateCode=getRndInteger(process.env.AUTHENTICATECODE_MIN,process.env.AUTHENTICATECODE_MAX);
+                        console.log("requestNewWorker: authenticate code is "+authenticateCode);
+                        console.log("requestNewWorker: running worker.createWorkerApply...");
                         var workerApply=await this.worker.createWorkerApply(contact_uri,friendlyName,authenticateCode);
                         var messageText="A request has been made to add you as a Vent user with the name "+friendlyName+"."+
                                         "  To confirm your identity, please respond to this text with the number "+authenticateCode+".";
+                        console.log("requestNewWorker: sending message to contact_uri...");
                         this.sendMessageToContact_uri(contact_uri,messageText);
                         output="Authentication message sent to "+contact_uri+".";
                         console.log("requestNewWorker: "+output);
