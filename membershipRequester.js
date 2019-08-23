@@ -34,7 +34,9 @@ class MembershipRequester{
             if (notFound){
                 try{
                     workerEntity=this.worker.getWorkerEntityFromFriendlyName(friendlyName);
-                    notFound=(workerEntity==null)
+                    //notFound=(workerEntity==null);
+                    //todo: delete below line, replace with above line when finished testing
+                    notFound=true;
                     if(notFound){
                         var authenticateCode=getRndInteger(process.env.AUTHENTICATECODE_MIN,process.env.AUTHENTICATECODE_MAX);
                         var workerApply=await this.worker.createWorkerApply(contact_uri,friendlyName,authenticateCode);
