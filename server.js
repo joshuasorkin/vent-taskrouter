@@ -67,13 +67,14 @@ app.post('/submit_newuser',async function(req,res){
 		var phonenumber=req.body.phonenumber;
 		var username=req.body.username;
 		//output="you submitted: "+username+" "+phonenumber;
-		console.log("/submit_newuser: text to send back: "+output);
 		var membershipRequestResult=await membershipRequester.requestNewWorker(phonenumber,username);
+		console.log("/submit_newuser: membershipRequestResult: "+membershipRequestResult);
 		output=membershipRequestResult;
 	}
 	catch(err){
 		output=err;
 	}
+	console.log("/submit_newuser: text to send back: "+output);
 	res.send(output);
 });
 
