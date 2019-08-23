@@ -10,6 +10,9 @@ class MembershipRequester{
     }
 
     sendMessageToContact_uri(contact_uri,messageBody){
+        if(contact_uri.charAt(0)!='+'){
+            contact_uri='+'+contact_uri;
+        }
         this.client.messages
         .create({
             from:process.env.TWILIO_PHONE_NUMBER,
@@ -27,6 +30,8 @@ class MembershipRequester{
         if (this.dataValidator.validPhoneNumber(contact_uri)){
             try{
                 workerEntity=await this.worker.getWorkerEntityFromContact_uri(contact_uri);
+                //todo: delete below line, replace with above line when finished testing
+                workerEntity=null;
                 if(workerEntity!=null){
                     notFound=false;
                     output="A worker with this phone number already exists.";
