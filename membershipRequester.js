@@ -27,7 +27,7 @@ class MembershipRequester{
         if (this.dataValidator.validPhoneNumber(contact_uri)){
             try{
                 workerEntity=await this.worker.getWorkerEntityFromContact_uri(contact_uri);
-                if(workerEntity!=null) then{
+                if(workerEntity!=null){
                     notFound=false;
                     output="A worker with this phone number already exists.";
                     return output;
