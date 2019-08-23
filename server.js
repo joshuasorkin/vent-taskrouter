@@ -61,12 +61,18 @@ app.get('/',function(req,res){
 })
 
 app.post('/submit_newuser',async function(req,res){
-	console.log("/submit_newuser: req.body: "+JSON.stringify(req.body));
-	var phonenumber=req.body.phonenumber;
-	var username=req.body.username;
-	var output="you submitted: "+username+" "+phonenumber;
-	console.log("/submit_newuser: text to send back: "+output);
-	var membershipRequestResult=await membershipRequester.requestNewWorker(phonenumber,username);
+	var output;
+	try{
+		console.log("/submit_newuser: req.body: "+JSON.stringify(req.body));
+		var phonenumber=req.body.phonenumber;
+		var username=req.body.username;
+		output="you submitted: "+username+" "+phonenumber;
+		console.log("/submit_newuser: text to send back: "+output);
+		var membershipRequestResult=await membershipRequester.requestNewWorker(phonenumber,username);
+	}
+	catch(err){
+		output=err;
+	}
 	res.send(output);
 });
 
