@@ -3,13 +3,14 @@ require('env2')('.env');
 
 class MembershipRequester{
 
-    constructor(worker){
+    constructor(client,worker){
         this.dataValidator=new DataValidator();
         this.worker=worker;
+        this.client=client;
     }
 
     sendMessageToContact_uri(contact_uri,messageBody){
-        client.messages
+        this.client.messages
         .create({
             from:process.env.TWILIO_PHONE_NUMBER,
             body:messageBody,

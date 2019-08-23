@@ -836,7 +836,7 @@ app.listen(http_port,async ()=>{
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	worker=new Worker(clientWorkspace);
 	sms=new Sms(worker);
-	membershipRequester=new MembershipRequester(worker);
+	membershipRequester=new MembershipRequester(client,worker);
 	taskrouter=new Taskrouter(clientWorkspace);
 	conference=new Conference(client,clientWorkspace);
 	taskrouter.configureWorkspace();
