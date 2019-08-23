@@ -35,6 +35,7 @@ class MembershipRequester{
                 if(workerEntity!=null){
                     notFound=false;
                     output="A worker with this phone number already exists.";
+                    console.log("requestNewWorker: "+output);
                     return output;
                 }
             }
@@ -56,14 +57,17 @@ class MembershipRequester{
                                         "  To confirm your identity, please respond to this text with the number "+authenticateCode+".";
                         this.sendMessageToContact_uri(contact_uri,messageText);
                         output="Authentication message sent to "+contact_uri+".";
+                        console.log("requestNewWorker: "+output);
                     }
                     else{
                         output="A worker with this name already exists.";
+                        console.log("requestNewWorker: "+output);
                     }
                 }
                 catch(err){
                     notFound=false;
                     output=err;
+                    console.log("requestNewWorker: "+output);
                 }
             }
 
@@ -71,6 +75,7 @@ class MembershipRequester{
         }
         else{
             output="Invalid phone number.";
+            console.log("requestNewWorker: "+output);
         }
         return output;
     }
