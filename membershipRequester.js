@@ -23,14 +23,20 @@ class MembershipRequester{
     async requestNewWorker(contact_uri,friendlyName){
         var workerEntity;
         var notFound;
+        var output;
         if (this.dataValidator.validPhoneNumber(contact_uri)){
             try{
-                workerEntity=this.worker.getWorkerEntityFromContact_uri(contact_uri);
-                notFound=false;
-                throw("A worker with this phone number already exists.");
+                workerEntity=await this.worker.getWorkerEntityFromContact_uri(contact_uri);
+                if(workerEntity!=null) then{
+                    notFound=false;
+                    output="A worker with this phone number already exists.";
+                    return output;
+                }
             }
             catch(err){
                 notFound=true;
+                output=err;
+                return output;
             }
             if (notFound){
                 try{
@@ -44,21 +50,24 @@ class MembershipRequester{
                         var messageText="A request has been made to add you as a Vent user with the name "+friendlyName+"."+
                                         "  To confirm your identity, please respond to this text with the number "+authenticateCode+".";
                         this.sendMessageToContact_uri(contact_uri,messageText);
+                        output="Authentication message sent to "+contact_uri+".";
                     }
                     else{
-                        throw("A worker with this name already exists.");
+                        output="A worker with this name already exists.";
                     }
                 }
                 catch(err){
                     notFound=false;
+                    output=err;
                 }
             }
 
                 
         }
         else{
-            throw("Invalid phone number.");
+            output="Invalid phone number.";
         }
+        return output;
     }
 
     getRndInteger(min, max) {
