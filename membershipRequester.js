@@ -59,7 +59,7 @@ class MembershipRequester{
                     //todo: delete below line, replace with above line when finished testing
                     notFound=true;
                     if(notFound){
-                        var authenticateCode=getRndInteger(process.env.AUTHENTICATECODE_MIN,process.env.AUTHENTICATECODE_MAX);
+                        var authenticateCode=this.getRndInteger(process.env.AUTHENTICATECODE_MIN,process.env.AUTHENTICATECODE_MAX);
                         console.log("requestNewWorker: authenticate code is "+authenticateCode);
                         console.log("requestNewWorker: running worker.createWorkerApply...");
                         var workerApply=await this.worker.createWorkerApply(contact_uri,friendlyName,authenticateCode);
