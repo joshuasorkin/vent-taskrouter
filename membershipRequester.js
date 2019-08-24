@@ -32,6 +32,7 @@ class MembershipRequester{
             console.log("requestNewWorker: getting worker by contact_uri...");
             try{
                 workerEntity=await this.worker.getWorkerEntityFromContact_uri(contact_uri);
+                console.log("requestNewWorker: finished getWorkerEntityFromContact_uri");
                 //todo: delete below line, replace with above line when finished testing
                 workerEntity=null;
 
@@ -41,9 +42,11 @@ class MembershipRequester{
                     console.log("requestNewWorker: "+output);
                     return output;
                 }
+                else{
+                    notFound=true;
+                }
             }
             catch(err){
-                notFound=true;
                 output=err;
                 console.log("requestNewWorker: "+output);
                 return output;
