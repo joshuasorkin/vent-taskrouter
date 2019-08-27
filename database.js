@@ -331,7 +331,7 @@ class Database{
 
 	async updateMembershipRequestToComplete(contact_uri){
 		return sequelize.query("update workerapply "+
-								"set status=complete "+
+								"set status='complete' "+
 								"where contact_uri=?",{
 									replacements:[contact_uri],
 									type:sequelize.QueryTypes.UPDATE
