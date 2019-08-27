@@ -11,15 +11,11 @@ class DataValidator{
         return (match!=null);
     }
 
+    //basically just checks if authenticateCode is a sequence of digits,
+    //since the actual verification of whether this digit sequence matches an entry in workerApply
+    //happens elsewhere
     validAuthenticateCode(authenticateCode){
-        if(Number.isInteger(authenticateCode)){
-            console.log("validAuthenticateCode: "+authenticateCode+" is integer");
-            return (authenticateCode>=process.env.AUTHENTICATECODE_MIN)&&(authenticateCode<=process.env.AUTHENTICATECODE_MAX);
-        }
-        else{
-            console.log("validAuthenticateCode: "+authenticateCode+" is not integer");
-            return false;
-        }
+        return (authenticateCode.match(/^\d+$/g)!=null);
     }
 }
 
