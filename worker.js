@@ -22,6 +22,7 @@ class Worker{
 						do_not_contact:[]
 					}), friendlyName: friendlyName})
 					.then(worker=>{
+						console.log("createWorker: worker successfully created in Twilio, now creating in database...");
 						return database.createWorker(worker)
 						.then(result=>result);
 					})

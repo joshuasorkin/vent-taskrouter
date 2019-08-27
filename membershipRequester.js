@@ -112,6 +112,7 @@ class MembershipRequester{
             if (workerEntity==null){
                 var updateResult=await this.worker.updateMembershipRequestToComplete(fromNumber);
                 var addResult=await this.sms.addWithoutParameterObj(contact_uri,membershipRequest.friendlyName);
+                console.log("verifyRequest: addResult: "+addResult);
                 return addResult;
             }
             else{
