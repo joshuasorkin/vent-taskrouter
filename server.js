@@ -99,7 +99,8 @@ app.post('/sms',async function(req,res){
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	console.log("/sms: contact_uriExists: "+contact_uriExists);
 	if (!contact_uriExists||(fromNumber==process.env.ADMIN_PHONE_NUMBER)){
-		if(dataValidator.validAuthenticateCode(body)){
+		var validAuthenticateCode=await dataValidator.validAuthenticateCode(body);
+		if(validAuthenticateCode){
 			var result=await membershipRequester.verifyRequest(fromNumber,body);
 			responseValue=result;
 		}
