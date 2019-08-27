@@ -101,12 +101,12 @@ class MembershipRequester{
     }
 
     async verifyRequest(contact_uri,authenticateCode){
-        membershipRequest=this.worker.getMembershipRequest(contact_uri,authenticateCode);
+        var membershipRequest=this.worker.getMembershipRequest(contact_uri,authenticateCode);
         if(membershipRequest==null){
             return "No membership request found for this phone number and authentication code."
         }
         else{
-            workerEntity=await this.worker.getWorkerEntityFromFriendlyName(membershipRequest.friendlyname);
+            var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(membershipRequest.friendlyname);
             if (workerEntity==null){
                 var updateResult=await worker.updateMembershipRequestToComplete(fromNumber);
                 var addResult=await this.sms.addWithoutParameterObj(contact_uri,membershipRequest.friendlyName);
