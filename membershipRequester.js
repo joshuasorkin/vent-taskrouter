@@ -110,7 +110,7 @@ class MembershipRequester{
             console.log("verifyRequest: friendlyName for this request is: "+membershipRequest.friendlyname);
             var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(membershipRequest.friendlyname);
             if (workerEntity==null){
-                var updateResult=await worker.updateMembershipRequestToComplete(fromNumber);
+                var updateResult=await this.worker.updateMembershipRequestToComplete(fromNumber);
                 var addResult=await this.sms.addWithoutParameterObj(contact_uri,membershipRequest.friendlyName);
                 return addResult;
             }
