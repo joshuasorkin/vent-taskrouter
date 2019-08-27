@@ -101,7 +101,7 @@ class MembershipRequester{
     }
 
     async verifyRequest(contact_uri,authenticateCode){
-        var membershipRequest=this.worker.getMembershipRequest(contact_uri,authenticateCode);
+        var membershipRequest=await this.worker.getMembershipRequest(contact_uri,authenticateCode);
         if(membershipRequest==null){
             return "No membership request found for this phone number and authentication code."
         }
