@@ -104,7 +104,9 @@ app.post('/sms',async function(req,res){
 			var result=await membershipRequester.verifyRequest(fromNumber,body);
 			responseValue=result;
 		}
-		responseValue="You are not recognized as an authorized user.  Please register with an administrator and try again.";
+		else{
+			responseValue="You are not recognized as an authorized user.  Please register with an administrator and try again.";
+		}
 	}
 	else{
 		var workerEntity=await worker.getWorkerEntityFromContact_uri(fromNumber);
