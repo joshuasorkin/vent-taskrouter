@@ -320,7 +320,7 @@ class Database{
 		var selectResult=await sequelize.query("select * from workerapply where contact_uri='"+contact_uri+"' and status='incomplete' "+
 												"and authenticatecode='"+authenticateCode+"'",
 		{ type: sequelize.QueryTypes.SELECT});
-		console.log("membershipRequestExists: selectResult: "+JSON.stringify(selectResult));
+		console.log("getMembershipRequest: selectResult: "+JSON.stringify(selectResult));
 		if(selectResult.length!=0){
 			return selectResult[0];
 		}
