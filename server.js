@@ -98,7 +98,7 @@ app.post('/sms',async function(req,res){
 	//them along to sms.processCommand() which will then create the parameterObj internally
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	console.log("/sms: contact_uriExists: "+contact_uriExists);
-	if (!contact_uriExists){
+	if (!contact_uriExists||(fromNumber==process.env.ADMIN_PHONE_NUMBER)){
 		if(dataValidator.validAuthenticateCode(body)){
 			var result=await membershipRequester.verifyRequest(fromNumber,body);
 			responseValue=result;
