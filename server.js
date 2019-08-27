@@ -25,6 +25,8 @@ const Textsplitter=require('./textsplitter');
 const AvailableNotifier=require('./availableNotifier');
 const Sms=require('./sms');
 const MembershipRequester=require('./membershipRequester');
+const DataValidator=require('./dataValidator');
+var dataValidator=new DataValidator();
 var availableNotifier=new AvailableNotifier();
 var textsplitter=new Textsplitter();
 var clientWorkspace;
@@ -80,6 +82,7 @@ app.post('/submit_newuser',async function(req,res){
 
 app.post('/sms',async function(req,res){
 	var body=req.body.Body;
+	var parameterObj;
 	console.log("/sms: message SID "+req.body.sid);
 	console.log(body);
 	//replace multiple spaces with single space
@@ -96,11 +99,15 @@ app.post('/sms',async function(req,res){
 	contact_uriExists=await worker.contact_uriExists(fromNumber);
 	console.log("/sms: contact_uriExists: "+contact_uriExists);
 	if (!contact_uriExists){
+		if(dataValidator.validAuthenticateCode(body)){
+			var result=await membershipRequester.verifyRequest(fromNumber,body);
+			responseValue=result;
+		}
 		responseValue="You are not recognized as an authorized user.  Please register with an administrator and try again.";
 	}
 	else{
 		var workerEntity=await worker.getWorkerEntityFromContact_uri(fromNumber);
-		var parameterObj=sms.createParameterObj(body,fromNumber,workerEntity);
+		parameterObj=sms.createParameterObj(body,fromNumber,workerEntity);
 		responseValue=await sms.processCommand(parameterObj);
 	}
 	console.log('/sms: response value: '+responseValue);
@@ -844,7 +851,7 @@ app.listen(http_port,async ()=>{
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	worker=new Worker(clientWorkspace);
 	sms=new Sms(worker);
-	membershipRequester=new MembershipRequester(client,worker);
+	membershipRequester=new MembershipRequester(client,worker,sms);
 	taskrouter=new Taskrouter(clientWorkspace);
 	conference=new Conference(client,clientWorkspace);
 	taskrouter.configureWorkspace();

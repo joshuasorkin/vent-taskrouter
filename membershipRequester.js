@@ -3,10 +3,11 @@ require('env2')('.env');
 
 class MembershipRequester{
 
-    constructor(client,worker){
+    constructor(client,worker,sms){
         this.dataValidator=new DataValidator();
         this.worker=worker;
         this.client=client;
+        this.sms=sms;
     }
 
     sendMessageToContact_uri(contact_uri,messageBody){
@@ -97,6 +98,25 @@ class MembershipRequester{
         var rndInteger=Math.floor(Math.random() * (max - min + 1) ) + min;
         console.log("getRndInteger: "+rndInteger);
         return rndInteger;
+    }
+
+    async verifyRequest(contact_uri,authenticateCode){
+        membershipRequest=this.worker.getMembershipRequest(contact_uri,authenticateCode);
+        if(membershipRequest==null){
+            return "No membership request found for this phone number and authentication code."
+        }
+        else{
+            workerEntity=await this.worker.getWorkerEntityFromFriendlyName(membershipRequest.friendlyname);
+            if (workerEntity==null){
+                var updateResult=await worker.updateMembershipRequestToComplete(fromNumber);
+                var addResult=await this.sms.addWithoutParameterObj(contact_uri,membershipRequest.friendlyName);
+                return addResult;
+            }
+            else{
+                return "A worker already exists with the name corresponding to this authentication code, "+
+                        "please use another code or generate a new membership request."
+            }
+        }
     }
 }
 

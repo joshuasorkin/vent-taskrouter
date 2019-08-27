@@ -202,6 +202,25 @@ class Sms{
         return responseValue;
     }
 
+    async addWithoutParameterObj(contact_uri,friendlyName){
+        //todo:this is duplicate code from add(), need to refactor
+        var contact_uriExists=await this.worker.contact_uriExists(contact_uri);
+        if (contact_uriExists){
+                responseValue="Worker with contact_uri "+contact_uri+" already exists.";
+        }
+        else{
+            responseValue=await this.worker.createWorker(contact_uri,friendlyName);
+            //todo: this is a hack until I can figure out what the problem
+            //is with the return value from worker.create
+            if (responseValue==",1"){
+                //todo: need to allow user to remove themselves by texting "remove"
+                this.sendAddNotification(friendlyName,contact_uri);
+                responseValue="Worker "+friendlyName+" successfully created.";
+            }
+        }
+        return responseValue;
+    }
+
     async add(parameterObj){
         var responseValue;
         var contact_uri=parameterObj.commandArray[2];

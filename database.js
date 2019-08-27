@@ -316,6 +316,28 @@ class Database{
 								});
 	}
 
+	async getMembershipRequest(contact_uri,authenticateCode){
+		var selectResult=await sequelize.query("select * from workerapply where contact_uri='"+contact_uri+"' and status='incomplete' "+
+												"and authenticatecode='"+authenticateCode+"'",
+		{ type: sequelize.QueryTypes.SELECT});
+		console.log("membershipRequestExists: selectResult: "+JSON.stringify(selectResult));
+		if(selectResult.length!=0){
+			return selectResult[0];
+		}
+		else{
+			return null;
+		}
+	}
+
+	async updateMembershipRequestToComplete(contact_uri){
+		return sequelize.query("update workerapply "+
+								"set status=complete "+
+								"where contact_uri=?",{
+									replacements:[contact_uri],
+									type:sequelize.QueryTypes.UPDATE
+								});
+	}
+
 	
 	                                                           
 }

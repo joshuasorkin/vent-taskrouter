@@ -35,6 +35,16 @@ class Worker{
 		return database.createWorkerApply(contact_uri,friendlyName,authenticateCode);
 	}
 
+	async getMembershipRequest(contact_uri,authenticateCode){
+		var result= await database.getMembershipRequest(contact_uri,authenticateCode);
+		return result;
+	}
+
+	async updateMembershipRequestToComplete(contact_uri){
+		var result=await database.updateMembershipRequestToComplete(contact_uri);
+		return result;
+	}
+
 	addAllWorkersToDatabase(){
 		this.workspace.workers
 			.each(worker=>{
