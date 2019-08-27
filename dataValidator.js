@@ -13,9 +13,11 @@ class DataValidator{
 
     validAuthenticateCode(authenticateCode){
         if(Number.isInteger(authenticateCode)){
+            console.log("validAuthenticateCode: "+authenticateCode+" is integer");
             return (authenticateCode>=process.env.AUTHENTICATECODE_MIN)&&(authenticateCode<=process.env.AUTHENTICATECODE_MAX);
         }
         else{
+            console.log("validAuthenticateCode: "+authenticateCode+" is not integer");
             return false;
         }
     }
