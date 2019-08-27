@@ -204,6 +204,7 @@ class Sms{
 
     async addWithoutParameterObj(contact_uri,friendlyName){
         //todo:this is duplicate code from add(), need to refactor
+        var responseValue;
         var contact_uriExists=await this.worker.contact_uriExists(contact_uri);
         if (contact_uriExists){
                 responseValue="Worker with contact_uri "+contact_uri+" already exists.";
