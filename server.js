@@ -465,6 +465,9 @@ app.post('/incomingCallEvents',async function(req,res){
 	
 	if((req.body.CallStatus=="completed")&&(req.body.From!=process.env.TWILIO_PHONE_NUMBER)){
 		var workerEntity=await worker.getWorkerEntityFromContact_uri(req.body.From);
+		if (workerEntity==null){
+			throw("/incomingCallEvents: error: no workerEntity found for contact_uri "+req.body.From);
+		}
 		var updateResult=await worker.updateWorkerActivityFromSid(workerEntity.sid,process.env.TWILIO_OFFLINE_SID);
 		worker.messageWorkerUnavailable(workerEntity.friendlyName,req.body.From);
 	}
