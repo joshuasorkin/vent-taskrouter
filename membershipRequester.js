@@ -108,10 +108,11 @@ class MembershipRequester{
         else{
             console.log("verifyRequest: membershipRequest: "+JSON.stringify(membershipRequest));
             console.log("verifyRequest: friendlyName for this request is: "+membershipRequest.friendlyname);
-            var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(membershipRequest.friendlyname);
+            var friendlyName=membershipRequest.friendlyname;
+            var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(friendlyName);
             if (workerEntity==null){
                 var updateResult=await this.worker.updateMembershipRequestToComplete(fromNumber);
-                var addResult=await this.sms.addWithoutParameterObj(contact_uri,membershipRequest.friendlyName);
+                var addResult=await this.sms.addWithoutParameterObj(contact_uri,friendlyName);
                 console.log("verifyRequest: addResult: "+addResult);
                 return addResult;
             }
