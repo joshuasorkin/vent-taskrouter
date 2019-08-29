@@ -30,6 +30,8 @@ class MembershipRequester{
         var output;
         console.log("requestNewWorker: validating phone number...");
         if (this.dataValidator.validPhoneNumber(contact_uri)){
+            contact_uri=contact_uri.replace(/[()+\s\-]/g,'');
+            contact_uri='+'+contact_uri;
             console.log("requestNewWorker: getting worker by contact_uri...");
             try{
                 workerEntity=await this.worker.getWorkerEntityFromContact_uri(contact_uri);

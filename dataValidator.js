@@ -7,7 +7,8 @@ class DataValidator{
     }
 
     validPhoneNumber(contact_uri){
-        var match=contact_uri.match(/^[+]\d+$/g);
+        contact_uri=contact_uri.replace(/[()+\s\-]/g,'');
+        var match=contact_uri.match(/^\d+$/g);
         return (match!=null);
     }
 
