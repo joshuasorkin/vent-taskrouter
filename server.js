@@ -58,6 +58,12 @@ app.get('/admin',function(req,res){
 	res.sendFile(path.join(__dirname+'/admin.html'));
 });
 
+app.get('/webhookSecurityTest',function(req,res){
+	voiceResponse=new VoiceResponse();
+	voiceResponse.say("this is a test");
+	res.send(voiceResponse.toString());
+})
+
 app.get('/',function(req,res){
 	res.sendFile(path.join(__dirname+'/apply.html'));
 })
