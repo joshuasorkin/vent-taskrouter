@@ -58,12 +58,6 @@ app.get('/admin',function(req,res){
 	res.sendFile(path.join(__dirname+'/admin.html'));
 });
 
-app.get('/webhookSecurityTest',twilio.webhook(),function(req,res){
-	voiceResponse=new VoiceResponse();
-	voiceResponse.say("this is a test");
-	res.send(voiceResponse.toString());
-})
-
 app.get('/',function(req,res){
 	res.sendFile(path.join(__dirname+'/apply.html'));
 })
@@ -126,7 +120,7 @@ app.post('/sms',twilio.webhook(),async function(req,res){
 });
 
 
-app.get('/conferenceAnnounceEnd_participantLeave',function(req,res){
+app.get('/conferenceAnnounceEnd_participantLeave',twilio.webhook(),function(req,res){
 	var parameters=urlSerializer.deserialize(req);
 	url=urlSerializer.serialize('endConference_update',parameters);
 	const response=new VoiceResponse();
@@ -140,7 +134,7 @@ app.get('/conferenceAnnounceEnd_participantLeave',function(req,res){
 
 //todo: refactor this, both of the conferenceAnnounceEnd should be the same function
 //with different say() text passed in
-app.get('/conferenceAnnounceEnd_timeUp',function(req,res){
+app.get('/conferenceAnnounceEnd_timeUp',twilio.webhook(),function(req,res){
 	var parameters=urlSerializer.deserialize(req);
 	url=urlSerializer.serialize('endConference_update',parameters);
 	const response=new VoiceResponse();
@@ -156,7 +150,7 @@ app.get('/conferenceAnnounceEnd_timeUp',function(req,res){
 });
 
 
-app.get('/postConferenceIVR',function(req,res){
+app.get('/postConferenceIVR',twilio.webhook(),function(req,res){
 	var parameters=urlSerializer.deserialize(req);
 	const response=new VoiceResponse();
 
@@ -175,7 +169,7 @@ app.get('/postConferenceIVR',function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/process_postConferenceIVR',async function(req,res){
+app.get('/process_postConferenceIVR',twilio.webhook(),async function(req,res){
 	var parameters=urlSerializer.deserialize(req);
 	var userInput;
 	if (req.query.hasOwnProperty('Digits')){
@@ -212,7 +206,7 @@ app.get('/process_postConferenceIVR',async function(req,res){
 
 
 
-app.get('/endConference_update',function(req,res){
+app.get('/endConference_update',twilio.webhook(),function(req,res){
 	console.log("/endConference_update: reached this endpoint");
 	var parameters=urlSerializer.deserialize(req);
 	var conferenceSid=parameters.conferenceSid;
@@ -221,7 +215,7 @@ app.get('/endConference_update',function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/conferenceAnnounceTime',function(req,res){
+app.get('/conferenceAnnounceTime',twilio.webhook(),function(req,res){
 	const response=new VoiceResponse();
 	parameters=urlSerializer.deserialize(req);
 	timeRemaining=parameters.timeRemaining;
@@ -237,7 +231,7 @@ app.get('/conferenceAnnounceTime',function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/processGatherConferenceMinutes',async function(req,res){
+app.get('/processGatherConferenceMinutes',twilio.webhook(),async function(req,res){
 	console.log("/processGatherConferenceMinutes: req.query: "+JSON.stringify(req.query));
 	var digits;
 	if (req.query.hasOwnProperty('Digits')){
@@ -291,7 +285,7 @@ app.get('/processGatherConferenceMinutes',async function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/redirectToWait',function(req,res){
+app.post('/redirectToWait',twilio.webhook(),function(req,res){
 	response=new VoiceResponse();
 	//response.play(process.env.CHIME_URL);
 	twimlBuilder.say(response,"Now calling a potential receiver.  Please continue to wait.");
@@ -302,14 +296,14 @@ app.post('/redirectToWait',function(req,res){
 
 //used for repeating initial conference minutes gather if user
 //doesn't respond the first time
-app.get('/gatherConferenceMinutes',function(req,res){
+app.get('/gatherConferenceMinutes',twilio.webhook(),function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	const response=new VoiceResponse();
 	twimlBuilder.gatherConferenceMinutes(response,minMinutes,maxMinutes,parameters);
 	res.send(response.toString()); 
 });
 
-app.post('/voice',async function(req,res){
+app.post('/voice',twilio.webhook(),async function(req,res){
 
 	const response=new VoiceResponse();
 
@@ -360,14 +354,14 @@ app.post('/voice',async function(req,res){
 });
 
 
-app.post('/randomSoundLoop',function(req,res){
+app.post('/randomSoundLoop',twilio.webhook(),function(req,res){
 	const response=new VoiceResponse();
 	response.play(process.env.WAIT_URL);
 	response.redirect('/randomSoundLoop');
 	res.send(response.toString());
 });
 
-app.post('/randomWordLoop',function(req,res){
+app.post('/randomWordLoop',twilio.webhook(),function(req,res){
 	const response=new VoiceResponse();
 	var word=textsplitter.randomSentenceFromFiletextArray();
 	twimlBuilder.sayReading(response,word);
@@ -378,11 +372,11 @@ app.post('/randomWordLoop',function(req,res){
 //etag control per https://stackoverflow.com/a/48404148/619177
 app.set('etag', 'strong');
 
-app.get('/waitSound',function(req,res){
+app.get('/waitSound',twilio.webhook(),function(req,res){
 	res.append('Last-Modified', (new Date(lastModifiedStringDate)).toUTCString());
 })
 
-app.post('/wait',function(req,res){
+app.post('/wait',twilio.webhook,function(req,res){
 	const response=new VoiceResponse();
 	response.redirect('/randomSoundLoop');
 	res.send(response.toString());
@@ -392,7 +386,7 @@ app.post('/wait',function(req,res){
 //this endpoint to be reached if the agent does not provide IVR response
 //to the options presented by /agent_answer
 //either because they hung up or waited too long
-app.get('/agent_answer_hangup',function(req,res){
+app.get('/agent_answer_hangup',twilio.webhook(),function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	const response=new VoiceResponse();
 	twimlBuilder.say(response,'I didn\'t get any input from you.  Goodbye!');
@@ -424,7 +418,7 @@ app.get('/agent_answer_hangup',function(req,res){
 });
 
 //this endpoint to be reached if agent answers outbound call initiated by /assignment
-app.get('/agent_answer',async function(req,res){
+app.get('/agent_answer',twilio.webhook(),async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	const minutes=parameters.minutes;
 	console.log("endpoint: agent_answer");
@@ -464,7 +458,7 @@ app.get('/agent_answer',async function(req,res){
 	res.send(response.toString());
 });
 
-app.post('/incomingCallEvents',async function(req,res){
+app.post('/incomingCallEvents',twilio.webhook(),async function(req,res){
 	event=req.body.StatusCallbackEvent;
 	console.log("/incomingCallEvents:");
 	console.log(JSON.stringify(req.body));
@@ -481,7 +475,7 @@ app.post('/incomingCallEvents',async function(req,res){
 
 
 
-app.get('/conferenceEvents',async function(req,res){
+app.get('/conferenceEvents',twilio.webhook(),async function(req,res){
 	var responseValue="";
 	var callSid;
 	var outboundCallSid;
@@ -556,7 +550,7 @@ app.get('/conferenceEvents',async function(req,res){
 	}
 });
 
-app.get('/updateCallToConference',function(req,res){
+app.get('/updateCallToConference',twilio.webhook(),function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	console.log("/updateCallToConference: about to generate conference transfer twiml");
 	var response=conference.generateConference(parameters,null);
@@ -564,7 +558,7 @@ app.get('/updateCallToConference',function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/agent_answer_process',async function(req,res){
+app.get('/agent_answer_process',twilio.webhook(),async function(req,res){
 	console.log("endpoint: agent_answer_process");
 	console.log("/agent_answer_process: req.query: "+JSON.stringify(req.query));
 	parameters=urlSerializer.deserialize(req);
@@ -646,7 +640,7 @@ app.get('/agent_answer_process',async function(req,res){
 
 
 // POST /call/assignment
-app.post('/assignment', async function (req, res) {
+app.post('/assignment', twilio.webhook(),async function (req, res) {
 	console.log("task attributes: "+req.body.TaskAttributes);
 	console.log("worker attributes: "+req.body.WorkerAttributes);
 	console.log("reservation sid: "+req.body.ReservationSid);
@@ -742,7 +736,7 @@ app.post('/assignment', async function (req, res) {
     res.status(200).send({error:'an error occurred in sending response to assignment callback'});
 });
 
-app.get('/outboundCallEvent',async function(req,res){
+app.get('/outboundCallEvent',twilio.webhook(),async function(req,res){
 	var response=new VoiceResponse();
 	parameters=urlSerializer.deserialize(req);
 	switch(req.query.CallStatus){
@@ -756,7 +750,7 @@ app.get('/outboundCallEvent',async function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/endCall_automatic',function(req,res){
+app.get('/endCall_automatic',twilio.webhook(),function(req,res){
 	console.log("/endCall_automatic: now hanging up");
 	var response=new VoiceResponse();
 	response.hangup();
@@ -765,7 +759,7 @@ app.get('/endCall_automatic',function(req,res){
 
 //this is the URL reached when there are no valid live agents remaining to accept the call,
 //and the task falls through to the automatic queue
-app.get('/automatic',async function(req,res){
+app.get('/automatic',twilio.webhook(),async function(req,res){
 	parameters=urlSerializer.deserialize(req);
 	var response=new VoiceResponse();
 	var url=urlSerializer.serialize('endCall_automatic',parameters);
@@ -798,11 +792,11 @@ app.get('/automatic',async function(req,res){
 	res.send(response.toString());
 });
 
-app.get('/processAutomatic',function(req,res){
+app.get('/processAutomatic',twilio.webhook(),function(req,res){
 
 });
 
-app.post('/workspaceEvent',async function(req,res){
+app.post('/workspaceEvent',twilio.webhook(),async function(req,res){
 	eventType=req.body.EventType;
 	eventDescription=req.body.EventDescription;
 	eventDate=req.body.EventDate;
