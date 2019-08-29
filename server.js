@@ -58,7 +58,7 @@ app.get('/admin',function(req,res){
 	res.sendFile(path.join(__dirname+'/admin.html'));
 });
 
-app.get('/webhookSecurityTest',function(req,res){
+app.get('/webhookSecurityTest',twilio.webhook(),function(req,res){
 	voiceResponse=new VoiceResponse();
 	voiceResponse.say("this is a test");
 	res.send(voiceResponse.toString());
