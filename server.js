@@ -1,7 +1,10 @@
 require('env2')('.env');
+const passport = require('passport');
 const path = require('path');
 const http = require('http');
 const express = require('express');
+const session = require('express-session');
+const flash=require('connect-flash');
 const twilio=require('twilio');
 const app = express();
 const bodyParser = require('body-parser');
@@ -54,13 +57,32 @@ function exitErrorHandler(error) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+
+app.post('/login',
+	passport.authenticate('local'),
+	function(req,res){
+
+});
+
 app.get('/admin',function(req,res){
 	res.sendFile(path.join(__dirname+'/admin.html'));
 });
 
-app.get('/',function(req,res){
+app.get('/apply',function(req,res){
 	res.sendFile(path.join(__dirname+'/apply.html'));
-})
+});
+
+app.get('/',function(req,res,next){
+	res.render('index',
+		{title:"Home",
+		userData:req.user,
+		messages:{
+			danger:req.flash('danger'),
+			warning:req.flash('warning'),
+			success:req.flash('success')}});
+	console.log(req.user);
+});
+
 
 app.post('/submit_newuser',async function(req,res){
 	var output;
