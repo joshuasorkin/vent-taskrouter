@@ -15,7 +15,9 @@ class AppInitializer{
         app.use(passport.initialize());
         app.use(passport.session());
         app.use(flash());
-        app.use(session({secret: process.env.SESSION_SECRET}))
+        app.use(session({secret: process.env.SESSION_SECRET}));
+        app.set('view engine', 'pug');
+        app.set('view options', { layout: false });
 
     }
 }
