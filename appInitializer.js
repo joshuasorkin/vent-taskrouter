@@ -1,8 +1,10 @@
 //this class is responsible for adding middleware to app
+require('env2')('.env');
 
 const passport = require('passport');
 const session = require('express-session');
 const flash=require('connect-flash');
+const bodyParser = require('body-parser');
 
 class AppInitializer{
 
@@ -13,6 +15,7 @@ class AppInitializer{
         app.use(passport.initialize());
         app.use(passport.session());
         app.use(flash());
+        app.use(session({secret: process.env.SESSION_SECRET}))
 
     }
 }
