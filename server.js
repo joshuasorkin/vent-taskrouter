@@ -29,6 +29,8 @@ const AvailableNotifier=require('./availableNotifier');
 const Sms=require('./sms');
 const MembershipRequester=require('./membershipRequester');
 const DataValidator=require('./dataValidator');
+const AppInitializer=require('./appInitializer');
+var appInitializer=new AppInitializer();
 var dataValidator=new DataValidator();
 var availableNotifier=new AvailableNotifier();
 var textsplitter=new Textsplitter();
@@ -45,8 +47,9 @@ var wait=new Wait();
 var minMinutes=1;
 var maxMinutes=10;
 var objectUpdater=new ObjectUpdater();
-app.use('/other_route',require('./other_route').router);
 
+//app.use('/other_route',require('./other_route').router);
+appInitializer.initialize(app);
 
 function exitErrorHandler(error) {
   console.error('An error occurred:');
@@ -54,8 +57,8 @@ function exitErrorHandler(error) {
   process.exit(1);
 }
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.post('/login',
