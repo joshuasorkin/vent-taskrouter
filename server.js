@@ -190,7 +190,7 @@ app.get('/postConferenceIVR',twilio.webhook(),function(req,res){
 		method:'GET'
 	});
 	twimlBuilder.playChime(response);
-	twimlBuilder.say(gather,"Would you like to connect with this person on one of your future calls?  Say 'Yes' or press 1, or say 'No' or press 2.");
+	twimlBuilder.say(gather,"Would you like to connect with this person on one of your future calls?  Say 'Yes' or press 1 to keep them available, or say 'No' or press 2 to add them to your do not contact list.");
 	res.send(response.toString());
 });
 
@@ -303,7 +303,8 @@ app.get('/processGatherConferenceMinutes',twilio.webhook(),async function(req,re
 		response.enqueue({
 			workflowSid:workflowSid,
 			callerWorkerSid:parameters.workerSid,
-			waitUrl:'/randomSoundLoop'
+			//waitUrl:'/randomSoundLoop'
+			waitUrl:'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical'
 		})
 		.task({},JSON.stringify(taskJSON));
 	}
