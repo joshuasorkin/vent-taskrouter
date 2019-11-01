@@ -303,8 +303,8 @@ app.get('/processGatherConferenceMinutes',twilio.webhook(),async function(req,re
 		response.enqueue({
 			workflowSid:workflowSid,
 			callerWorkerSid:parameters.workerSid,
-			//waitUrl:'/randomSoundLoop'
-			waitUrl:'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical'
+			waitUrl:'/randomSoundLoop'
+			//waitUrl:process.env.WAIT_URL_BUCKET
 		})
 		.task({},JSON.stringify(taskJSON));
 	}
@@ -382,8 +382,8 @@ app.post('/voice',twilio.webhook(),async function(req,res){
 
 app.post('/randomSoundLoop',twilio.webhook(),function(req,res){
 	const response=new VoiceResponse();
-	response.play(process.env.WAIT_URL);
-	response.redirect('/randomSoundLoop');
+	response.play(process.env.WAIT_URL_BUCKET);
+	//response.redirect('/randomSoundLoop');
 	res.send(response.toString());
 });
 
