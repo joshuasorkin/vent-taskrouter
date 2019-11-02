@@ -18,6 +18,23 @@ const sequelize=new Sequelize(process.env.database,process.env.username,process.
 	}
 });
 
+//todo: this is a duplicate of the function in database.js, need to refactor
+//todo: is there a way to incorporate the boolean parse into the class?
+//maybe make const sequelize into a this.sequelize, and move this function into
+//the class definition?
+function parseSSLEnvVar(){
+	sequelize_ssl=process.env.SEQUELIZE_SSL.toLowerCase();
+	switch(sequelize_ssl){
+		case 'true':
+			return true;
+			break;
+		case 'false':
+			return false;
+			break;
+		default:
+			throw "Invalid value '"+process.env.SEQUELIZE_SSL+"' for process.env.SEQUELIZE_SSL, must be 'true' or 'false'";
+	}
+}
 
 //TODO
 //Add forgot password functionality
