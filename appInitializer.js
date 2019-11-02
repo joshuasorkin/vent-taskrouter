@@ -5,6 +5,7 @@ const passport = require('passport');
 const session = require('express-session');
 const flash=require('connect-flash');
 const bodyParser = require('body-parser');
+const express = require('express');
 
 class AppInitializer{
 
@@ -16,6 +17,7 @@ class AppInitializer{
         app.use(passport.session());
         app.use(flash());
         app.use(session({secret: process.env.SESSION_SECRET}));
+        app.use(express.static('public'));
         app.set('view engine', 'pug');
         app.set('view options', { layout: false });
 
