@@ -17,6 +17,7 @@ class AppInitializer{
         app.use(passport.session());
         app.use(flash());
         app.use(session({secret: process.env.SESSION_SECRET}));
+        app.use('/public', express.static(__dirname + '/public'));
         app.use(express.static('public'));
         app.set('view engine', 'pug');
         app.set('view options', { layout: false });
