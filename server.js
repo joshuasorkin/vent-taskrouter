@@ -75,16 +75,7 @@ app.get('/apply',function(req,res){
 	res.sendFile(path.join(__dirname+'/apply.html'));
 });
 
-app.get('/',function(req,res,next){
-	res.render('index',
-		{title:"Home",
-		userData:req.user,
-		messages:{
-			danger:req.flash('danger'),
-			warning:req.flash('warning'),
-			success:req.flash('success')}});
-	console.log(req.user);
-});
+
 
 
 app.post('/submit_newuser',async function(req,res){

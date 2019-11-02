@@ -21,6 +21,8 @@ class AppInitializer{
         app.use(express.static('public'));
         app.set('view engine', 'pug');
         app.set('view options', { layout: false });
+        //todo:should all the routes files go into /lib ?
+        require('./browserRoutes.js')(app);
 
     }
 }
