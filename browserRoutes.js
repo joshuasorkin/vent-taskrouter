@@ -64,34 +64,41 @@ module.exports = function (app) {
 	
 	
 	app.post('/join', async function (req, res) {
-		
+        var selectResult;
+        var insertResult;
+        var pwd;
 		try{
 			await sequelize.query('BEGIN')
-			var pwd = await bcrypt.hash(req.body.password, 5);
-			await JSON.stringify(sequelize.query('SELECT id_uuid FROM "users" WHERE "email"=$1', [req.body.username], function(err, result) {
-				if(result.rows[0]){
-					req.flash('warning', "This email address is already registered. <a href='/login'>Log in!</a>");
-					res.redirect('/join');
-				}
-				else{
-					sequelize.query('INSERT INTO users (id_uuid, "firstName", "lastName", email, passwordhash) VALUES ($1, $2, $3, $4, $5)', [uuidv4(), req.body.firstName, req.body.lastName, req.body.username, pwd], function(err, result) {
-						if(err){console.log(err);}
-						else {
-						
-						sequelize.query('COMMIT')
-							console.log(result)
-							req.flash('success','User created.')
-							res.redirect('/login');
-							return;
-						}
-					});
-					
-					
-				}
-				
-			}));
-		} 
-		catch(e){throw(e)}
+			pwd = await bcrypt.hash(req.body.password, 5);
+			selectResult=await sequelize.query('SELECT id_uuid FROM users WHERE email=?', {
+                    replacements:[req.body.username],
+                    type:sequelize.QueryTypes.SELECT});
+
+            if(selectResult.length>0){
+                req.flash('warning', "This email address is already registered. <a href='/login'>Log in!</a>");
+                res.redirect('/join');
+            }
+            else{
+                try{
+                insertResult=await sequelize.query('INSERT INTO users (id_uuid, firstName, lastName, email, passwordhash) VALUES (?,?,?,?,?)', {
+                                        replacements:[uuidv4(), req.body.firstName, req.body.lastName, req.body.username, pwd],
+                                        type:sequelize.QueryTypes.INSERT});
+                }
+                catch(err){
+                    console.log(err);
+                    return;
+                }                    
+                commit=await sequelize.query('COMMIT');
+                console.log(insertResult);
+                req.flash('success','User created.')
+                res.redirect('/login');
+                return;
+            }
+        }
+
+		catch(e){
+            throw(e)
+        }
 	});
 	
 	app.get('/account', function (req, res, next) {
@@ -143,37 +150,46 @@ passport.use('local', new  LocalStrategy({passReqToCallback : true}, (req, usern
 	
 	loginAttempt();
 	async function loginAttempt() {
+        var bcryptResult;
 				
 		try{
-			await sequelize.query('BEGIN')
-			var currentAccountsData = await JSON.stringify(sequelize.query('SELECT id_uuid, "firstName", "email", "passwordhash" FROM "users" WHERE "email"=$1', [username], function(err, result) {
-				
-				if(err) {
-					return done(err)
-				}	
-				if(result.rows[0] == null){
-					req.flash('danger', "Oops. Incorrect login details.");
-					return done(null, false);
-				}
-				else{
-					bcrypt.compare(password, result.rows[0].passwordhash, function(err, check) {
-						if (err){
-							console.log('Error while checking password');
-							return done();
-						}
-						else if (check){
-							return done(null, [{email: result.rows[0].email, firstName: result.rows[0].firstName}]);
-						}
-						else{
-							req.flash('danger', "Oops. Incorrect login details.");
-							return done(null, false);
-						}
-					});
-				}
-			}))
-		}
-		
-		catch(e){throw (e);}
+            var result;
+            await sequelize.query('BEGIN')
+            try{
+			    result = await sequelize.query('SELECT id_uuid, firstName, email, passwordhash FROM users WHERE email=?', {
+                                                                        replacements:[username],
+                                                                        type:sequelize.QueryTypes.SELECT});
+                }
+            catch(err){
+                return done(err);
+            }
+			if (result.length==0){
+                req.flash('danger', "Oops. Incorrect login details.");
+                return done(null,false);
+            }
+			else{
+                try{
+                    bcryptResult=await bcrypt.compare(password, result[0].passwordhash);
+                }
+                catch(err){
+                    console.log('Error while checking password');
+                    return done();
+                }
+                if(bcryptResult){
+                    return done(null,[{
+                        email:result[0].email,
+                        firstName:result[0].firstName
+                    }]);
+                }
+                else{
+                    req.flash('danger',"Oops. Incorrect login details.");
+                    return done(null,false);
+                } 
+		    }
+        }
+		catch(e){
+            throw (e);
+        }
 	};
 	
 }
