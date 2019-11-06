@@ -166,7 +166,7 @@ passport.use('local', new LocalStrategy({passReqToCallback : true}, (req, userna
             catch(err){
                 return done(err);
             }
-            console.log("loginAttempt: select query completed.");
+            console.log("loginAttempt: select query completed, result: "+result[0]);
 			if (result.length==0){
                 req.flash('danger', "Oops. Incorrect login details.");
                 return done(null,false);
