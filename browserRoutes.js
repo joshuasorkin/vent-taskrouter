@@ -181,7 +181,7 @@ passport.use('local', new LocalStrategy({passReqToCallback : true}, (req, userna
                 }
                 if(bcryptResult){
                     var email=result[0].email;
-                    var firstName=result[0].firstName;
+                    var firstName=result[0].firstname;
                     console.log("loginAttempt: password match succeeded for "+email+" "+firstName);
                     return done(null,[{
                         email:email,
