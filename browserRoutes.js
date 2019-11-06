@@ -134,6 +134,10 @@ module.exports = function (app) {
 		failureRedirect: '/login',
 		failureFlash: true
 		}), function(req, res) {
+        console.log("/login: running done function");
+        if(res!=false){
+            console.log("/login: res: "+res);
+        }
 		if (req.body.remember) {
 			req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // Cookie expires after 30 days
 			} else {
