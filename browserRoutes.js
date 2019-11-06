@@ -73,7 +73,6 @@ module.exports = function (app) {
 			selectResult=await sequelize.query('SELECT id_uuid FROM users WHERE email=?', {
                     replacements:[req.body.username],
                     type:sequelize.QueryTypes.SELECT});
-
             if(selectResult.length>0){
                 req.flash('warning', "This email address is already registered. <a href='/login'>Log in!</a>");
                 res.redirect('/join');
@@ -167,6 +166,7 @@ passport.use('local', new  LocalStrategy({passReqToCallback : true}, (req, usern
             catch(err){
                 return done(err);
             }
+            console.log("loginAttempt: select query completed.");
 			if (result.length==0){
                 req.flash('danger', "Oops. Incorrect login details.");
                 return done(null,false);
