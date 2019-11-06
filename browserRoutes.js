@@ -149,7 +149,7 @@ module.exports = function (app) {
 	
 }
 
-passport.use('local', new  LocalStrategy({passReqToCallback : true}, (req, username, password, done) => {
+passport.use('local', new LocalStrategy({passReqToCallback : true}, (req, username, password, done) => {
 	
 	loginAttempt();
 	async function loginAttempt() {
@@ -180,10 +180,12 @@ passport.use('local', new  LocalStrategy({passReqToCallback : true}, (req, usern
                     return done();
                 }
                 if(bcryptResult){
-                    console.log("loginAttempt: password match succeeded");
+                    var email=result[0].email;
+                    var firstName=result[0].firstName;
+                    console.log("loginAttempt: password match succeeded for "+email+" "+firstName);
                     return done(null,[{
-                        email:result[0].email,
-                        firstName:result[0].firstName
+                        email:email,
+                        firstName:firstName
                     }]);
                 }
                 else{
