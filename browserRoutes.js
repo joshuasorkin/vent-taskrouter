@@ -180,6 +180,7 @@ passport.use('local', new  LocalStrategy({passReqToCallback : true}, (req, usern
                     return done();
                 }
                 if(bcryptResult){
+                    console.log("loginAttempt: password match succeeded");
                     return done(null,[{
                         email:result[0].email,
                         firstName:result[0].firstName
