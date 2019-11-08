@@ -113,9 +113,11 @@ module.exports = function (app) {
 	
 	app.get('/login', function (req, res, next) {
 		if (req.isAuthenticated()) {
+            console.log("/login: user is authenticated");
 			res.redirect('/account');
 		}
 		else{
+            console.log("/login: user is not authenticated");
 			res.render('login', {title: "Log in", userData: req.user, messages: {danger: req.flash('danger'), warning: req.flash('warning'), success: req.flash('success')}});
 		}
 		
