@@ -102,9 +102,11 @@ module.exports = function (app) {
 	
 	app.get('/account', function (req, res, next) {
 		if(req.isAuthenticated()){
+            console.log("/account: user is authenticated");
 			res.render('account', {title: "Account", userData: req.user, userData: req.user, messages: {danger: req.flash('danger'), warning: req.flash('warning'), success: req.flash('success')}});
 		}
 		else{
+            console.log("/account: user is not authenticated");
 			res.redirect('/login');
 		}
 	});
