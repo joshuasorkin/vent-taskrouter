@@ -179,19 +179,24 @@ passport.use('local', new LocalStrategy({passReqToCallback : true}, (req, userna
                     console.log('Error while checking password');
                     return done();
                 }
-                if(bcryptResult){
-                    var email=result[0].email;
-                    var firstName=result[0].firstname;
-                    console.log("loginAttempt: password match succeeded for "+email+" "+firstName);
-                    return done(null,[{
-                        email:email,
-                        firstName:firstName
-                    }]);
+                try{
+                    if(bcryptResult){
+                        var email=result[0].email;
+                        var firstName=result[0].firstname;
+                        console.log("loginAttempt: password match succeeded for "+email+" "+firstName);
+                        return done(null,[{
+                            email:email,
+                            firstName:firstName
+                        }]);
+                    }
+                    else{
+                        req.flash('danger',"Oops. Incorrect login details.");
+                        return done(null,false);
+                    }
                 }
-                else{
-                    req.flash('danger',"Oops. Incorrect login details.");
-                    return done(null,false);
-                } 
+                catch(e){
+                    console.log("loginAttempt: error: "+e);
+                }   
 		    }
         }
 		catch(e){
