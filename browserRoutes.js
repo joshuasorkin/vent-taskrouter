@@ -161,7 +161,7 @@ passport.use('local', new LocalStrategy({passReqToCallback : true}, (req, userna
 				
 		try{
             var result;
-            await sequelize.query('BEGIN')
+            //await sequelize.query('BEGIN')
             try{
 			    result = await sequelize.query('SELECT id_uuid, firstName, email, passwordhash FROM users WHERE email=?', {
                                                                         replacements:[username],
@@ -188,7 +188,8 @@ passport.use('local', new LocalStrategy({passReqToCallback : true}, (req, userna
                         var email=result[0].email;
                         var firstName=result[0].firstname;
                         console.log("loginAttempt: password match succeeded for "+email+" "+firstName);
-                        return done(null,result[0]);
+                        user=result[0];
+                        return done(null,user);
                         /*return done(null,[{
                             email:email,
                             firstName:firstName
