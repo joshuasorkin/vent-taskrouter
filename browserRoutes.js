@@ -215,9 +215,11 @@ passport.use('local', new LocalStrategy({passReqToCallback : true}, (req, userna
 
 
 passport.serializeUser(function(user, done) {
+    console.log("serializeUser running");
 	done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-	done(null, user);
+    console.log("deserializeUser running");
+    done(null, user);
 });		
