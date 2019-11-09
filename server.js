@@ -60,12 +60,13 @@ function exitErrorHandler(error) {
 //app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({ extended: false }));
 
-
+/*
 app.post('/login',
 	passport.authenticate('local'),
 	function(req,res){
 
 });
+*/
 
 app.get('/admin',function(req,res){
 	res.sendFile(path.join(__dirname+'/admin.html'));
