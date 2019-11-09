@@ -188,7 +188,11 @@ passport.use('local', new LocalStrategy({passReqToCallback : true}, (req, userna
                         var email=result[0].email;
                         var firstName=result[0].firstname;
                         console.log("loginAttempt: password match succeeded for "+email+" "+firstName);
-                        user=result[0];
+                        //user=result[0];
+                        user={
+                            email:email,
+                            firstName:firstName
+                        };
                         return done(null,user);
                         /*return done(null,[{
                             email:email,
