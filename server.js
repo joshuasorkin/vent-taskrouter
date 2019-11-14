@@ -374,7 +374,7 @@ app.post('/voice',twilio.webhook(),async function(req,res){
 
 app.post('/randomSoundLoop',twilio.webhook(),function(req,res){
 	const response=new VoiceResponse();
-	response.play(process.env.WAIT_URL_BUCKET);
+	response.play(process.env.WAIT_URL);
 	//response.redirect('/randomSoundLoop');
 	res.send(response.toString());
 });
