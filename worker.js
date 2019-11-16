@@ -333,7 +333,7 @@ class Worker{
 	}
 
 	getStatisticsByWorkerSid(workerSid){
-		return this.workspace.workers(workerSid).statistics.fetch();
+		return this.workspace.workers(workerSid).statistics().fetch();
 	}
 
 	async getStatisticsByWorkerSid_cumulative(workerSid){
