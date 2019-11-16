@@ -333,7 +333,9 @@ class Worker{
 	}
 
 	getStatisticsByWorkerSid(workerSid){
-		return this.workspace.workers(workerSid).statistics().fetch();
+		return this.workspace.workers(workerSid).statistics({
+			startDate:"2019-01-01"
+		}).fetch();
 	}
 
 	async getStatisticsByWorkerSid_cumulative(workerSid){
