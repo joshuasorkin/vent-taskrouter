@@ -331,6 +331,23 @@ class Worker{
 	removeWorker(workerEntity,contact_uri){
 		
 	}
+
+	getStatisticsByWorkerSid(workerSid){
+		return this.workspace.workers(workerSid).statistics.fetch();
+	}
+
+	async getStatisticsByWorkerSid_cumulative(workerSid){
+		try{
+			var statistics=await this.getStatisticsByWorkerSid(workerSid);
+			return statistics.cumulative;
+		}
+		catch(err){
+			console.log("getStatisticsByWorkerSid_cumulative: error "+err);
+			return null;
+		}
+	}
+
+
 	
 }
 

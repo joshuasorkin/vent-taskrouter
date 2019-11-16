@@ -121,8 +121,8 @@ module.exports = function (app) {
 			res.render('login', {title: "Log in", userData: req.user, messages: {danger: req.flash('danger'), warning: req.flash('warning'), success: req.flash('success')}});
 		}
 		
-	});
-	
+    });
+    	
 	app.get('/logout', function(req, res){
 		
 		console.log(req.isAuthenticated());

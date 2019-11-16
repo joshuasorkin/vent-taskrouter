@@ -76,7 +76,11 @@ app.get('/apply',function(req,res){
 	res.sendFile(path.join(__dirname+'/apply.html'));
 });
 
-
+app.get('/workerStatistics',async function(req,res){
+	var workerSid=req.query.workerSid;
+	var statistics=await worker.getStatisticsByWorkerSid_cumulative(workerSid);
+	res.send(statistics);
+});
 
 
 app.post('/submit_newuser',async function(req,res){
