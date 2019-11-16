@@ -334,8 +334,8 @@ class Worker{
 
 	getStatisticsByWorkerSid(workerSid){
 		return this.workspace.workers(workerSid).statistics({
-			start_time: '2017-01-01T01:00:00Z', 
-			end_time: '2020-01-01T01:00:00Z'
+			startDate: '2017-01-01T01:00:00Z', 
+			endDate: '2020-01-01T01:00:00Z'
 		}).fetch();
 	}
 
