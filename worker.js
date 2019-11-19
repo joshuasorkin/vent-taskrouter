@@ -333,10 +333,10 @@ class Worker{
 	}
 
 	getStatisticsByWorkerSid(workerSid){
-		return this.workspace.workers(workerSid).statistics({
+		return this.workspace.workers(workerSid).statistics().fetch({
 			startDate: '2017-01-01T01:00:00Z', 
 			endDate: '2020-01-01T01:00:00Z'
-		}).fetch();
+		});
 	}
 
 	async getStatisticsByWorkerSid_cumulative(workerSid){
