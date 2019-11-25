@@ -54,6 +54,7 @@ class TwimlBuilder{
         });
         this.playChime(gather);
         if (parameters.attempts<2){
+            this.say(gather, "Welcome to Vent production. ");
             this.say(gather,"Hello, "+parameters.friendlyName);
         }
         gather.pause({
