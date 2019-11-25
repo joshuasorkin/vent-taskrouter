@@ -54,7 +54,7 @@ class TwimlBuilder{
         });
         this.playChime(gather);
         if (parameters.attempts<2){
-            this.say(gather,"This is a development version of the Vent app. ");
+            this.say(gather,"Development version of Vent app. ");
             this.say(gather,"Hello, "+parameters.friendlyName);
         }
         gather.pause({
