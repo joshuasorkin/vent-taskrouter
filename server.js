@@ -30,6 +30,7 @@ const Sms=require('./sms');
 const MembershipRequester=require('./membershipRequester');
 const DataValidator=require('./dataValidator');
 const AppInitializer=require('./appInitializer');
+const RouteInitializer_Twilio=require('./api/twilio/routeInitializer_twilio');
 var appInitializer=new AppInitializer();
 var dataValidator=new DataValidator();
 var availableNotifier=new AvailableNotifier();
@@ -50,6 +51,7 @@ var objectUpdater=new ObjectUpdater();
 
 //app.use('/other_route',require('./other_route').router);
 appInitializer.initialize(app);
+
 
 function exitErrorHandler(error) {
   console.error('An error occurred:');
@@ -101,6 +103,7 @@ app.post('/submit_newuser',async function(req,res){
 	res.send(output);
 });
 
+/*
 app.post('/sms',twilio.webhook(),async function(req,res){
 	var body=req.body.Body;
 	var parameterObj;
@@ -139,7 +142,7 @@ app.post('/sms',twilio.webhook(),async function(req,res){
 	res.writeHead(200, {'Content-Type': 'text/xml'});
 	res.end(response.toString());
 });
-
+*/
 
 app.get('/conferenceAnnounceEnd_participantLeave',twilio.webhook(),function(req,res){
 	var parameters=urlSerializer.deserialize(req);
@@ -885,6 +888,8 @@ app.listen(http_port,async ()=>{
 	taskrouter.configureWorkspace();
 	workflow=await taskrouter.configureWorkflow();
 	console.log("returned from configureWorkflow");
-	textsplitter.splitTextFromFile("critiqueofpurereason.txt");	
+	var routeInitializer_twilio=new RouteInitializer_Twilio(twilio,MessagingResponse,
+															worker,dataValidator,membershipRequester,sms);
+	routeInitializer_twilio.initialize(app);
 });
 
