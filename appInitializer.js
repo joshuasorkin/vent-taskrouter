@@ -10,6 +10,7 @@ const express = require('express');
 class AppInitializer{
 
     initialize(app){
+        console.log("appInitializer running");
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
         app.use('/other_route',require('./other_route').router);
