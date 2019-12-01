@@ -1,4 +1,4 @@
-require('env2')('.env');
+
 
 class RouteInitializer_Twilio{
     constructor(twilio,MessagingResponse,worker,dataValidator,membershipRequester,sms){
@@ -8,6 +8,7 @@ class RouteInitializer_Twilio{
         this.dataValidator=dataValidator;
         this.membershipRequester=membershipRequester;
         this.sms=sms;
+        require('env2')('.env');
     }
 
     initialize(app){

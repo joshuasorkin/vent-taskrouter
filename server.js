@@ -866,18 +866,7 @@ app.post('/workspaceEvent',twilio.webhook(),async function(req,res){
 	res.status(204).send({error:'error occurred in processing workspace event callback'});
 });
 
-app.listen(http_port,async ()=>{
-	console.log(`app listening on port ${http_port}`);
-	console.log("Configuring incoming call urls...");
-	baseUrl=process.env.APP_BASE_URL;
-	incoming_phone_number=await client.incomingPhoneNumbers(process.env.TWILIO_PHONE_NUMBER_SID)
-															.update({
-																smsUrl:baseUrl+"/sms",
-																voiceUrl:baseUrl+"/voice",
-																statusCallback:baseUrl+"/incomingCallEvents"
-															});
-	console.log(incoming_phone_number.friendlyName);
-		
+function configureTwilioListeners() {
 	console.log("Configuring workspace...");
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	worker=new Worker(clientWorkspace);
@@ -891,5 +880,32 @@ app.listen(http_port,async ()=>{
 	var routeInitializer_twilio=new RouteInitializer_Twilio(twilio,MessagingResponse,
 															worker,dataValidator,membershipRequester,sms);
 	routeInitializer_twilio.initialize(app);
+}
+app.listen(http_port,async ()=>{
+	console.log(`app listening on port ${http_port}`);
+	console.log("Configuring incoming call urls...");
+	baseUrl=process.env.APP_BASE_URL;
+	incoming_phone_number=await client.incomingPhoneNumbers(process.env.TWILIO_PHONE_NUMBER_SID)
+															.update({
+																smsUrl:baseUrl+"/sms",
+																voiceUrl:baseUrl+"/voice",
+																statusCallback:baseUrl+"/incomingCallEvents"
+															});
+	console.log(incoming_phone_number.friendlyName);
+	configureTwilioListeners();
+
+	// console.log("Configuring workspace...");
+	// clientWorkspace=client.taskrouter.workspaces(workspaceSid);
+	// worker=new Worker(clientWorkspace);
+	// sms=new Sms(worker);
+	// membershipRequester=new MembershipRequester(client,worker,sms);
+	// taskrouter=new Taskrouter(clientWorkspace);
+	// conference=new Conference(client,clientWorkspace);
+	// taskrouter.configureWorkspace();
+	// workflow=await taskrouter.configureWorkflow();
+	// console.log("returned from configureWorkflow");
+	// var routeInitializer_twilio=new RouteInitializer_Twilio(twilio,MessagingResponse,
+	// 														worker,dataValidator,membershipRequester,sms);
+	// routeInitializer_twilio.initialize(app);
 });
 
