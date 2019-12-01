@@ -866,7 +866,7 @@ app.post('/workspaceEvent',twilio.webhook(),async function(req,res){
 	res.status(204).send({error:'error occurred in processing workspace event callback'});
 });
 
-function configureTwilioListeners() {
+async function configureTwilioListeners() {
 	console.log("Configuring workspace...");
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	worker=new Worker(clientWorkspace);
@@ -893,7 +893,6 @@ app.listen(http_port,async ()=>{
 															});
 	console.log(incoming_phone_number.friendlyName);
 	configureTwilioListeners();
-
 	// console.log("Configuring workspace...");
 	// clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	// worker=new Worker(clientWorkspace);
