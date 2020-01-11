@@ -90,7 +90,12 @@ app.post('/submit_newuser',async function(req,res){
 		var phonenumber=req.body.phonenumber;
 		var username=req.body.username;
 		//output="you submitted: "+username+" "+phonenumber;
-		var membershipRequestResult=await membershipRequester.requestNewWorker(phonenumber,username);
+		//appending  "1" to start of phone number if it isn't already there
+		var prefixedPhoneNumber = phonenumber;
+		if(phonenumber.substring(0,1)!="1"){
+			prefixedPhoneNumber=`1${phonenumber}`;
+		}
+		var membershipRequestResult=await membershipRequester.requestNewWorker(prefixedPhoneNumber,username);
 		console.log("/submit_newuser: membershipRequestResult: "+membershipRequestResult);
 		output=membershipRequestResult;
 	}
