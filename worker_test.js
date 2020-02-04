@@ -21,7 +21,8 @@ async function getWorkerList(){
 			.each(worker=>{
                 console.log("pushing worker...");
 				workerList.push(worker);
-			});
+            });
+    console.log(JSON.stringify(workerList));
 	return workerList;
 
     /*
@@ -36,7 +37,7 @@ async function getWorkerList(){
 
 
 var workerList=getWorkerList();
-console.log(JSON.stringify(workerList));
+
 
 
 
