@@ -18,12 +18,9 @@ async function getWorkerList(){
 
     var workerList=await clientWorkspace.workers.list();
     var workerNameList;
-    foreach(worker in workerList){
-        workerNameList.push(worker.friendlyName);
-    }
-    //workerList.forEach(worker=>workerNameList.push(worker.friendlyName));
     console.log("outputting worker name list...")
-    console.log(JSON.stringify(workerNameList));
+    workerList.forEach(worker=>console.log(worker.friendlyName));
+    //console.log(JSON.stringify(workerNameList));
 	return workerList;
 
     /*
