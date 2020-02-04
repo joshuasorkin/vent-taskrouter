@@ -11,26 +11,19 @@ const client=require('twilio')(accountSid,authToken);
 
 console.log("obtaining workspace...");
 clientWorkspace=client.taskrouter.workspaces(workspaceSid);
-
+var worker=new Worker(clientWorkspace);
 
 async function getWorkerList(){
     console.log("getting worker list...");
 
-    var workerList=await clientWorkspace.workers.list();
+    var workerList=worker.getWorkerList();
     var workerNameList;
     console.log("outputting worker name list...")
-    workerList.forEach(worker=>console.log(worker.friendlyName));
-    //console.log(JSON.stringify(workerNameList));
+    workerList.forEach(worker=>{
+        console.log(worker.friendlyName);
+        console.log(worker.contact_uri);
+    });
 	return workerList;
-
-    /*
-    var workerList=await clientWorkspace.workers.list();
-    var workerObj;
-    for(index=0;index<workerList.length;index++){
-        workerObj=workerList[index];
-        console.log(workerObj.friendlyName+" "+workerObj.sid);
-    }
-    */
 }
 
 

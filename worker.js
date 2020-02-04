@@ -178,11 +178,7 @@ class Worker{
 	async getWorkerList(){
 
 
-		var workerList;
-		var pushResult=await this.workspace.workers
-			.each(worker=>{
-				workerList.push(worker);
-			});
+		var workerList=await this.workspace.workers.list();
 		return workerList;
 
 	}
