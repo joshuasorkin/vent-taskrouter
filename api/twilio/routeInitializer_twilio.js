@@ -16,7 +16,7 @@ class RouteInitializer_Twilio{
             var body=req.body.Body;
             var parameterObj;
             console.log("/sms: message SID "+req.body.sid);
-            console.log(body);
+            console.log("/sms: message body: "+body);
             //replace multiple spaces with single space
             
             fromNumber=req.body.From;
