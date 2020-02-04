@@ -15,6 +15,7 @@ class RouteInitializer_Twilio{
         app.post('/sms',this.twilio.webhook(),async function(req,res){
             var body=req.body.Body;
             var parameterObj;
+            console.log("/sms: message request body: "+JSON.stringify(req.body));
             console.log("/sms: message SID "+req.body.sid);
             console.log("/sms: message body: "+body);
             //replace multiple spaces with single space
