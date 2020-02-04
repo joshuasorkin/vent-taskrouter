@@ -22,6 +22,7 @@ async function getWorkerList(){
                 console.log("pushing worker...");
 				workerList.push(worker);
             });
+    console.log("outputting worker list...")
     console.log(JSON.stringify(workerList));
 	return workerList;
 
