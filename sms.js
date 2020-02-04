@@ -58,11 +58,31 @@ class Sms{
         commandList[commandName]=command;
     }
 
+    //this is different than
+    //sendMessageToWorkerEntity
+    //because the worker retrieved from getWorkerList()
+    //needs to have its attributes parsed
+    sendMessageToWorkerFromGetWorkerList(worker,messageBody){
+        attributes=JSON.stringify(worker.attributes);
+        phonenumber=attributes.contact_uri;
+        client.messages
+                .create({
+                    from:process.env.TWILIO_PHONE_NUMBER,
+                    body:messageBody,
+                    to:phonenumber
+                })
+                .then(message=>console.log("Sms.sendMessageToWorkerFromGetWorkerList(): sent message to worker: "+message.sid))
+                .catch(err=>console.log("Sms.sendMessageToWorkerFromGetWorkerList(): Error sending message to worker: "+err));
+    }
+
     async sendAll(parameterObj){
         var messageBody=parameterObj.commandArray[2];
-        
-        
-        //var workerList=await this.worker.getWorkerList();
+        var workerList=await this.worker.getWorkerList();
+        workerList.forEach(worker=>{
+            this.sendMessageToWorkerFromGetWorkerList(worker,messageBody);
+        })
+
+        /*
         var index;
         //var workerEntity;
 
@@ -80,7 +100,7 @@ class Sms{
                 .then(message=>console.log("Sms.sendMessageToWorkerEntity(): sent message to worker: "+message.sid))
                 .catch(err=>console.log("Sms.sendMessageToWorkerEntity(): Error sending message to worker: "+err));
         }
-        
+        */
 
         /*
         for(index=0;index<workerList.length;index++){
