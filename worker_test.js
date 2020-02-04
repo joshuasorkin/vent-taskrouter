@@ -16,8 +16,7 @@ var worker=new Worker(clientWorkspace);
 async function getWorkerList(){
     console.log("getting worker list...");
 
-    var workerList=worker.getWorkerList();
-    var workerNameList;
+    var workerList=await worker.getWorkerList();
     console.log("outputting worker name list...")
     workerList.forEach(worker=>{
         console.log(worker.friendlyName);
