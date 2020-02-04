@@ -19,6 +19,7 @@ async function getWorkerList(){
 
     var pushResult=await clientWorkspace.workers
 			.each(worker=>{
+                console.log("pushing worker...");
 				workerList.push(worker);
 			});
 	return workerList;
