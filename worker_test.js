@@ -14,7 +14,7 @@ clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 
 
 async function getWorkerList(){
-    var index;
+    var workerList;
     console.log("getting worker list...");
 
     var pushResult=await clientWorkspace.workers
@@ -34,8 +34,8 @@ async function getWorkerList(){
 }
 
 
-getWorkerList();
-
+var workerList=getWorkerList();
+console.log(JSON.stringify(workerList));
 
 
 
