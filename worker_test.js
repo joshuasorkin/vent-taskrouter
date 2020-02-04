@@ -21,6 +21,7 @@ async function getWorkerList(){
     workerList.forEach(worker=>{
         console.log(worker.friendlyName);
         console.log(worker.contact_uri);
+        console.log(JSON.stringify(worker));
     });
 	return workerList;
 }
