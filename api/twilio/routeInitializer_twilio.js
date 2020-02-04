@@ -20,7 +20,7 @@ class RouteInitializer_Twilio{
             console.log("/sms: message body: "+body);
             //replace multiple spaces with single space
             
-            fromNumber=req.body.From;
+            var fromNumber=req.body.From;
             
             var responseValue;
             const response=new this.MessagingResponse();
