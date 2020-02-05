@@ -8,12 +8,11 @@ class RouteInitializer_Twilio{
         this.dataValidator=dataValidator;
         this.membershipRequester=membershipRequester;
         this.sms=sms;
-        this.MessagingResponse=this.MessagingResponse.bind(this);
         require('env2')('.env');
     }
 
     initialize(app){
-        app.post('/sms',this.twilio.webhook(),async function(req,res){
+        app.post('/sms',this.twilio.webhook(),async (req,res)=>{
             var body=req.body.Body;
             var parameterObj;
             console.log("/sms: message request body: "+JSON.stringify(req.body));
