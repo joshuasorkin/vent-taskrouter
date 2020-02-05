@@ -8,6 +8,7 @@ class RouteInitializer_Twilio{
         this.dataValidator=dataValidator;
         this.membershipRequester=membershipRequester;
         this.sms=sms;
+        this.MessagingResponse=this.MessagingResponse.bind(this);
         require('env2')('.env');
     }
 
