@@ -48,6 +48,7 @@ class RouteInitializer_Twilio{
             }
             console.log('/sms: response value: '+responseValue);
             response.message(responseValue);
+            console.log('/sms: twiml response: '+response.toString());
             res.writeHead(200, {'Content-Type': 'text/xml'});
             res.end(response.toString());
         });
