@@ -5,9 +5,12 @@ var express = require('express'),
     VoiceResponse = require('twilio/lib/twiml/VoiceResponse');
 
 module.exports = function (app) {
-  // POST /call/incoming
+  // POST /call/incoming: twilio webhook for incoming call
   router.post('/incoming/', function (req, res) {
+    //create new voice response
     var twimlResponse = new VoiceResponse();
+    //voice response prompts user to enter a digit
+    //this digit is then sent to /call/enqueue for processing
     var gather = twimlResponse.gather({
       numDigits: 1,
       action: '/call/enqueue',
