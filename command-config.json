@@ -1,0 +1,10 @@
+{
+    "on":{
+        "name":"on",
+        "description":"Sets the user as available to receive calls.",
+        "parameterUsage":"on",
+        "parameterCount":1,
+        "adminTask":null
+
+    }
+}
