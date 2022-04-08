@@ -1,7 +1,7 @@
 const Sms = require('./sms');
 
 function createParameterObj_assert(){
-    const sms = new Sms(null);
+    const sms = new Sms(null,null);
     const paramObj = sms.createParameterObj("body","from","workerEntity");
     const paramObj_test = {
         body:"body",
@@ -16,7 +16,7 @@ function createParameterObj_assert(){
 }
 
 function createCommandList_assert(){
-    const sms = new Sms(null);
+    const sms = new Sms(null,null);
     console.log(sms.commandList);
 }
 

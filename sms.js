@@ -2,18 +2,17 @@ require('env2')('.env');
 const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 const client=require('twilio')(accountSid,authToken);
-const Password=require('./password');
 const DataValidator=require('./dataValidator');
 const fs = require('fs');
 class Sms{
 
 
-    constructor(worker){
+    constructor(worker,password){
         this.worker=worker;
         this.commandList=this.createCommandList();
         var commandListKeys=Object.keys(this.commandList);
         this.commandListKeysString=commandListKeys.sort().join("\n");
-        this.password=new Password();
+        this.password=password;
         this.phoneNumberPattern="^[+]\d+$";
         this.dataValidator=new DataValidator();
     }
@@ -27,43 +26,19 @@ class Sms{
         return parameterObj;
     }
 
-    //todo: this needs to be refactored into a JSON config file
     createCommandList(){
-        let commandList = JSON.parse(fs.readFileSync('command-config.json'));
-        Object.keys(this.commandList).forEach(key =>{
+        let rawData = fs.readFileSync('command-config.json');
+        let commandList_output = JSON.parse(rawData);
+        Object.keys(commandList_output).forEach(key =>{
             console.log(key);
-            this.commandList[key].command = this[key].bind(this);
+            if(key !== "default"){
+                commandList_output[key].command = this[key].bind(this);
+            }
         });
-        //this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,null,this.on.bind(this));
-        //this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,null,this.off.bind(this));
-        //this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,null,this.off.bind(this));
-        //this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,"addUser",this.add.bind(this));
-        //this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,null,this.changeName.bind(this));
-        //this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,"update",this.changeNumber.bind(this));
-        //this.addCommand(commandList,"manual","Gets help manual for a command, or lists all commands if used by itself.","manual [command name]",2,null,this.manual.bind(this));
-        //this.addCommand(commandList,"status","Gets status for user and system.","status",1,null,this.status.bind(this));
-        //this.addCommand(commandList,"setadminpassword","Authorizes specified user for admin task and sets initial password.","setadminpassword "+
-        //                            "[password] [username] [admin task] [initial password]",5,"identity",this.setAdminPassword.bind(this));
-        //this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall [password] \"[message]\"",3,"sendmessage",this.sendAll.bind(this));
-        //this.addCommand(commandList,"sendusername","Sends a text message to a user by name.","sendusername "+
-        //                            "[password] [username] \"[message]\"",4,"sendmessage",this.sendUsername.bind(this));
-        //this.addCommand(commandList,"apply","Applies for membership as a new user.","apply [phone number] [username]",3,null,this.apply.bind(this));
-        return commandList;
+        return commandList_output;
     }
 
-    addCommand(commandList,commandName,helpMessage,parameterUsage,parameterCount,adminTask,commandFunction){
-        var command={
-            commandName:commandName,
-            helpMessage:helpMessage,
-            parameterUsage:parameterUsage,
-            parameterCount:parameterCount,
-            adminTask:adminTask,
-            commandFunction:commandFunction
-        }
-        commandList[commandName]=command;
-    }
-
-    async sendAll(parameterObj){
+    async sendall(parameterObj){
         var messageBody=parameterObj.commandArray[2];
         
         
@@ -112,7 +87,7 @@ class Sms{
         return Math.floor(Math.random() * (max - min + 1) ) + min;
     }
 
-    async sendUsername(parameterObj){
+    async sendusername(parameterObj){
         var friendlyName=parameterObj.commandArray[2];
         var messageBody=parameterObj.commandArray[3];
         var workerEntity=await this.worker.getWorkerEntityFromFriendlyName(friendlyName);
@@ -134,7 +109,7 @@ class Sms{
 
     
 
-    async setAdminPassword(parameterObj){
+    async setadminpassword(parameterObj){
         var friendlyName=parameterObj.commandArray[2];
         console.log("setAdminPassword: friendlyName: "+friendlyName);
         var adminTask=parameterObj.commandArray[3];
@@ -272,7 +247,7 @@ class Sms{
         .catch(err=>console.log("Sms.add(): Error sending message to added worker: "+err));
     }
 
-    async changeName(parameterObj){
+    async changename(parameterObj){
         var responseValue;
         try{
             var newFriendlyName=parameterObj.commandArray[1];
@@ -286,7 +261,7 @@ class Sms{
     }
 
     //todo: validate oldNumber and newNumber as "\+\d+"
-    async changeNumber(parameterObj){
+    async changenumber(parameterObj){
         var responseValue;
         try{
             var oldNumber=parameterObj.commandArray[2];

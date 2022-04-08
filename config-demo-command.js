@@ -3,7 +3,9 @@ const commands = fs.readFileSync('config-demo.json');
 
 class Command{
     constructor(){
-        let rawData = fs.readFileSync('config-demo.json');
+        this.value = true;
+        //let rawData = fs.readFileSync('config-demo.json');
+        /*
         this.commands = JSON.parse(rawData);
         this.value = true;
         console.log(this.commands);
@@ -11,10 +13,21 @@ class Command{
             console.log(key);
             this.commands[key].command = this[key].bind(this);
         });
-//        this.commands.setTrue.command = this["setTrue"].bind(this);
-//        this.commands.setFalse.command = this["setFalse"].bind(this);
-//        this.commands.show.command = this["show"].bind(this);
+        */
+       this.commands = this.buildCommands();
     }
+
+    buildCommands(){
+        let rawData = fs.readFileSync('config-demo.json');
+        let commands = JSON.parse(rawData);
+        console.log(commands);
+        Object.keys(commands).forEach(key =>{
+            console.log(key);
+            commands[key].command = this[key].bind(this);
+        });
+        return commands;
+    }
+
     setTrue(){
         this.value = true;
     }
