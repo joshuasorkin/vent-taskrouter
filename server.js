@@ -30,6 +30,8 @@ const Sms=require('./sms');
 const MembershipRequester=require('./membershipRequester');
 const DataValidator=require('./dataValidator');
 const AppInitializer=require('./appInitializer');
+const Password=require('./password');
+const password = new Password();
 var appInitializer=new AppInitializer();
 var dataValidator=new DataValidator();
 var availableNotifier=new AvailableNotifier();
@@ -883,7 +885,7 @@ app.listen(http_port,async ()=>{
 	console.log("Configuring workspace...");
 	clientWorkspace=client.taskrouter.workspaces(workspaceSid);
 	worker=new Worker(clientWorkspace);
-	sms=new Sms(worker);
+	sms=new Sms(worker,password);
 	membershipRequester=new MembershipRequester(client,worker,sms);
 	taskrouter=new Taskrouter(clientWorkspace);
 	conference=new Conference(client,clientWorkspace);

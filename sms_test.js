@@ -15,8 +15,13 @@ function createParameterObj_assert(){
     )
 }
 
-console.log(createParameterObj_assert());
+function createCommandList_assert(){
+    const sms = new Sms(null);
+    console.log(sms.commandList);
+}
 
+console.log(createParameterObj_assert());
+console.log(createCommandList_assert());
 
 /*
 var args=process.argv.slice(2);
