@@ -35,17 +35,17 @@ class Sms{
             this.commandList[key].command = this[key].bind(this);
         });
         //this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,null,this.on.bind(this));
-        this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,null,this.off.bind(this));
-        this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,null,this.off.bind(this));
-        this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,"addUser",this.add.bind(this));
-        this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,null,this.changeName.bind(this));
-        this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,"update",this.changeNumber.bind(this));
-        this.addCommand(commandList,"manual","Gets help manual for a command, or lists all commands if used by itself.","manual [command name]",2,null,this.manual.bind(this));
-        this.addCommand(commandList,"status","Gets status for user and system.","status",1,null,this.status.bind(this));
-        this.addCommand(commandList,"setadminpassword","Authorizes specified user for admin task and sets initial password.","setadminpassword "+
-                                    "[password] [username] [admin task] [initial password]",5,"identity",this.setAdminPassword.bind(this));
-        this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall [password] \"[message]\"",3,"sendmessage",this.sendAll.bind(this));
-        this.addCommand(commandList,"sendusername","Sends a text message to a user by name.","sendusername "+
+        //this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,null,this.off.bind(this));
+        //this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,null,this.off.bind(this));
+        //this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,"addUser",this.add.bind(this));
+        //this.addCommand(commandList,"changename","Changes a user's name.","changename [new name (no spaces)]",2,null,this.changeName.bind(this));
+        //this.addCommand(commandList,"changenumber","Changes a user's phone number.","changenumber [password] [old number] [new number]",4,"update",this.changeNumber.bind(this));
+        //this.addCommand(commandList,"manual","Gets help manual for a command, or lists all commands if used by itself.","manual [command name]",2,null,this.manual.bind(this));
+        //this.addCommand(commandList,"status","Gets status for user and system.","status",1,null,this.status.bind(this));
+        //this.addCommand(commandList,"setadminpassword","Authorizes specified user for admin task and sets initial password.","setadminpassword "+
+        //                            "[password] [username] [admin task] [initial password]",5,"identity",this.setAdminPassword.bind(this));
+        //this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall [password] \"[message]\"",3,"sendmessage",this.sendAll.bind(this));
+        //this.addCommand(commandList,"sendusername","Sends a text message to a user by name.","sendusername "+
                                     "[password] [username] \"[message]\"",4,"sendmessage",this.sendUsername.bind(this));
         //this.addCommand(commandList,"apply","Applies for membership as a new user.","apply [phone number] [username]",3,null,this.apply.bind(this));
         return commandList;
