@@ -46,7 +46,7 @@ class Sms{
         //                            "[password] [username] [admin task] [initial password]",5,"identity",this.setAdminPassword.bind(this));
         //this.addCommand(commandList,"sendall","Sends a text message to all users.","sendall [password] \"[message]\"",3,"sendmessage",this.sendAll.bind(this));
         //this.addCommand(commandList,"sendusername","Sends a text message to a user by name.","sendusername "+
-                                    "[password] [username] \"[message]\"",4,"sendmessage",this.sendUsername.bind(this));
+        //                            "[password] [username] \"[message]\"",4,"sendmessage",this.sendUsername.bind(this));
         //this.addCommand(commandList,"apply","Applies for membership as a new user.","apply [phone number] [username]",3,null,this.apply.bind(this));
         return commandList;
     }
