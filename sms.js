@@ -4,6 +4,7 @@ const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 const client=require('twilio')(accountSid,authToken);
 const Password=require('./password');
 const DataValidator=require('./dataValidator');
+const fs = require('fs');
 class Sms{
 
 
@@ -28,8 +29,12 @@ class Sms{
 
     //todo: this needs to be refactored into a JSON config file
     createCommandList(){
-        var commandList=[];
-        this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,null,this.on.bind(this));
+        let commandList = JSON.parse(fs.readFileSync('command-config.json'));
+        Object.keys(this.commandList).forEach(key =>{
+            console.log(key);
+            this.commandList[key].command = this[key].bind(this);
+        });
+        //this.addCommand(commandList,"on","Enables the user to receive calls.","on",1,null,this.on.bind(this));
         this.addCommand(commandList,"off","Disables the user from receiving calls.","off",1,null,this.off.bind(this));
         this.addCommand(commandList,"default","Disables the user from receiving calls.","any unrecognized command",1,null,this.off.bind(this));
         this.addCommand(commandList,"add","Adds a new user.","add [password] [contact_uri] [username]",4,"addUser",this.add.bind(this));
