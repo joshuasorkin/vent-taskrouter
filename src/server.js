@@ -11,13 +11,15 @@ const twilio = require("twilio");
 const bodyParser = require("body-parser");
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
 const MessagingResponse = require("twilio").twiml.MessagingResponse;
-const client = require("twilio")(accountSid, authToken);
-//var workspace = require('./lib/workspace')();
+
 const http_port = process.env.HTTP_PORT || process.env.PORT;
 const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 const workspaceSid = process.env.TWILIO_WORKSPACE_SID; //add your workspace sid
 const workflowSid = process.env.TWILIO_WORKFLOW_SID;
+
+const client = require("twilio")(accountSid, authToken);
+//var workspace = require('./lib/workspace')();
 
 const Taskrouter = require("./lib/taskrouter");
 const UrlSerializer = require("./lib/urlSerializer");
