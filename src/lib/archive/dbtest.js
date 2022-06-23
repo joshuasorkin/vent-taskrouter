@@ -1,14 +1,17 @@
-const Database=require("./database");
-require('env2')('.env');
+const Database = require("../../config/database");
+require("env2")(".env");
 
+var db = new Database();
+var args = process.argv.slice(2);
+var workerSid = args[0];
 
-var db=new Database();
-var args=process.argv.slice(2);
-var workerSid=args[0];
-
-async function insert(){
-	var result=await db.insertConferenceParticipant(workerSid,"callSid101","conferenceSid12345");
-	return result;
+async function insert() {
+  var result = await db.insertConferenceParticipant(
+    workerSid,
+    "callSid101",
+    "conferenceSid12345"
+  );
+  return result;
 }
 
 console.log(insert());
