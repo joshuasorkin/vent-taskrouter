@@ -1,10 +1,79 @@
 {
     "on":{
         "name":"on",
-        "description":"Sets the user as available to receive calls.",
+        "description":"Sets the user as available for receiving calls.",
         "parameterUsage":"on",
         "parameterCount":1,
         "adminTask":null
-
+    },
+    "off":{
+        "name":"off",
+        "description":"Sets the user as unavailable for receiving calls.",
+        "parameterUsage":"off",
+        "parameterCount":1,
+        "adminTask":null
+    },
+    "default":{
+        "name":"default",
+        "description":"Sets the user as unavailable for receiving calls.",
+        "parameterUsage":"any unrecognized command",
+        "parameterCount":1,
+        "adminTask":null
+    },
+    "add":{
+        "name":"add",
+        "description":"Adds a new user.",
+        "parameterUsage":"add [password] [contact_uri] [username]",
+        "parameterCount":4,
+        "adminTask":"addUser"
+    },
+    "changename":{
+        "name":"changename",
+        "description":"Changes a user's name.",
+        "parameterUsage":"changename [new name (no spaces)]",
+        "parameterCount":2,
+        "adminTask":null
+    },
+    "changenumber":{
+        "name":"changenumber",
+        "description":"Changes a user's phone number.",
+        "parameterUsage":"changenumber [password] [old number] [new number]",
+        "parameterCount":4,
+        "adminTask":"update"
+    },
+    "manual":{
+        "name":"manual",
+        "description":"Gets help manual for a command, or lists all commands if used by itself.",
+        "parameterUsage":"manual [command name]",
+        "parameterCount":2,
+        "adminTask":null
+    },
+    "status":{
+        "name":"status",
+        "description":"Gets status for user and system.",
+        "parameterUsage":"status",
+        "parameterCount":1,
+        "adminTask":null
+    },
+    "setadminpassword":{
+        "name":"setadminpassword",
+        "description":"Authorizes specified user for admin task and sets initial password.",
+        "parameterUsage":"setadminpassword [password] [username] [admin task] [initial password]",
+        "parameterCount":5,
+        "adminTask":"identity"
+    },
+    "sendall":{
+        "name":"sendall",
+        "description":"Sends a text message to all users.",
+        "parameterUsage":"sendall [password] \"[message]\"",
+        "parameterCount":3,
+        "adminTask":"sendmessage"
+    },
+    "sendusername":{
+        "name":"sendusername",
+        "description":"Sends a text message to a user by name.",
+        "parameterUsage":"sendusername [password] [username] \"[message]\"",
+        "parameterCount":4,
+        "adminTask":"sendmessage"
     }
 }

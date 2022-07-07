@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
     "env2": "^2.2.2",
@@ -27,7 +27,6 @@
     "uuid": "^3.3.3",
     "wav": "^1.0.2"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "test.js",
     "start": "node ./src/server.js"

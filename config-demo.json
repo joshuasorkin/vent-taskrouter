@@ -1,0 +1,11 @@
+{
+    "setTrue":{
+        "description":"set value to true"
+    },
+    "setFalse":{
+        "description":"set value to false"
+    },
+    "show":{
+        "description":"displays the value"
+    }
+}
