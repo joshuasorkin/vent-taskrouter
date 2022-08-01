@@ -1,0 +1,25 @@
+
+callpool{{
+    callID1,
+    callID2
+    ...
+}}
+
+agentpool{
+    userid1,
+    userid2,
+    ...
+}
+
+callID:{
+    caller:user
+    listOfOfferedAgents:[]
+    othermetadata:{}
+}
+
+agent sends back
+{
+    callID:number
+    answer:answertype
+    agentcredentials:{sessiontoken}
+}
