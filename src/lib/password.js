@@ -1,4 +1,4 @@
-const Bcrypt = require("bcrypt");
+const Bcrypt = require("bcryptjs");
 const Database = require("../config/database");
 var database = new Database();
 
