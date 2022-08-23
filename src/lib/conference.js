@@ -1,6 +1,6 @@
 const UrlSerializer = require("./urlSerializer");
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
-const TwimlBuilder = require("../twimlBuilder");
+const TwimlBuilder = require("./twimlBuilder");
 const Database = require("../config/database");
 require("env2")(".env");
 
