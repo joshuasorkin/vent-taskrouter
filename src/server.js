@@ -25,7 +25,7 @@ const Taskrouter = require("./lib/taskrouter");
 const UrlSerializer = require("./lib/urlSerializer");
 const Conference = require("./lib/conference");
 const Worker = require("./lib/worker");
-const TwimlBuilder = require("./twimlBuilder");
+const TwimlBuilder = require("./lib/twimlBuilder");
 const Wait = require("./lib/wait");
 const ObjectUpdater = require("./lib/objectUpdater");
 const Textsplitter = require("./lib/textsplitter");
@@ -1080,5 +1080,5 @@ app.listen(http_port, async () => {
   taskrouter.configureWorkspace();
   workflow = await taskrouter.configureWorkflow();
   console.log("returned from configureWorkflow");
-  textsplitter.splitTextFromFile("critiqueofpurereason.txt");
+  textsplitter.splitTextFromFile("./docs/critiqueofpurereason.txt");
 });
