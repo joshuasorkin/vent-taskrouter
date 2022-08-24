@@ -7,8 +7,12 @@ const express = require("express");
 const session = require("express-session");
 const flash = require("connect-flash");
 const twilio = require("twilio");
-
 const bodyParser = require("body-parser");
+const compression = require("compression");
+const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
+
+const argv = require("minimist")(process.argv.slice(2));
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
 const MessagingResponse = require("twilio").twiml.MessagingResponse;
 
@@ -36,6 +40,38 @@ const DataValidator = require("./lib/dataValidator");
 const AppInitializer = require("./appInitializer");
 
 const app = express();
+
+const subpath = express();
+const swagger = require("swagger-node-express").createNew(subpath);
+swagger.setApiInfo({
+  title: "example API",
+  description: "API to do something, manage something...",
+  termsOfServiceUrl: "",
+  contact: "yourname@something.com",
+  license: "",
+  licenseUrl: "",
+});
+// Set api-doc path
+swagger.configureSwaggerPaths("", "api-docs", "");
+
+// Configure the API domain
+var domain = "localhost";
+if (argv.domain !== undefined) domain = argv.domain;
+else
+  console.log(
+    'No --domain=xxx specified, taking default hostname "localhost".'
+  );
+
+// Configure the API port
+var port = 1337;
+if (argv.port !== undefined) port = argv.port;
+else console.log("No --port=xxx specified, taking default port " + port + ".");
+
+// Set and display the application URL
+var applicationUrl = "http://" + domain + "/v1:" + port;
+console.log("snapJob API running on " + applicationUrl);
+
+swagger.configure(applicationUrl, "1.0.0");
 
 var appInitializer = new AppInitializer();
 var dataValidator = new DataValidator();
@@ -74,6 +110,24 @@ app.post('/login',
 
 });
 */
+
+/* app.use("/api/v1", subpath); */
+app.use(express.static(path.join(__dirname, "../swagger/index.html")));
+/* app.use(compression());
+app.use(cookieParser());
+app.use(
+  cookieSession({
+    key: "mysite.sid.uid.whatever",
+    secret: process.env["SESSION_SECRET"],
+    cookie: {
+      maxAge: 2678400000, // 31 days
+    },
+  })
+); */
+
+app.get("/api-docs", function (req, res) {
+  res.sendFile(path.join(__dirname, "../swagger/index.html"));
+});
 
 app.get("/admin", function (req, res) {
   res.sendFile(path.join(__dirname + "/public/admin.html"));
