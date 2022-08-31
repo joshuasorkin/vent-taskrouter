@@ -2,7 +2,7 @@
   "name": "vent-taskrouter",
   "version": "1.0.0",
   "description": "taskrouter implementation of vent prototype",
-  "main": "server.js",
+  "main": "./src/server.js",
   "directories": {
     "lib": "lib"
   },
@@ -32,10 +32,15 @@
     "uuid": "^3.3.3",
     "wav": "^1.0.2"
   },
+  "devDependencies": {
+    "@types/swagger-jsdoc": "^6.0.1",
+    "minimist": "^1.2.6",
+    "nodemon": "^2.0.19"
+  },
   "scripts": {
     "test": "test.js",
-    "watch": "npx nodemon src/server.js --port 8080 --domain=localhost",
-    "start": "node ./src/server.js"
+    "watch": "nodemon",
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -46,9 +51,5 @@
   "bugs": {
     "url": "https://github.com/joshuasorkin/vent-taskrouter/issues"
   },
-  "homepage": "https://github.com/joshuasorkin/vent-taskrouter#readme",
-  "devDependencies": {
-    "@types/swagger-jsdoc": "^6.0.1",
-    "minimist": "^1.2.6"
-  }
+  "homepage": "https://github.com/joshuasorkin/vent-taskrouter#readme"
 }
