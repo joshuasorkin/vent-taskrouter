@@ -47,14 +47,26 @@ var maxMinutes = 10;
 
 appInitializer.initialize(app);
 
-app.get("/admin", function (req, res) {
-  res.sendFile(path.join(__dirname + "/public/admin.html"));
-});
-
-app.get("/apply", function (req, res) {
-  res.sendFile(path.join(__dirname + "/public/apply.html"));
-});
-
+/**
+ * @openapi
+ * '/api/workerStatistics':
+ *  get:
+ *     tags:
+ *     - Service
+ *     summary: Get service worker statistics
+ *     parameters:
+ *       - in: body
+ *         name: workerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: service worker Id
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ */
 app.get("/workerStatistics", async function (req, res) {
   var workerSid = req.query.workerSid;
   var statistics = await worker.getStatisticsByWorkerSid_cumulative(workerSid);
@@ -997,6 +1009,16 @@ app.post("/workspaceEvent", twilio.webhook(), async function (req, res) {
     .status(204)
     .send({ error: "error occurred in processing workspace event callback" });
 });
+
+//#region Existing admin dashboard
+app.get("/admin", function (req, res) {
+  res.sendFile(path.join(__dirname + "/public/admin.html"));
+});
+
+app.get("/apply", function (req, res) {
+  res.sendFile(path.join(__dirname + "/public/apply.html"));
+});
+//#endregion
 
 app.listen(http_port, async () => {
   console.log(`app listening on port ${http_port}`);
