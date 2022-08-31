@@ -1,18 +1,9 @@
 require("env2")(".env");
 
-const passport = require("passport");
 const path = require("path");
-const http = require("http");
 const express = require("express");
-const session = require("express-session");
-const flash = require("connect-flash");
 const twilio = require("twilio");
-const bodyParser = require("body-parser");
-const compression = require("compression");
-const cookieParser = require("cookie-parser");
-const cookieSession = require("cookie-session");
 
-const argv = require("minimist")(process.argv.slice(2));
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
 const MessagingResponse = require("twilio").twiml.MessagingResponse;
 
@@ -29,8 +20,6 @@ const UrlSerializer = require("./lib/urlSerializer");
 const Conference = require("./lib/conference");
 const Worker = require("./lib/worker");
 const TwimlBuilder = require("./lib/twimlBuilder");
-const Wait = require("./lib/wait");
-const ObjectUpdater = require("./lib/objectUpdater");
 const Textsplitter = require("./lib/textsplitter");
 const AvailableNotifier = require("./lib/availableNotifier");
 const Sms = require("./lib/sms");
@@ -52,19 +41,11 @@ var worker;
 var sms;
 var taskrouter = null;
 var twimlBuilder = new TwimlBuilder();
-var router = express.Router();
-var wait = new Wait();
+
 var minMinutes = 1;
 var maxMinutes = 10;
-var objectUpdater = new ObjectUpdater();
 
 appInitializer.initialize(app);
-
-function exitErrorHandler(error) {
-  console.error("An error occurred:");
-  console.error(error);
-  process.exit(1);
-}
 
 app.get("/admin", function (req, res) {
   res.sendFile(path.join(__dirname + "/public/admin.html"));
