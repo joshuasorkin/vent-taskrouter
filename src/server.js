@@ -73,10 +73,35 @@ app.get("/workerStatistics", async function (req, res) {
   res.send(statistics);
 });
 
+/**
+ * @openapi
+ * '/api/submit_newuser':
+ *  post:
+ *     tags:
+ *     - User
+ *     summary: Create new user
+ *     parameters:
+ *       - in: body
+ *         name: phonenumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: user's phone number
+ *       - in: body
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: username
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ */
 app.post("/submit_newuser", async function (req, res) {
   var output;
   try {
-    console.log("/submit_newuser: req.body: " + JSON.stringify(req.body));
     var phonenumber = req.body.phonenumber;
     var username = req.body.username;
     //output="you submitted: "+username+" "+phonenumber;
