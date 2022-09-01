@@ -41,7 +41,8 @@
   "scripts": {
     "test": "test.js",
     "watch": "nodemon",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "run-with-docker": "docker build -t vent . && docker run --env-file .env -dp 3000:1337 vent"
   },
   "repository": {
     "type": "git",
