@@ -7,7 +7,11 @@ const flash = require("connect-flash");
 const bodyParser = require("body-parser");
 const express = require("express");
 
+const Database = require("./config/database");
 const swaggerDocs = require("./swagger");
+
+const database = new Database();
+
 global.swagger = swaggerDocs;
 
 class AppInitializer {
@@ -16,6 +20,7 @@ class AppInitializer {
   constructor() {
     this.swagger = swaggerDocs;
   }
+
   initialize(app) {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
