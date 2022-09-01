@@ -1,14 +1,9 @@
 require("env2")(".env");
 
-const passport = require("passport");
 const path = require("path");
-const http = require("http");
 const express = require("express");
-const session = require("express-session");
-const flash = require("connect-flash");
 const twilio = require("twilio");
 
-const bodyParser = require("body-parser");
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
 const MessagingResponse = require("twilio").twiml.MessagingResponse;
 
@@ -19,15 +14,12 @@ const workspaceSid = process.env.TWILIO_WORKSPACE_SID; //add your workspace sid
 const workflowSid = process.env.TWILIO_WORKFLOW_SID;
 
 const client = require("twilio")(accountSid, authToken);
-//var workspace = require('./lib/workspace')();
 
 const Taskrouter = require("./lib/taskrouter");
 const UrlSerializer = require("./lib/urlSerializer");
 const Conference = require("./lib/conference");
 const Worker = require("./lib/worker");
 const TwimlBuilder = require("./lib/twimlBuilder");
-const Wait = require("./lib/wait");
-const ObjectUpdater = require("./lib/objectUpdater");
 const Textsplitter = require("./lib/textsplitter");
 const AvailableNotifier = require("./lib/availableNotifier");
 const Sms = require("./lib/sms");
@@ -49,50 +41,67 @@ var worker;
 var sms;
 var taskrouter = null;
 var twimlBuilder = new TwimlBuilder();
-var router = express.Router();
-var wait = new Wait();
+
 var minMinutes = 1;
 var maxMinutes = 10;
-var objectUpdater = new ObjectUpdater();
 
-//app.use('/other_route',require('./other_route').router);
 appInitializer.initialize(app);
 
-function exitErrorHandler(error) {
-  console.error("An error occurred:");
-  console.error(error);
-  process.exit(1);
-}
-
-//app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: false }));
-
-/*
-app.post('/login',
-	passport.authenticate('local'),
-	function(req,res){
-
-});
-*/
-
-app.get("/admin", function (req, res) {
-  res.sendFile(path.join(__dirname + "/public/admin.html"));
-});
-
-app.get("/apply", function (req, res) {
-  res.sendFile(path.join(__dirname + "/public/apply.html"));
-});
-
+/**
+ * @openapi
+ * '/api/workerStatistics':
+ *  get:
+ *     tags:
+ *     - Service
+ *     summary: Get service worker statistics
+ *     parameters:
+ *       - in: body
+ *         name: workerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: service worker Id
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ */
 app.get("/workerStatistics", async function (req, res) {
   var workerSid = req.query.workerSid;
   var statistics = await worker.getStatisticsByWorkerSid_cumulative(workerSid);
   res.send(statistics);
 });
 
+/**
+ * @openapi
+ * '/api/submit_newuser':
+ *  post:
+ *     tags:
+ *     - User
+ *     summary: Create new user
+ *     parameters:
+ *       - in: body
+ *         name: phonenumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: user's phone number
+ *       - in: body
+ *         name: username
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: username
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ */
 app.post("/submit_newuser", async function (req, res) {
   var output;
   try {
-    console.log("/submit_newuser: req.body: " + JSON.stringify(req.body));
     var phonenumber = req.body.phonenumber;
     var username = req.body.username;
     //output="you submitted: "+username+" "+phonenumber;
@@ -337,15 +346,12 @@ app.get(
         minutes: digitsInt,
         do_not_contact: do_not_contact,
       };
-      //twimlBuilder.say(response,'Thank you.  Please enjoy randomly selected text while you wait.');
       twimlBuilder.say(response, "Thank you.");
-      //response.play(process.env.CHIME_URL);
       response
         .enqueue({
           workflowSid: workflowSid,
           callerWorkerSid: parameters.workerSid,
           waitUrl: "/randomSoundLoop",
-          //waitUrl:process.env.WAIT_URL_BUCKET
         })
         .task({}, JSON.stringify(taskJSON));
     }
@@ -355,12 +361,10 @@ app.get(
 
 app.post("/redirectToWait", twilio.webhook(), function (req, res) {
   response = new VoiceResponse();
-  //response.play(process.env.CHIME_URL);
   twimlBuilder.say(
     response,
     "Now calling a potential receiver.  Please continue to wait."
   );
-  //response.play(process.env.CHIME_URL);
   response.redirect("/randomSoundLoop");
   res.send(response.toString());
 });
@@ -436,16 +440,12 @@ app.post("/voice", twilio.webhook(), async function (req, res) {
     );
     response.hangup();
   }
-  //twimlBuilder.say(response,"This is an alpha test version.  By proceeding, you acknowledge that you "
-  //													+"have reviewed reliability and security limitations.");
-
   res.send(response.toString());
 });
 
 app.post("/randomSoundLoop", twilio.webhook(), function (req, res) {
   const response = new VoiceResponse();
   response.play(process.env.WAIT_URL);
-  //response.redirect('/randomSoundLoop');
   res.send(response.toString());
 });
 
@@ -478,8 +478,6 @@ app.get("/agent_answer_hangup", twilio.webhook(), function (req, res) {
   const response = new VoiceResponse();
   twimlBuilder.say(response, "I didn't get any input from you.  Goodbye!");
   response.hangup();
-  //var rejectResult=await taskrouter.rejectReservation(parameters.workerSid,parameters.reservationSid);
-  //var updateResult=worker.updateWorkerFromSid(parameters.workerSid,process.env.TWILIO_OFFLINE_SID);
   console.log(
     "/agent_answer_hangup: now updating worker to offline, should automatically reject pending reservation"
   );
@@ -488,21 +486,6 @@ app.get("/agent_answer_hangup", twilio.webhook(), function (req, res) {
     process.env.TWILIO_OFFLINE_SID,
     true
   );
-
-  /*
-	clientWorkspace
-							.workers(parameters.workerSid)
-							.reservations(parameters.reservationSid)
-							.update({
-								reservationStatus:'rejected'
-							})
-							.then(reservation=>{
-								console.log("reservation status: "+reservation.reservationStatus);
-								console.log("worker name: "+reservation.workerName);
-								
-							})
-							.catch(err=>console.log("/agent_answer_hangup: error rejecting reservation: "+err));
-	*/
 
   res.send(response.toString());
 });
@@ -965,14 +948,10 @@ app.get("/automatic", twilio.webhook(), async function (req, res) {
     "We're sorry, no one is available to take your call.  I will notify you by text message when a receiver becomes available.  Good-bye."
   );
   response.hangup();
-  //response.play(process.env.CHIME_URL);
-  //response.redirect('/randomSoundLoop')
   workerSid = await worker.getWorkerSid(parameters.fromNumber);
   console.log("/automatic: workerSid: " + workerSid);
   console.log("/automatic: now creating available notification request");
   availableNotifier.create(workerSid);
-  //response.hangup();
-  //response.redirect({method:'GET'},url);
 
   //consider task completed once automatic response finishes
   clientWorkspace
@@ -1016,7 +995,6 @@ app.post("/workspaceEvent", twilio.webhook(), async function (req, res) {
       console.log(
         "/workspaceEvent: reservation rejected, worker will be set offline"
       );
-      //console.log(JSON.stringify(req.body));
       workerSid = req.body.WorkerSid;
       console.log(
         "/workspaceEvent: workerSid " + workerSid + " now being set to offline"
@@ -1056,6 +1034,16 @@ app.post("/workspaceEvent", twilio.webhook(), async function (req, res) {
     .status(204)
     .send({ error: "error occurred in processing workspace event callback" });
 });
+
+//#region Existing admin dashboard
+app.get("/admin", function (req, res) {
+  res.sendFile(path.join(__dirname + "/public/admin.html"));
+});
+
+app.get("/apply", function (req, res) {
+  res.sendFile(path.join(__dirname + "/public/apply.html"));
+});
+//#endregion
 
 app.listen(http_port, async () => {
   console.log(`app listening on port ${http_port}`);

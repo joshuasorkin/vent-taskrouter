@@ -2,14 +2,17 @@
   "name": "vent-taskrouter",
   "version": "1.0.0",
   "description": "taskrouter implementation of vent prototype",
-  "main": "server.js",
+  "main": "./src/server.js",
   "directories": {
     "lib": "lib"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.0.0",
     "env2": "^2.2.2",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
@@ -21,15 +24,24 @@
     "pg": "^7.11.0",
     "pug": "^3.0.1",
     "querystring": "^0.2.0",
+    "request": "^2.88.2",
     "sequelize": "^5.21.1",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.5.0",
     "tonegenerator": "^0.3.2",
     "twilio": "^3.33.1",
     "uuid": "^3.3.3",
     "wav": "^1.0.2"
   },
+  "devDependencies": {
+    "@types/swagger-jsdoc": "^6.0.1",
+    "minimist": "^1.2.6",
+    "nodemon": "^2.0.19"
+  },
   "scripts": {
     "test": "test.js",
-    "start": "node ./src/server.js"
+    "watch": "nodemon",
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",

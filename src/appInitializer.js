@@ -7,7 +7,15 @@ const flash = require("connect-flash");
 const bodyParser = require("body-parser");
 const express = require("express");
 
+const swaggerDocs = require("./swagger");
+global.swagger = swaggerDocs;
+
 class AppInitializer {
+  swagger = null;
+
+  constructor() {
+    this.swagger = swaggerDocs;
+  }
   initialize(app) {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
@@ -22,6 +30,7 @@ class AppInitializer {
     app.set("view options", { layout: false });
     //todo:should all the routes files go into /lib ?
     require("./browserRoutes.js")(app);
+    this.swagger(app, 1337);
   }
 }
 
