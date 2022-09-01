@@ -27,23 +27,24 @@ const MembershipRequester = require("./lib/membershipRequester");
 const DataValidator = require("./lib/dataValidator");
 const AppInitializer = require("./appInitializer");
 
-const app = express();
-
 var appInitializer = new AppInitializer();
 var dataValidator = new DataValidator();
 var availableNotifier = new AvailableNotifier();
 var textsplitter = new Textsplitter();
+var urlSerializer = new UrlSerializer();
+var twimlBuilder = new TwimlBuilder();
+
 var clientWorkspace;
 var membershipRequester;
-var urlSerializer = new UrlSerializer();
 var conference;
 var worker;
 var sms;
 var taskrouter = null;
-var twimlBuilder = new TwimlBuilder();
 
 var minMinutes = 1;
 var maxMinutes = 10;
+
+const app = express();
 
 appInitializer.initialize(app);
 
