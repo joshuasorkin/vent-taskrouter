@@ -1,7 +1,9 @@
 require("env2")(".env");
-const Database = require("../config/database");
-var database = new Database();
 const Sms = require("./sms");
+const Database = require("../config/database");
+
+var database = Database.getInstance();
+
 const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 //todo: is it better to have client instance created inside the constructor, maybe even passed in like workspace?

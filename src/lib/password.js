@@ -1,6 +1,6 @@
 const Bcrypt = require("bcryptjs");
 const Database = require("../config/database");
-var database = new Database();
+var database = Database.getInstance();
 
 class Password {
   constructor() {
