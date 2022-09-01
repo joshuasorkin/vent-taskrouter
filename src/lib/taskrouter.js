@@ -12,7 +12,7 @@ class Taskrouter {
     this.workflowConfigurer = new WorkflowConfigurer();
     //todo: should database be passed in instead of
     //creating a new connection here?
-    this.database = new Database();
+    this.database = Database.getInstance();
   }
 
   configureWorkspace() {

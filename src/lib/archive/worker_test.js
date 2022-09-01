@@ -19,60 +19,6 @@ async function getWorkerList() {
     workerList.push(worker);
   });
   return workerList;
-
-  /*
-    var workerList=await clientWorkspace.workers.list();
-    var workerObj;
-    for(index=0;index<workerList.length;index++){
-        workerObj=workerList[index];
-        console.log(workerObj.friendlyName+" "+workerObj.sid);
-    }
-    */
 }
 
 getWorkerList();
-
-/*
-var workerObj=new Worker(clientWorkspace);
-var args=process.argv.slice(2);
-var workerSid=args[0];
-
-async function getCount(){
-    var result=await workerObj.getCountOfIdleWorkers();
-    console.log("count of idle workers: "+result);
-}
-
-getCount();
-*/
-
-/*
-async function select(callSid){
-    var result=await workerObj.getWorkerSidFromCallSid(callSid);
-    console.log(result);
-}
-
-
-async function insert(callSid,workerSid){
-    var result=await workerObj.insertCallSidWorkerSid(callSid,workerSid);
-    console.log("result: "+result);
-    console.log("this happens after the result.");
-}
-
-async function update(workerSid){
-    var result;
-    var workerEntity=await clientWorkspace.workers('WK425caf724515f59b5620fba1af1e1fd8')
-    .fetch();
-    workerObj.updateWorkerAddAttributeArrayValue(workerEntity,"do_not_contact",workerSid);
-}
-
-//insert("callsidXIOSFDI",workerSid);
-
-//workerObj.updateWorkerNameFromSid(null,"helloNewWorker");
-
-
-//workerObj.createWorker("abcxisiwe","zzyswiew");
-//update(workerSid);
-
-//worker.addAllWorkersToDatabase();
-//workerObj.updateWorkerAddAttribute(null,null,null);
-*/

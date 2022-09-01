@@ -10,7 +10,7 @@ class Conference {
     this.workspace = workspace;
     this.urlSerializer = new UrlSerializer();
     this.twimlBuilder = new TwimlBuilder();
-    this.database = new Database();
+    this.database = Database.getInstance();
   }
   generateConference(parameters, initialSay) {
     var response = new VoiceResponse();

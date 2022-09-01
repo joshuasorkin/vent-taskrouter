@@ -4,10 +4,7 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 const client = require("twilio")(accountSid, authToken);
 
-//todo: shouldn't have separate connection to database in different objects, instead
-//should pass in the same instance of Database to constructors for e.g. AvailableNotifier and Worker
-//maybe same for Twilio client?
-var database = new Database();
+var database = Database.getInstance();
 
 class AvailableNotifier {
   constructor() {
