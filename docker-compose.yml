@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  webserver:
+    image: nginx
+    volumes:
+    - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+    ports:
+    - "8080:80"
+    environment:
+    - NGINX_HOST=localhost
+    - NGINX_PORT=8080
+    networks:
+    - infra
+  ngrok:
+    image: wernight/ngrok:latest
+    ports:
+      - 4040:4040
+    environment:
+      NGROK_PROTOCOL: http
+      NGROK_PORT: nginx:443
+      NGROK_AUTH: ${NGROK_AUTH_TOKEN}
+    depends_on:
+      - webserver
+    networks:
+    - infra
+  backend:
+   build:
+     context: ./
+     dockerfile: Dockerfile
+   ports: 
+    - "3000:1137"
+   env_file: .env
+   networks:
+    - api
+  database:
+   image: postgres
+   ports:
+    - 5001:5432
+   volumes:
+     - ./dbexport.pgsql:/docker-entrypoint-initdb.d/init.sql
+   environment:
+     - POSTGRES_USER=${username}
+     - POSTGRES_PASSWORD=${password}
+     - POSTGRES_DBNAME=${database}
+   networks:
+    - api
+
+networks:
+  api: {}
+  infra: {}
