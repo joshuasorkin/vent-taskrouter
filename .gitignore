@@ -8,3 +8,4 @@ npm-debug.log*
 *.sh
 *.ignore
 docker_PR_plan.md
+.dockerrc
