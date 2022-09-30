@@ -380,7 +380,7 @@ class Sms {
   }
 
   manualResponse(command) {
-    return command.helpMessage + "\nUsage: " + command.parameterUsage;
+    return command.description + "\nUsage: " + command.parameterUsage;
   }
 
   //todo: add STOP reserved commands to manual()
