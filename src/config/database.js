@@ -374,9 +374,9 @@ class Database {
     }
   }
 
-  insertEvent(reqBody) {
+  async insertEvent(reqBody) {
     console.log({reqBody});
-    return this.sequelize.query(
+    return await this.sequelize.query(
       "insert into event " +
         "(eventType,eventDescription,timestamp,resourceType,resourceSid,workerSid,data) " +
         "values " +
