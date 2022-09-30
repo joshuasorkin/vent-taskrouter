@@ -14,6 +14,13 @@ class Sms {
     this.password = password;
     this.phoneNumberPattern = "^[+]d+$";
     this.dataValidator = new DataValidator();
+    this.commandFunctionMap = this.createCommandFunctionMap();
+  }
+
+  createCommandFunctionMap() {
+    return {
+      on:this.on(),
+    }
   }
 
   createParameterObj(body, from, workerEntity) {
@@ -417,6 +424,7 @@ class Sms {
       return parameterObj.commandArray.length == command.parameterCount;
     }
   }
+
   async processCommand(parameterObj) {
     var responseValue;
     var commandArray = this.bodyToCommandArray(parameterObj.body);
@@ -449,7 +457,9 @@ class Sms {
     } else {
       command = this.commandList["default"];
     }
-    responseValue = await command.commandFunction(parameterObj);
+    //responseValue = await command.commandFunction(parameterObj);
+    responseValue = await command.command(parameterObj);
+
 
     return responseValue;
   }
