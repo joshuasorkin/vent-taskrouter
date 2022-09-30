@@ -292,7 +292,7 @@ class Database {
   //we pass in workerSid here because we don't want the worker who just went to Idle to get
   //a notification of an available worker (since calling themselves isn't an option)
   iterateThroughUnsentNotificationsForMessaging(callback, workerSid) {
-    sequelize
+    this.sequelize
       .query(
         "select * from available_notification_request_worker where notification_sent=false and sid!='" +
           workerSid +
@@ -393,7 +393,7 @@ class Database {
             reqBody.ResourceType || "",
             reqBody.ResourceSid || "",
             reqBody.WorkerSid || "",
-            reqBody.Data || "",
+            reqBody.Data || JSON.stringify({data:null}),
           ],
           type: this.sequelize.QueryTypes.INSERT,
         }
