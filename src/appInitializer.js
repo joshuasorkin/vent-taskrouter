@@ -25,9 +25,10 @@ class AppInitializer {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use("/other_route", require("./other_route").router);
-    app.use(session({ secret: process.env.SESSION_SECRET }));
+    //todo: re-enable this session code?  or outsource session management to a SaaS like firebase?
+    //app.use(session({ secret: process.env.SESSION_SECRET }));
     app.use(passport.initialize());
-    app.use(passport.session());
+    //app.use(passport.session());
     app.use(flash());
     app.use("/public", express.static(__dirname + "/public"));
     app.use(express.static("public"));
