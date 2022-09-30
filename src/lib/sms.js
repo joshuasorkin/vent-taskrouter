@@ -14,13 +14,6 @@ class Sms {
     this.password = password;
     this.phoneNumberPattern = "^[+]d+$";
     this.dataValidator = new DataValidator();
-    this.commandFunctionMap = this.createCommandFunctionMap();
-  }
-
-  createCommandFunctionMap() {
-    return {
-      on:this.on(),
-    }
   }
 
   createParameterObj(body, from, workerEntity) {
@@ -426,6 +419,7 @@ class Sms {
   }
 
   async processCommand(parameterObj) {
+    console.log({parameterObj});
     var responseValue;
     var commandArray = this.bodyToCommandArray(parameterObj.body);
     const commandName = commandArray[0].toLowerCase();

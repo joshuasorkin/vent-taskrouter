@@ -378,7 +378,6 @@ class Database {
   //  SequelizeDatabaseError: relation "event" does not exist
   //verify whether the schema I gave Mina has this relation in it
   async insertEvent(reqBody) {
-    console.log({reqBody});
     try{
       let result = await this.sequelize.query(
         "insert into event " +
