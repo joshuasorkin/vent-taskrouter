@@ -228,8 +228,8 @@ class Sms {
   }
 
   async default(parameterObj){
-    offResult = await this.off(parameterObj);
-    manualResult = await this.manual(parameterObj);
+    let offResult = await this.off(parameterObj);
+    let manualResult = await this.manual(parameterObj);
     return offResult+"\n"+manualResult;
   }
 
