@@ -398,7 +398,7 @@ class Database {
       return result;
     }
     catch(err){
-      console.err(err);
+      console.log(`error: ${err}`);
     }
   }
 
