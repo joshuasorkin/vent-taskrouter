@@ -6,12 +6,12 @@ const client = require("twilio")(accountSid, authToken);
 const Password = require("./password");
 const DataValidator = require("./dataValidator");
 class Sms {
-  constructor(worker, password) {
+  constructor(worker) {
     this.worker = worker;
     this.commandList = this.createCommandList();
     var commandListKeys = Object.keys(this.commandList);
     this.commandListKeysString = commandListKeys.sort().join("\n");
-    this.password = password;
+    this.password = new Password();
     this.phoneNumberPattern = "^[+]d+$";
     this.dataValidator = new DataValidator();
   }
