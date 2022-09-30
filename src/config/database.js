@@ -24,7 +24,7 @@ class Database {
 
     try {
       this.sequelize.authenticate();
-      console.log("Database onnection has been established successfully.");
+      console.log("Database connection has been established successfully.");
     } catch (error) {
       console.error("Unable to connect to the database:", error);
     }
@@ -239,6 +239,7 @@ class Database {
   }
 
   async getAdminTaskId(adminTask) {
+    console.log({adminTask});
     var selectResult = await this.sequelize.query(
       "select * from adminTask " + "where adminTask=?",
       {
