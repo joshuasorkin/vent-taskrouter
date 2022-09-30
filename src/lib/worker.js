@@ -201,6 +201,7 @@ class Worker {
   }
 
   async messageWorkerUnavailable(workerName, contact_uri) {
+    console.log({contact_uri});
     try {
       console.log("messageWorkerUnavailable: sending message to worker...");
       var message = await client.messages.create({

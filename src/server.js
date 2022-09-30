@@ -351,7 +351,7 @@ app.get(
       response
         .enqueue({
           workflowSid: workflowSid,
-          callerWorkerSid: parameters.workerSid,
+          //callerWorkerSid: parameters.workerSid,
           waitUrl: "/randomSoundLoop",
         })
         .task({}, JSON.stringify(taskJSON));
