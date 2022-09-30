@@ -375,6 +375,7 @@ class Database {
   }
 
   insertEvent(reqBody) {
+    console.log({reqBody});
     return this.sequelize.query(
       "insert into event " +
         "(eventType,eventDescription,timestamp,resourceType,resourceSid,workerSid,data) " +
@@ -382,13 +383,13 @@ class Database {
         "(?,?,?,?,?,?,?)",
       {
         replacements: [
-          reqBody.EventType,
-          reqBody.EventDescription,
-          reqBody.Timestamp,
-          reqBody.ResourceType,
-          reqBody.ResourceSid,
-          reqBody.WorkerSid,
-          reqBody.Data,
+          reqBody.EventType || "",
+          reqBody.EventDescription || "",
+          reqBody.Timestamp || "",
+          reqBody.ResourceType || "",
+          reqBody.ResourceSid || "",
+          reqBody.WorkerSid || "",
+          reqBody.Data || "",
         ],
         type: this.sequelize.QueryTypes.INSERT,
       }
