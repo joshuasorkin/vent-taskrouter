@@ -376,24 +376,30 @@ class Database {
 
   async insertEvent(reqBody) {
     console.log({reqBody});
-    return await this.sequelize.query(
-      "insert into event " +
-        "(eventType,eventDescription,timestamp,resourceType,resourceSid,workerSid,data) " +
-        "values " +
-        "(?,?,?,?,?,?,?)",
-      {
-        replacements: [
-          reqBody.EventType || "",
-          reqBody.EventDescription || "",
-          reqBody.Timestamp || "",
-          reqBody.ResourceType || "",
-          reqBody.ResourceSid || "",
-          reqBody.WorkerSid || "",
-          reqBody.Data || "",
-        ],
-        type: this.sequelize.QueryTypes.INSERT,
-      }
-    );
+    try{
+      let result = await this.sequelize.query(
+        "insert into event " +
+          "(eventType,eventDescription,timestamp,resourceType,resourceSid,workerSid,data) " +
+          "values " +
+          "(?,?,?,?,?,?,?)",
+        {
+          replacements: [
+            reqBody.EventType || "",
+            reqBody.EventDescription || "",
+            reqBody.Timestamp || "",
+            reqBody.ResourceType || "",
+            reqBody.ResourceSid || "",
+            reqBody.WorkerSid || "",
+            reqBody.Data || "",
+          ],
+          type: this.sequelize.QueryTypes.INSERT,
+        }
+      );
+      return result;
+    }
+    catch(err){
+      console.err(err);
+    }
   }
 
   insertConference(
