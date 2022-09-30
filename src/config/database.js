@@ -374,6 +374,9 @@ class Database {
     }
   }
 
+  //todo: I'm getting the error:
+  //  SequelizeDatabaseError: relation "event" does not exist
+  //verify whether the schema I gave Mina has this relation in it
   async insertEvent(reqBody) {
     console.log({reqBody});
     try{
