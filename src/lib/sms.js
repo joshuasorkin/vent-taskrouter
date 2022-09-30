@@ -30,9 +30,9 @@ class Sms {
     let commandList_output = JSON.parse(rawData);
     Object.keys(commandList_output).forEach((key) => {
       console.log(key);
-      if (key !== "default") {
+      //if (key !== "default") {
         commandList_output[key].command = this[key].bind(this);
-      }
+      //}
     });
     return commandList_output;
   }
