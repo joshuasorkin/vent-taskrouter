@@ -227,6 +227,12 @@ class Sms {
     return responseValue;
   }
 
+  async default(parameterObj){
+    offResult = await this.off(parameterObj);
+    manualResult = await this.manual(parameterObj);
+    return offResult+"\n"+manualResult;
+  }
+
   async addWithoutParameterObj(contact_uri, friendlyName) {
     //todo:this is duplicate code from add(), need to refactor
     var responseValue;
@@ -450,6 +456,7 @@ class Sms {
       }
     } else {
       command = this.commandList["default"];
+      console.log({command});
     }
     //responseValue = await command.commandFunction(parameterObj);
     responseValue = await command.command(parameterObj);
