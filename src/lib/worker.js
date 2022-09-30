@@ -14,6 +14,8 @@ class Worker {
   constructor(workspace) {
     this.workspace = workspace;
     this.sms = new Sms();
+    this.database = Database.getInstance();
+    console.log(`database in worker: ${this.database}`);
   }
 
   createWorker(contact_uri, friendlyName) {
