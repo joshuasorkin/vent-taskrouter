@@ -2,9 +2,7 @@ require("env2")(".env");
 const Sequelize = require("sequelize");
 
 class Database {
-  sequelize;
-  sequelize_ssl;
-
+  
   constructor() {
     if (Database._instance) {
       throw new Error(
