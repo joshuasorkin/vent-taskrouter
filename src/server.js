@@ -1038,11 +1038,11 @@ app.post("/workspaceEvent", twilio.webhook(), async function (req, res) {
 
 //#region Existing admin dashboard
 app.get("/admin", function (req, res) {
-  res.sendFile(path.join(__dirname + "/public/admin.html"));
+  res.sendFile(path.join(process.cwd() + "/public/admin.html"));
 });
 
 app.get("/apply", function (req, res) {
-  res.sendFile(path.join(__dirname + "/public/apply.html"));
+  res.sendFile(path.join(process.cwd() + "/public/apply.html"));
 });
 //#endregion
 
