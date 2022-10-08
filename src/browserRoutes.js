@@ -5,7 +5,6 @@ var app = express();
 var passport = require("passport");
 
 var fs = require("fs");
-var request = require("request");
 const bcrypt = require("bcryptjs");
 const uuidv4 = require("uuid/v4");
 
@@ -23,10 +22,6 @@ const sequelize = new Sequelize(
   }
 );
 
-//todo: this is a duplicate of the function in database.js, need to refactor
-//todo: is there a way to incorporate the boolean parse into the class?
-//maybe make const sequelize into a this.sequelize, and move this function into
-//the class definition?
 function parseSSLEnvVar() {
   sequelize_ssl = process.env.SEQUELIZE_SSL.toLowerCase();
   switch (sequelize_ssl) {
@@ -45,17 +40,7 @@ function parseSSLEnvVar() {
   }
 }
 
-//TODO
-//Add forgot password functionality
-//Add email confirmation functionality
-//Add edit account page
-
-app.use(express.static("public"));
-
 const LocalStrategy = require("passport-local").Strategy;
-//const connectionString = process.env.DATABASE_URL;
-
-var currentAccountsData = [];
 
 module.exports = function (app) {
   app.get("/", function (req, res, next) {
