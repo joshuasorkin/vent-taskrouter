@@ -29,11 +29,14 @@ class Database {
       console.error("Unable to connect to the database:", error);
     }
 
-    Database._instance = this;
+    //Database._instance = this;
   }
 
   static getInstance() {
-    return Database._instance;
+    if (!this._instance){
+      this._instance = new Database();
+    }
+    return this._instance;
   }
 
   parseSSLEnvVar() {
