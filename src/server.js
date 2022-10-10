@@ -129,7 +129,8 @@ app.post("/submit_newuser", async function (req, res) {
 app.post("/sms", twilio.webhook(), async function (req, res) {
   var body = req.body.Body;
   var parameterObj;
-  console.log("/sms: message SID " + req.body.sid);
+  console.log(`/sms: req.body: ${JSON.stringify(req.body)}`);
+  console.log("/sms: message SID " + req.body.SmsSid);
   console.log(body);
   //replace multiple spaces with single space
 
