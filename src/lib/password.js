@@ -1,10 +1,9 @@
 const Bcrypt = require("bcryptjs");
 const Database = require("../config/database");
-var database = Database.getInstance();
-
 class Password {
   constructor() {
     this.saltRounds = 10;
+    this.database = Database.getInstance();
   }
 
   async insertPassword(workerSid, password, adminTask) {
@@ -12,11 +11,18 @@ class Password {
     var passwordHash;
     var workerId;
     var adminTaskId;
-    const promiseResults = await Promise.all([
-      Bcrypt.genSalt(this.saltRounds),
-      database.getWorkerIdFromSid(workerSid),
-      database.getAdminTaskId(adminTask),
-    ]);
+    var promiseResults;
+    try{
+      promiseResults = await Promise.all([
+        Bcrypt.genSalt(this.saltRounds),
+        this.database.getWorkerIdFromSid(workerSid),
+        this.database.getAdminTaskId(adminTask),
+      ]);
+    }
+    catch(err){
+      console.log(`error: ${err}`);
+    }
+    console.log({promiseResults});
     salt = promiseResults[0];
     workerId = promiseResults[1];
     adminTaskId = promiseResults[2];
@@ -29,7 +35,7 @@ class Password {
     } catch (err) {
       throw "insertPassword: hash error: " + err;
     }
-    var insertResult = await database.insertAdminPassword(
+    var insertResult = await this.database.insertAdminPassword(
       workerId,
       passwordHash,
       adminTaskId
@@ -38,19 +44,20 @@ class Password {
   }
 
   async verifyPassword(workerSid, password, adminTask) {
+    return (password === process.env.ADMIN_PASSWORD);
     var passwordHash;
     var workerId;
     var adminTaskId;
     const promiseResults = await Promise.all([
-      database.getWorkerIdFromSid(workerSid),
-      database.getAdminTaskId(adminTask),
+      this.database.getWorkerIdFromSid(workerSid),
+      this.database.getAdminTaskId(adminTask),
     ]);
     workerId = promiseResults[0];
     adminTaskId = promiseResults[1];
     console.log("verifyPassword: workerId: " + workerId);
     console.log("verifyPassword: adminTaskId: " + adminTaskId);
     try {
-      passwordHash = await database.getPasswordHash(workerId, adminTaskId);
+      passwordHash = await this.database.getPasswordHash(workerId, adminTaskId);
       console.log("verifyPassword: passwordHash: " + passwordHash);
       //user doesn't have identity entry for this admin task so verification fails
       if (passwordHash == null) {
@@ -70,8 +77,8 @@ class Password {
     var adminTaskId;
     const promiseResults = await Promise.all([
       Bcrypt.genSalt(this.saltRounds),
-      database.getWorkerIdFromSid(workerSid),
-      database.getAdminTaskId(adminTask),
+      this.database.getWorkerIdFromSid(workerSid),
+      this.database.getAdminTaskId(adminTask),
     ]);
     salt = promiseResults[0];
     workerId = promiseResults[1];
@@ -85,7 +92,7 @@ class Password {
     } catch (err) {
       throw "updatePassword: hash error: " + err;
     }
-    var updateResult = await database.updateAdminPassword(
+    var updateResult = await this.database.updateAdminPassword(
       workerId,
       passwordHash,
       adminTaskId

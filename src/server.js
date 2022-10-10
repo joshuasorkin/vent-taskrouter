@@ -351,7 +351,7 @@ app.get(
       response
         .enqueue({
           workflowSid: workflowSid,
-          callerWorkerSid: parameters.workerSid,
+          //callerWorkerSid: parameters.workerSid,
           waitUrl: "/randomSoundLoop",
         })
         .task({}, JSON.stringify(taskJSON));
@@ -478,6 +478,7 @@ app.get("/agent_answer_hangup", twilio.webhook(), function (req, res) {
   parameters = urlSerializer.deserialize(req);
   const response = new VoiceResponse();
   twimlBuilder.say(response, "I didn't get any input from you.  Goodbye!");
+  console.log(`hanging up call from ${parameters.from} to ${parameters.to}`);
   response.hangup();
   console.log(
     "/agent_answer_hangup: now updating worker to offline, should automatically reject pending reservation"
@@ -488,6 +489,7 @@ app.get("/agent_answer_hangup", twilio.webhook(), function (req, res) {
     true
   );
 
+  console.log(response.toString());
   res.send(response.toString());
 });
 
