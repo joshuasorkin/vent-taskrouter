@@ -9,20 +9,19 @@ var database = Database.getInstance();
 class AvailableNotifier {
   constructor() {
     this.phoneNumberRegex = new RegExp("^\\+\\d+$");
-    this.database = Database.getInstance();
   }
   async create(workerSid) {
-    var result = await this.database.createAvailableNotificationRequest(workerSid);
+    var result = await database.createAvailableNotificationRequest(workerSid);
     return result;
   }
 
   async updateToSent(workerSid) {
-    var result = await this.database.updateNotificationToSent(workerSid);
+    var result = await database.updateNotificationToSent(workerSid);
     return result;
   }
 
   iterateSend(workerSid) {
-    var result = this.database.iterateThroughUnsentNotificationsForMessaging(
+    var result = database.iterateThroughUnsentNotificationsForMessaging(
       this.send.bind(this),
       workerSid
     );
@@ -49,7 +48,7 @@ class AvailableNotifier {
         })
         .then((message) => {
           console.log("send: message.sid: " + message.sid);
-          this.database.updateNotificationToSent(callbackParam.sid);
+          database.updateNotificationToSent(callbackParam.sid);
         });
     } else {
       console.log(contact_uri + " is not a valid phone number.");

@@ -6,12 +6,12 @@ const client = require("twilio")(accountSid, authToken);
 const Password = require("./password");
 const DataValidator = require("./dataValidator");
 class Sms {
-  constructor(worker) {
+  constructor(worker, password) {
     this.worker = worker;
     this.commandList = this.createCommandList();
     var commandListKeys = Object.keys(this.commandList);
     this.commandListKeysString = commandListKeys.sort().join("\n");
-    this.password = new Password();
+    this.password = password;
     this.phoneNumberPattern = "^[+]d+$";
     this.dataValidator = new DataValidator();
   }
@@ -30,9 +30,9 @@ class Sms {
     let commandList_output = JSON.parse(rawData);
     Object.keys(commandList_output).forEach((key) => {
       console.log(key);
-      //if (key !== "default") {
+      if (key !== "default") {
         commandList_output[key].command = this[key].bind(this);
-      //}
+      }
     });
     return commandList_output;
   }
@@ -227,12 +227,6 @@ class Sms {
     return responseValue;
   }
 
-  async default(parameterObj){
-    let offResult = await this.off(parameterObj);
-    let manualResult = await this.manual(parameterObj);
-    return offResult+"\n"+manualResult;
-  }
-
   async addWithoutParameterObj(contact_uri, friendlyName) {
     //todo:this is duplicate code from add(), need to refactor
     var responseValue;
@@ -380,7 +374,7 @@ class Sms {
   }
 
   manualResponse(command) {
-    return command.description + "\nUsage: " + command.parameterUsage;
+    return command.helpMessage + "\nUsage: " + command.parameterUsage;
   }
 
   //todo: add STOP reserved commands to manual()
@@ -423,9 +417,7 @@ class Sms {
       return parameterObj.commandArray.length == command.parameterCount;
     }
   }
-
   async processCommand(parameterObj) {
-    console.log({parameterObj});
     var responseValue;
     var commandArray = this.bodyToCommandArray(parameterObj.body);
     const commandName = commandArray[0].toLowerCase();
@@ -456,11 +448,8 @@ class Sms {
       }
     } else {
       command = this.commandList["default"];
-      console.log({command});
     }
-    //responseValue = await command.commandFunction(parameterObj);
-    responseValue = await command.command(parameterObj);
-
+    responseValue = await command.commandFunction(parameterObj);
 
     return responseValue;
   }

@@ -2,6 +2,8 @@ require("env2")(".env");
 const Sms = require("./sms");
 const Database = require("../config/database");
 
+var database = Database.getInstance();
+
 const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
 const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
 //todo: is it better to have client instance created inside the constructor, maybe even passed in like workspace?
@@ -12,7 +14,6 @@ class Worker {
   constructor(workspace) {
     this.workspace = workspace;
     this.sms = new Sms();
-    this.database = Database.getInstance();
   }
 
   createWorker(contact_uri, friendlyName) {
@@ -29,7 +30,7 @@ class Worker {
         console.log(
           "createWorker: worker successfully created in Twilio, now creating in database..."
         );
-        return this.database.createWorker(worker).then((result) => result);
+        return database.createWorker(worker).then((result) => result);
       })
       .catch((err) => {
         console.log(err);
@@ -38,7 +39,7 @@ class Worker {
   }
 
   createWorkerApply(contact_uri, friendlyName, authenticateCode) {
-    return this.database.createWorkerApply(
+    return database.createWorkerApply(
       contact_uri,
       friendlyName,
       authenticateCode
@@ -46,7 +47,7 @@ class Worker {
   }
 
   async getMembershipRequest(contact_uri, authenticateCode) {
-    var result = await this.database.getMembershipRequest(
+    var result = await database.getMembershipRequest(
       contact_uri,
       authenticateCode
     );
@@ -54,13 +55,13 @@ class Worker {
   }
 
   async updateMembershipRequestToComplete(contact_uri) {
-    var result = await this.database.updateMembershipRequestToComplete(contact_uri);
+    var result = await database.updateMembershipRequestToComplete(contact_uri);
     return result;
   }
 
   addAllWorkersToDatabase() {
     this.workspace.workers.each((worker) => {
-      this.database.createWorker(worker);
+      database.createWorker(worker);
     });
   }
 
@@ -70,7 +71,7 @@ class Worker {
     rejectPendingReservations
   ) {
     console.log("updateWorkerActivity: getting workerSid from database");
-    var workerSid = await this.database.getWorkerSid(contact_uri);
+    var workerSid = await database.getWorkerSid(contact_uri);
     console.log("updateWorkerActivity: workerSid is " + workerSid);
     var workerEntity = await this.updateWorkerActivityFromSid(
       workerSid,
@@ -86,7 +87,7 @@ class Worker {
 
   async updateWorkerName(contact_uri, newName) {
     console.log("updateWorkerName: getting workerSid from database");
-    var workerSid = await this.database.getWorkerSid(contact_uri);
+    var workerSid = await database.getWorkerSid(contact_uri);
     if (workerSid == null) {
       throw "updateWorkerName: error: workerSid not found for " + contact_uri;
     }
@@ -201,7 +202,6 @@ class Worker {
   }
 
   async messageWorkerUnavailable(workerName, contact_uri) {
-    console.log({contact_uri});
     try {
       console.log("messageWorkerUnavailable: sending message to worker...");
       var message = await client.messages.create({
@@ -216,7 +216,7 @@ class Worker {
   }
 
   async getWorkerEntityFromContact_uri(contact_uri) {
-    var workerSid = await this.database.getWorkerSid(contact_uri);
+    var workerSid = await database.getWorkerSid(contact_uri);
     if (workerSid == null) {
       return null;
     }
@@ -253,14 +253,14 @@ class Worker {
 
   async updateContact_uri(oldContact_uri, newContact_uri) {
     console.log("updateWorkerName: getting workerSid from database");
-    var workerSid = await this.database.getWorkerSid(oldContact_uri);
+    var workerSid = await database.getWorkerSid(oldContact_uri);
     if (workerSid == null) {
       throw (
         "updateContact_uri: error: workerSid not found for " + oldContact_uri
       );
     }
     console.log("updateContact_uri: workerSid is " + workerSid);
-    var dbResult = await this.database.updateWorkerContact_uri(
+    var dbResult = await database.updateWorkerContact_uri(
       oldContact_uri,
       newContact_uri
     );
@@ -305,12 +305,12 @@ class Worker {
   }
 
   async getWorkerSid(contact_uri) {
-    var workerSid = await this.database.getWorkerSid(contact_uri);
+    var workerSid = await database.getWorkerSid(contact_uri);
     return workerSid;
   }
 
   async contact_uriExists(contact_uri) {
-    var workerSid = await this.database.getWorkerSid(contact_uri);
+    var workerSid = await database.getWorkerSid(contact_uri);
     console.log("contact_uriExists: workerSid " + workerSid);
     console.log("workerSid!=null: " + (workerSid != null));
     return workerSid != null;
@@ -319,7 +319,7 @@ class Worker {
   async insertCallSidWorkerSid(callSid, workerSid) {
     var result;
     try {
-      result = await this.database.insertCallSidWorkerSid(callSid, workerSid);
+      result = await database.insertCallSidWorkerSid(callSid, workerSid);
       if (result == ",1") {
         return null;
       } else {
@@ -332,7 +332,7 @@ class Worker {
   }
 
   async getWorkerSidFromCallSid(callSid) {
-    var result = await this.database.getWorkerSidFromCallSid(callSid);
+    var result = await database.getWorkerSidFromCallSid(callSid);
     if (result == null) {
       throw (
         "getWorkerSidFromCallSid: callSid " +
