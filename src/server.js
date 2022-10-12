@@ -3,6 +3,7 @@ require("env2")(".env");
 const path = require("path");
 const express = require("express");
 const twilio = require("twilio");
+const fetch = require("node-fetch");
 
 const VoiceResponse = require("twilio").twiml.VoiceResponse;
 const MessagingResponse = require("twilio").twiml.MessagingResponse;
@@ -1052,6 +1053,29 @@ app.listen(http_port, async () => {
   console.log(`app listening on port ${http_port}`);
   console.log("Configuring incoming call urls...");
   baseUrl = process.env.APP_BASE_URL;
+
+  function checkWebhookUrl(req, result, next) {
+    let data = false;
+    let errMsg = `Error - Current webhook URL is not configured or working properly - ${baseUrl}`;
+    if (data === false) {
+      fetch(baseUrl)
+        .then((res) => {
+          if (res.ok) {
+            console.log(`Webhook URL configured properly!`);
+            data = true;
+            return res;
+          } else result.send(errMsg);
+        })
+        .catch(() => {
+          throw new Error(errMsg);
+        });
+    } else {
+      next();
+    }
+  }
+
+  checkWebhookUrl();
+
   incoming_phone_number = await client
     .incomingPhoneNumbers(process.env.TWILIO_PHONE_NUMBER_SID)
     .update({
