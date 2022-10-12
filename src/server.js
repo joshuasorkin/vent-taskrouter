@@ -28,6 +28,13 @@ const MembershipRequester = require("./lib/membershipRequester");
 const DataValidator = require("./lib/dataValidator");
 const AppInitializer = require("./appInitializer");
 
+const shouldValidate =
+  process.env.NODE_ENV === "local"
+    ? twilio.webhook({ validate: false })
+    : twilio.webhook();
+
+const app = express();
+
 var appInitializer = new AppInitializer();
 var dataValidator = new DataValidator();
 var availableNotifier = new AvailableNotifier();
@@ -44,8 +51,6 @@ var taskrouter = null;
 
 var minMinutes = 1;
 var maxMinutes = 10;
-
-const app = express();
 
 appInitializer.initialize(app);
 
@@ -211,7 +216,7 @@ app.post("/sms", twilio.webhook(), async function (req, res) {
  */
 app.get(
   "/conferenceAnnounceEnd_participantLeave",
-  twilio.webhook(),
+  shouldValidate,
   function (req, res) {
     var parameters = urlSerializer.deserialize(req);
     url = urlSerializer.serialize("endConference_update", parameters);
@@ -342,7 +347,7 @@ app.get("/postConferenceIVR", twilio.webhook(), function (req, res) {
  */
 app.get(
   "/process_postConferenceIVR",
-  twilio.webhook(),
+  shouldValidate,
   async function (req, res) {
     var parameters = urlSerializer.deserialize(req);
     var userInput;
@@ -483,7 +488,7 @@ app.get("/conferenceAnnounceTime", twilio.webhook(), function (req, res) {
  */
 app.get(
   "/processGatherConferenceMinutes",
-  twilio.webhook(),
+  shouldValidate,
   async function (req, res) {
     console.log(
       "/processGatherConferenceMinutes: req.query: " + JSON.stringify(req.query)
