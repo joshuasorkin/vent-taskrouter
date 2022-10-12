@@ -6,6 +6,21 @@
   "directories": {
     "lib": "lib"
   },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joshuasorkin/vent-taskrouter/issues"
+  },
+  "homepage": "https://github.com/joshuasorkin/vent-taskrouter#readme",
+  "scripts": {
+    "test": "test.js",
+    "watch": "nodemon",
+    "start": "cross-env NODE_ENV=local node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshuasorkin/vent-taskrouter.git"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -13,6 +28,7 @@
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
+    "cross-env": "^7.0.3",
     "env2": "^2.2.2",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
@@ -38,20 +54,5 @@
     "@types/swagger-jsdoc": "^6.0.1",
     "minimist": "^1.2.6",
     "nodemon": "^2.0.19"
-  },
-  "scripts": {
-    "test": "test.js",
-    "watch": "nodemon",
-    "start": "node src/server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/joshuasorkin/vent-taskrouter.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/joshuasorkin/vent-taskrouter/issues"
-  },
-  "homepage": "https://github.com/joshuasorkin/vent-taskrouter#readme"
+  }
 }
