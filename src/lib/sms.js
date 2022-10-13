@@ -416,7 +416,7 @@ class Sms {
   parameterCountMatch(command, parameterObj) {
     if (
       parameterObj.commandArray.length == 1 &&
-      command.commandName == "manual"
+      command.name == "manual"
     ) {
       return true;
     } else {
@@ -436,7 +436,7 @@ class Sms {
       if (!this.parameterCountMatch(command, parameterObj)) {
         responseValue =
           "Incorrect syntax for '" +
-          command.commandName +
+          command.name +
           "':\n" +
           command.parameterUsage;
         return responseValue;

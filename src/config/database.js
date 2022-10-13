@@ -399,6 +399,7 @@ static getInstance() {
           type: this.sequelize.QueryTypes.INSERT,
         }
       );
+      console.log({result});
       return result;
     }
     catch(err){
