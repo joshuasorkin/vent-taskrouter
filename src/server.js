@@ -1064,7 +1064,7 @@ app.listen(http_port, async () => {
             console.log(`Webhook URL configured properly!`);
             data = true;
             return res;
-          } else result.send(errMsg);
+          } else throw new Error(errMsg);
         })
         .catch(() => {
           throw new Error(errMsg);
