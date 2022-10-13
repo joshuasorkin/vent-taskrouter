@@ -23,11 +23,17 @@ class AppInitializer {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use("/other_route", require("./other_route").router);
-    //todo: re-enable this session code?  or outsource session management to a SaaS like firebase?
-    //app.use(session({ secret: process.env.SESSION_SECRET }));
     app.use(passport.initialize());
-    //app.use(passport.session());
     app.use(flash());
+    // Had to re-instate this as I got an error saying, "flash() requires sessions"
+    app.use(
+      session({
+        cookie: { maxAge: 60000 },
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+      })
+    );
     app.use("/public", express.static(process.cwd() + "/public"));
     app.set("views", path.join(__dirname, "../public", "views"));
     app.set("view engine", "pug");
