@@ -43,6 +43,18 @@ function parseSSLEnvVar() {
 const LocalStrategy = require("passport-local").Strategy;
 
 module.exports = function (app) {
+  /**
+   * @openapi
+   * '/':
+   *  get:
+   *     tags:
+   *     - Web Admin
+   *     summary: Current landing page for web admin client
+   *     parameters:
+   *     responses:
+   *       200:
+   *         description: Success
+   */
   app.get("/", function (req, res, next) {
     res.render("index", {
       title: "Home",
@@ -57,6 +69,18 @@ module.exports = function (app) {
     console.log(req.user);
   });
 
+  /**
+   * @openapi
+   * '/join':
+   *  get:
+   *     tags:
+   *     - Web Admin
+   *     summary: Signup page for web admin client
+   *     parameters:
+   *     responses:
+   *       200:
+   *         description: Success
+   */
   app.get("/join", function (req, res, next) {
     res.render("join", {
       title: "Join",
@@ -69,6 +93,38 @@ module.exports = function (app) {
     });
   });
 
+  /**
+   * @openapi
+   * '/join':
+   *  post:
+   *     tags:
+   *     - Web Admin
+   *     summary: Create new admin user
+   *     parameters:
+   *       - in: body
+   *         name: password
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: password for new user
+   *       - in: body
+   *         name: username
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: username for new user
+   *       - in: body
+   *         name: firstName
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: first name for new user
+   *     responses:
+   *       200:
+   *         description: Success
+   *       400:
+   *         description: Bad request
+   */
   app.post("/join", async function (req, res) {
     var selectResult;
     var insertResult;
@@ -119,6 +175,18 @@ module.exports = function (app) {
     }
   });
 
+  /**
+   * @openapi
+   * '/account':
+   *  get:
+   *     tags:
+   *     - Web Admin
+   *     summary: Account page for web admin client
+   *     parameters:
+   *     responses:
+   *       200:
+   *         description: Success
+   */
   app.get("/account", function (req, res, next) {
     if (req.isAuthenticated()) {
       console.log("/account: user is authenticated");
@@ -139,6 +207,18 @@ module.exports = function (app) {
     }
   });
 
+  /**
+   * @openapi
+   * '/login':
+   *  get:
+   *     tags:
+   *     - Web Admin
+   *     summary: Login page for web admin client
+   *     parameters:
+   *     responses:
+   *       200:
+   *         description: Success
+   */
   app.get("/login", function (req, res, next) {
     if (req.isAuthenticated()) {
       console.log("/login: user is authenticated");
@@ -157,14 +237,23 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/logout", function (req, res) {
-    console.log(req.isAuthenticated());
-    req.logout();
-    console.log(req.isAuthenticated());
-    req.flash("success", "Logged out. See you soon!");
-    res.redirect("/");
-  });
-
+  /**
+   * @openapi
+   * '/login':
+   *  post:
+   *     tags:
+   *     - Web Admin
+   *     parameters:
+   *       - in: body
+   *         name: remember
+   *         schema:
+   *           type: boolean
+   *         required: false
+   *         description: flag whether login should be remembered or not
+   *     responses:
+   *       200:
+   *         description: Success
+   */
   app.post(
     "/login",
     passport.authenticate("local", {
@@ -185,6 +274,26 @@ module.exports = function (app) {
       res.redirect("/");
     }
   );
+
+  /**
+   * @openapi
+   * '/logout':
+   *  get:
+   *     tags:
+   *     - Web Admin
+   *     summary: Logout page for web admin client
+   *     parameters:
+   *     responses:
+   *       200:
+   *         description: Success
+   */
+  app.get("/logout", function (req, res) {
+    console.log(req.isAuthenticated());
+    req.logout();
+    console.log(req.isAuthenticated());
+    req.flash("success", "Logged out. See you soon!");
+    res.redirect("/");
+  });
 };
 
 passport.use(
