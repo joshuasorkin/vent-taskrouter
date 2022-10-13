@@ -2,7 +2,7 @@ require("env2")(".env");
 const Sequelize = require("sequelize");
 
 class Database {
-  
+
   constructor() {
     if (Database._instance) {
       throw new Error(
@@ -28,13 +28,14 @@ class Database {
     } catch (error) {
       console.error("Unable to connect to the database:", error);
     }
+}
 
-    Database._instance = this;
+static getInstance() {
+  if (!this._instance){
+    this._instance = new Database();
   }
-
-  static getInstance() {
-    return Database._instance;
-  }
+  return this._instance;
+}
 
   parseSSLEnvVar() {
     this.sequelize_ssl = process.env.SEQUELIZE_SSL.toLowerCase();
