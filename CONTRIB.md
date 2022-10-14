@@ -16,7 +16,7 @@ If someone takes responsibility for an issue during a meeting:
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a
    build.
-2. Update the README.md with details of changes to the interface, this includes new environment
+2. Update the README.md with details of changes to the interface. This includes new environment
    variables, exposed ports, useful file locations and container parameters.
 3. Increase the version numbers in any example files and the README.md to the new version that this
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
@@ -31,8 +31,8 @@ In the interest of fostering an open and welcoming environment, we as
 contributors and maintainers pledge to make participation in our project and
 our community a harassment-free experience for everyone, regardless of age, body
 size, disability, ethnicity, gender identity and expression, level of experience,
-nationality, personal appearance, race, religion, or sexual identity and
-orientation.
+nationality, personal appearance, race, religion, ideology, neurotype, or sexual identity 
+and orientation.
 
 ### Our Standards
 
