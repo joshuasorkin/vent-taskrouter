@@ -38,6 +38,8 @@ class AppInitializer {
     app.set("views", path.join(__dirname, "../public", "views"));
     app.set("view engine", "pug");
     app.set("view options", { layout: false });
+    //etag control per https://stackoverflow.com/a/48404148/619177
+    app.set("etag", "strong");
     require("./browserRoutes.js")(app);
     this.swagger(app, 1337);
   }

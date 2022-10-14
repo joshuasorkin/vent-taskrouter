@@ -5,7 +5,30 @@ var express = require("express"),
   twimlGenerator = require("../lib/twiml-generator");
 
 module.exports = function (app) {
-  // POST /sms/incoming
+  /**
+   * @openapi
+   * '/sms/incoming':
+   *  post:
+   *     tags:
+   *     - SMS
+   *     summary: Process incoming SMS
+   *     parameters:
+   *       - in: body
+   *         name: Body
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: SMS body
+   *       - in: body
+   *         name: From
+   *         schema:
+   *           type: string
+   *         required: true
+   *         description: SMS sender
+   *     responses:
+   *       200:
+   *         description: Success
+   */
   router.post("/incoming/", function (req, res) {
     var targetActivity =
       req.body.Body.toLowerCase() === "on" ? "idle" : "offline";
