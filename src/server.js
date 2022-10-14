@@ -50,10 +50,10 @@ appInitializer.initialize(app);
 
 /**
  * @openapi
- * '/api/workerStatistics':
+ * '/workerStatistics':
  *  get:
  *     tags:
- *     - Service
+ *     - Worker
  *     summary: Get service worker statistics
  *     parameters:
  *       - in: body
@@ -76,7 +76,7 @@ app.get("/workerStatistics", async function (req, res) {
 
 /**
  * @openapi
- * '/api/submit_newuser':
+ * '/submit_newuser':
  *  post:
  *     tags:
  *     - User
@@ -126,6 +126,36 @@ app.post("/submit_newuser", async function (req, res) {
   res.send(output);
 });
 
+/**
+ * @openapi
+ * '/sms':
+ *  post:
+ *     tags:
+ *     - SMS
+ *     summary: Create new user
+ *     parameters:
+ *       - in: body
+ *         name: Body
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: SMS body
+ *       - in: body
+ *         name: From
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: SMS sender
+ *       - in: body
+ *         name: sid
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: SMS sid
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.post("/sms", twilio.webhook(), async function (req, res) {
   var body = req.body.Body;
   var parameterObj;
@@ -138,10 +168,12 @@ app.post("/sms", twilio.webhook(), async function (req, res) {
   var responseValue;
   const response = new MessagingResponse();
 
-  //todo: the contact_uriExists check should get moved to sms.js,
-  //as should the workerEntity retrieval.
-  //basically, /sms should just extract the body and fromNumber parameters, then pass
-  //them along to sms.processCommand() which will then create the parameterObj internally
+  /**
+   * Todo: the contact_uriExists check should get moved to sms.js,
+   * as should the workerEntity retrieval.
+   * basically, /sms should just extract the body and fromNumber parameters, then pass
+   * them along to sms.processCommand() which will then create the parameterObj internally
+   */
   contact_uriExists = await worker.contact_uriExists(fromNumber);
   console.log("/sms: contact_uriExists: " + contact_uriExists);
   if (!contact_uriExists) {
@@ -164,6 +196,18 @@ app.post("/sms", twilio.webhook(), async function (req, res) {
   res.end(response.toString());
 });
 
+/**
+ * @openapi
+ * '/conferenceAnnounceEnd_participantLeave':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Announce a participant leaving a conference call
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get(
   "/conferenceAnnounceEnd_participantLeave",
   twilio.webhook(),
@@ -188,8 +232,22 @@ app.get(
   }
 );
 
-//todo: refactor this, both of the conferenceAnnounceEnd should be the same function
-//with different say() text passed in
+/**
+ * @openapi
+ * '/conferenceAnnounceEnd_timeUp':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Announce to a participant that time is up
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+/**
+ * Todo: refactor this, both of the conferenceAnnounceEnd should be the same function
+ * /with different say() text passed in
+ */
 app.get("/conferenceAnnounceEnd_timeUp", twilio.webhook(), function (req, res) {
   var parameters = urlSerializer.deserialize(req);
   url = urlSerializer.serialize("endConference_update", parameters);
@@ -211,6 +269,18 @@ app.get("/conferenceAnnounceEnd_timeUp", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/postConferenceIVR':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Return TWIML for IVR request
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/postConferenceIVR", twilio.webhook(), function (req, res) {
   var parameters = urlSerializer.deserialize(req);
   const response = new VoiceResponse();
@@ -233,6 +303,42 @@ app.get("/postConferenceIVR", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/process_postConferenceIVR':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Process IVR input
+ *     parameters:
+ *       - in: path
+ *         name: workerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: worker sid
+ *       - in: path
+ *         name: otherParticipantWorkerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: other caller's sid
+ *       - in: body
+ *         name: Digits
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: user's IVR input
+ *       - in: body
+ *         name: SpeechResult
+ *         schema:
+ *           type: object
+ *         required: true
+ *         description: user's voice response
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get(
   "/process_postConferenceIVR",
   twilio.webhook(),
@@ -244,7 +350,7 @@ app.get(
     } else if (req.query.hasOwnProperty("SpeechResult")) {
       userInput = req.query.SpeechResult;
     } else {
-      throw "/agent_answer_process: error: no 'Digits' or 'SpeechResult' property present";
+      throw "/process_postConferenceIVR: error: no 'Digits' or 'SpeechResult' property present";
     }
     const response = new VoiceResponse();
     switch (userInput) {
@@ -278,6 +384,24 @@ app.get(
   }
 );
 
+/**
+ * @openapi
+ * '/endConference_update':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Ends conference call
+ *     parameters:
+ *       - in: path
+ *         name: conferenceSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: conference sid
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/endConference_update", twilio.webhook(), function (req, res) {
   console.log("/endConference_update: reached this endpoint");
   var parameters = urlSerializer.deserialize(req);
@@ -287,6 +411,24 @@ app.get("/endConference_update", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/conferenceAnnounceTime':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Announce time remaining for conference call
+ *     parameters:
+ *       - in: path
+ *         name: timeRemaining
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: time remaining
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/conferenceAnnounceTime", twilio.webhook(), function (req, res) {
   const response = new VoiceResponse();
   parameters = urlSerializer.deserialize(req);
@@ -302,6 +444,42 @@ app.get("/conferenceAnnounceTime", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/processGatherConferenceMinutes':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Set length for conference call
+ *     parameters:
+ *       - in: path
+ *         name: workflowSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: workflow sid
+ *       - in: path
+ *         name: do_not_contact
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: flag for do_not_contact
+ *       - in: body
+ *         name: Digits
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: user's IVR input
+ *       - in: body
+ *         name: SpeechResult
+ *         schema:
+ *           type: object
+ *         required: true
+ *         description: user's voice response
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get(
   "/processGatherConferenceMinutes",
   twilio.webhook(),
@@ -360,6 +538,18 @@ app.get(
   }
 );
 
+/**
+ * @openapi
+ * '/redirectToWait':
+ *  post:
+ *     tags:
+ *     - SMS
+ *     summary: Play random sound loop while system finds potential participant
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.post("/redirectToWait", twilio.webhook(), function (req, res) {
   response = new VoiceResponse();
   twimlBuilder.say(
@@ -370,8 +560,19 @@ app.post("/redirectToWait", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
-//used for repeating initial conference minutes gather if user
-//doesn't respond the first time
+/**
+ * @openapi
+ * '/gatherConferenceMinutes':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Set length for conference call
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+//used for repeating initial conference minutes gather if user - doesn't respond the first time
 app.get("/gatherConferenceMinutes", twilio.webhook(), function (req, res) {
   parameters = urlSerializer.deserialize(req);
   const response = new VoiceResponse();
@@ -384,6 +585,31 @@ app.get("/gatherConferenceMinutes", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/voice':
+ *  post:
+ *     tags:
+ *     - Conference Call
+ *     summary: Initiate conference call
+ *     parameters:
+ *       - in: body
+ *         name: From
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: user's phone number
+ *       - in: body
+ *         name: CallSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: call sid
+ *       - in: path
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.post("/voice", twilio.webhook(), async function (req, res) {
   const response = new VoiceResponse();
 
@@ -444,12 +670,36 @@ app.post("/voice", twilio.webhook(), async function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/randomSoundLoop':
+ *  post:
+ *     tags:
+ *     - Audio
+ *     summary: Play random sound loop
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.post("/randomSoundLoop", twilio.webhook(), function (req, res) {
   const response = new VoiceResponse();
   response.play(process.env.WAIT_URL);
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/randomWordLoop':
+ *  post:
+ *     tags:
+ *     - Audio
+ *     summary: Play random word loop
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.post("/randomWordLoop", twilio.webhook(), function (req, res) {
   const response = new VoiceResponse();
   var word = textsplitter.randomSentenceFromFiletextArray();
@@ -458,22 +708,70 @@ app.post("/randomWordLoop", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
-//etag control per https://stackoverflow.com/a/48404148/619177
-app.set("etag", "strong");
-
+/**
+ * @openapi
+ * '/waitSound':
+ *  get:
+ *     tags:
+ *     - Audio
+ *     summary: Set header for sound loop
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/waitSound", twilio.webhook(), function (req, res) {
   res.append("Last-Modified", new Date(lastModifiedStringDate).toUTCString());
 });
 
+/**
+ * @openapi
+ * '/wait':
+ *  get:
+ *     tags:
+ *     - Audio
+ *     summary: Play random sound loop
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.post("/wait", twilio.webhook, function (req, res) {
   const response = new VoiceResponse();
   response.redirect("/randomSoundLoop");
   res.send(response.toString());
 });
 
-//this endpoint to be reached if the agent does not provide IVR response
-//to the options presented by /agent_answer
-//either because they hung up or waited too long
+/**
+ * @openapi
+ * '/agent_answer_hangup':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: This endpoint is called if the agent does not provide IVR response to the options presented by /agent_answer, either because they hung up or waited too long.
+ *     parameters:
+ *       - in: path
+ *         name: from
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: requester's phone number
+ *       - in: path
+ *         name: to
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: participaent's phone number
+ *       - in: path
+ *         name: workerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: worker sid
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/agent_answer_hangup", twilio.webhook(), function (req, res) {
   parameters = urlSerializer.deserialize(req);
   const response = new VoiceResponse();
@@ -493,7 +791,36 @@ app.get("/agent_answer_hangup", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
-//this endpoint to be reached if agent answers outbound call initiated by /assignment
+/**
+ * @openapi
+ * '/agent_answer':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: This endpoint is called if agent answers outbound call initiated by /assignment.
+ *     parameters:
+ *       - in: path
+ *         name: minutes
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: number of minutes for call
+ *       - in: path
+ *         name: taskSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: task sid
+ *       - in: path
+ *         name: friendlyName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: user's name
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/agent_answer", twilio.webhook(), async function (req, res) {
   parameters = urlSerializer.deserialize(req);
   const minutes = parameters.minutes;
@@ -541,6 +868,36 @@ app.get("/agent_answer", twilio.webhook(), async function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/incomingCallEvents':
+ *  post:
+ *     tags:
+ *     - Conference Call
+ *     summary: This endpoint is called if agent answers outbound call initiated by /assignment.
+ *     parameters:
+ *       - in: body
+ *         name: CallStatus
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: call status
+ *       - in: path
+ *         name: From
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: requester's phone number
+ *       - in: path
+ *         name: StatusCallbackEvent
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: status callback event name
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.post("/incomingCallEvents", twilio.webhook(), async function (req, res) {
   event = req.body.StatusCallbackEvent;
   console.log("/incomingCallEvents:");
@@ -567,6 +924,54 @@ app.post("/incomingCallEvents", twilio.webhook(), async function (req, res) {
   }
 });
 
+/**
+ * @openapi
+ * '/conferenceEvents':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: This endpoint is called if agent answers outbound call initiated by /assignment.
+ *     parameters:
+ *       - in: path
+ *         name: conferenceSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description:
+ *       - in: query
+ *         name: ConferenceSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: conference sid
+ *       - in: query
+ *         name: CallSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: call sid
+ *       - in: query
+ *         name: taskSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: task sid
+ *       - in: query
+ *         name: StatusCallbackEvent
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: status callback event name
+ *       - in: query
+ *         name: minutes
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: number of minutes for call
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/conferenceEvents", twilio.webhook(), async function (req, res) {
   var responseValue = "";
   var callSid;
@@ -672,6 +1077,18 @@ app.get("/conferenceEvents", twilio.webhook(), async function (req, res) {
   }
 });
 
+/**
+ * @openapi
+ * '/updateCallToConference':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Generate a conference call.
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/updateCallToConference", twilio.webhook(), function (req, res) {
   parameters = urlSerializer.deserialize(req);
   console.log(
@@ -684,6 +1101,54 @@ app.get("/updateCallToConference", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/agent_answer_process':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Generate a conference call.
+ *     parameters:
+ *       - in: query
+ *         name: Digits
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: requester's phone number
+ *       - in: query
+ *         name: SpeechResult
+ *         schema:
+ *           type: object
+ *         required: true
+ *         description: caller's voice result
+ *       - in: path
+ *         name: workerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: worker sid
+ *       - in: path
+ *         name: callSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: call sid
+ *       - in: path
+ *         name: taskSid
+ *         schema:
+ *           type: object
+ *         required: true
+ *         description: caller's voice result
+ *       - in: path
+ *         name: reservationSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: worker sid
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/agent_answer_process", twilio.webhook(), async function (req, res) {
   console.log("endpoint: agent_answer_process");
   console.log("/agent_answer_process: req.query: " + JSON.stringify(req.query));
@@ -797,7 +1262,78 @@ app.get("/agent_answer_process", twilio.webhook(), async function (req, res) {
   res.send(response.toString());
 });
 
-// POST /call/assignment
+/**
+ * @openapi
+ * '/assignment':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Generate a conference call.
+ *     parameters:
+ *       - in: body
+ *         name: taskSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: task sid
+ *       - in: body
+ *         name: reservationSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: reservation sid
+ *       - in: path
+ *         name: workerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: worker sid
+ *       - in: body
+ *         name: callSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: call sid
+ *       - in: body
+ *         name: taskQueueSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: task queue sid
+ *       - in: body
+ *         name: minutes
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: number of minutes for call
+ *       - in: body
+ *         name: fromNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: requester's phone number
+ *       - in: body
+ *         name: callerWorkerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: caller worker sid
+ *       - in: body
+ *         name: contact_uri
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: contact uri
+ *       - in: body
+ *         name: friendlyName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: requester's name
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.post("/assignment", twilio.webhook(), async function (req, res) {
   console.log("task attributes: " + req.body.TaskAttributes);
   console.log("worker attributes: " + req.body.WorkerAttributes);
@@ -916,6 +1452,24 @@ app.post("/assignment", twilio.webhook(), async function (req, res) {
   });
 });
 
+/**
+ * @openapi
+ * '/outboundCallEvent':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Generate a conference call.
+ *     parameters:
+ *       - in: path
+ *         name: workerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: worker sid
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/outboundCallEvent", twilio.webhook(), async function (req, res) {
   var response = new VoiceResponse();
   parameters = urlSerializer.deserialize(req);
@@ -933,6 +1487,24 @@ app.get("/outboundCallEvent", twilio.webhook(), async function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/endCall_automatic':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: Generate a conference call.
+ *     parameters:
+ *       - in: path
+ *         name: workerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: worker sid
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/endCall_automatic", twilio.webhook(), function (req, res) {
   console.log("/endCall_automatic: now hanging up");
   var response = new VoiceResponse();
@@ -940,8 +1512,30 @@ app.get("/endCall_automatic", twilio.webhook(), function (req, res) {
   res.send(response.toString());
 });
 
-//this is the URL reached when there are no valid live agents remaining to accept the call,
-//and the task falls through to the automatic queue
+/**
+ * @openapi
+ * '/automatic':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary: this endpoint is called when there are no valid live agents remaining to accept the call and the task falls through to the automatic queue
+ *     parameters:
+ *       - in: path
+ *         name: fromNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: requester's phone number
+ *       - in: path
+ *         name: taskSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: task sid
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/automatic", twilio.webhook(), async function (req, res) {
   parameters = urlSerializer.deserialize(req);
   var response = new VoiceResponse();
@@ -972,8 +1566,62 @@ app.get("/automatic", twilio.webhook(), async function (req, res) {
   res.send(response.toString());
 });
 
+/**
+ * @openapi
+ * '/processAutomatic':
+ *  get:
+ *     tags:
+ *     - Conference Call
+ *     summary:
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.get("/processAutomatic", twilio.webhook(), function (req, res) {});
 
+/**
+ * @openapi
+ * '/workspaceEvent':
+ *  post:
+ *     tags:
+ *     - Conference Call
+ *     summary: this endpoint is called when there are no valid live agents remaining to accept the call and the task falls through to the automatic queue
+ *     parameters:
+ *       - in: body
+ *         name: EventType
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: event type
+ *       - in: body
+ *         name: EventDescription
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: event description
+ *       - in: body
+ *         name: EventDate
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: event date
+ *       - in: body
+ *         name: ResourceSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: resouece sid
+ *       - in: body
+ *         name: WorkerSid
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: worker sid
+ *     responses:
+ *       200:
+ *         description: Success
+ */
 app.post("/workspaceEvent", twilio.webhook(), async function (req, res) {
   eventType = req.body.EventType;
   eventDescription = req.body.EventDescription;
@@ -1039,10 +1687,38 @@ app.post("/workspaceEvent", twilio.webhook(), async function (req, res) {
 });
 
 //#region Existing admin dashboard
+/**
+ * @openapi
+ * '/submit_newuser':
+ *  post:
+ *     tags:
+ *     - User
+ *     summary: Show administration panel
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ */
 app.get("/admin", function (req, res) {
   res.sendFile(path.join(process.cwd() + "/public/admin.html"));
 });
 
+/**
+ * @openapi
+ * '/submit_newuser':
+ *  post:
+ *     tags:
+ *     - User
+ *     summary: Register new user
+ *     parameters:
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad request
+ */
 app.get("/apply", function (req, res) {
   res.sendFile(path.join(process.cwd() + "/public/apply.html"));
 });
