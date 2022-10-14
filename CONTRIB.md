@@ -1,22 +1,23 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or Slack before making a change.
+Before making a change to this repository, please first discuss it with the team via:
+- [GitHub issue](https://github.com/joshuasorkin/vent-taskrouter/issues)
+- Twitter: [@VentDevelopment](https://twitter.com/VentDevelopment)
+- [Slack](vent-development.slack.com)
 
-Please note we have a code of conduct, please follow it in all your interactions with the project.
+We have a code of conduct; please follow it in all your interactions with the project.
 
 If someone takes responsibility for an issue during a meeting:
-
-1. they should expect to be the only one working on it
-   2, and, nobody else should make PRs related to that issue without consulting with them first.
+1. They should expect to be the only one working on it, and
+2. Nobody else should make PRs related to that issue without consulting with them first.
 
 ## Pull Request Process
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a
    build.
-2. Update the README.md with details of changes to the interface, this includes new environment
+2. Update the README.md with details of changes to the interface. This includes new environment
    variables, exposed ports, useful file locations and container parameters.
-3. Increase the version numbers in any examples files and the README.md to the new version that this
+3. Increase the version numbers in any example files and the README.md to the new version that this
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
 4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you
    do not have permission to do that, you may request the second reviewer to merge it for you.
@@ -26,11 +27,21 @@ If someone takes responsibility for an issue during a meeting:
 ### Our Pledge
 
 In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
-our community a harassment-free experience for everyone, regardless of age, body
-size, disability, ethnicity, gender identity and expression, level of experience,
-nationality, personal appearance, race, religion, or sexual identity and
-orientation.
+contributors and maintainers pledge to make participation in our project and
+our community a harassment-free experience for everyone, regardless of:
+- age
+- body size
+- disability
+- ethnicity
+- gender identity and expression
+- ideology
+- level of experience
+- nationality
+- neurotype
+- personal appearance
+- race
+- religion
+- sexual identity and orientation
 
 ### Our Standards
 
@@ -56,30 +67,39 @@ Examples of unacceptable behavior by participants include:
 
 ### Our Responsibilities
 
-Project maintainers are responsible for clarifying the standards of acceptable
-behavior and are expected to take appropriate and fair corrective action in
-response to any instances of unacceptable behavior.
-
-Project maintainers have the right and responsibility to remove, edit, or
-reject comments, commits, code, wiki edits, issues, and other contributions
-that are not aligned to this Code of Conduct, or to ban temporarily or
-permanently any contributor for other behaviors that they deem inappropriate,
-threatening, offensive, or harmful.
+Project maintainers have the following rights and responsibilities:
+- Clarify the standards of acceptable behavior
+- Take appropriate and fair corrective action in response to any instances of unacceptable behavior
+- Remove, edit, or reject contributions that are not aligned to this Code of Conduct, including:
+   - comments
+   - commits
+   - code
+   - wiki edits
+   - issues
+- Ban temporarily or permanently any contributor for other behaviors that they deem:
+   - inappropriate
+   - threatening
+   - offensive
+   - harmful
 
 ### Scope
 
 This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community. Examples of
-representing a project or community include using an official project e-mail
-address, posting via an official social media account, or acting as an appointed
-representative at an online or offline event. Representation of a project may be
-further defined and clarified by project maintainers.
+when an individual is representing the project or its community. 
+
+Examples of representing the project or community include:
+- using an official project e-mail address
+- posting via an official social media account
+- acting as an appointed representative at an online or offline event
+
+Representation of a project may be further defined and clarified by project maintainers.
 
 ### Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at [INSERT EMAIL ADDRESS]. All
-complaints will be reviewed and investigated and will result in a response that
+reported by contacting the project team via Twitter: [@VentDevelopment](https://twitter.com/VentDevelopment) 
+
+All complaints will be reviewed and investigated and will result in a response that
 is deemed necessary and appropriate to the circumstances. The project team is
 obligated to maintain confidentiality with regard to the reporter of an incident.
 Further details of specific enforcement policies may be posted separately.
