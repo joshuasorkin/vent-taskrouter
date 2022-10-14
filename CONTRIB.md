@@ -1,19 +1,16 @@
 # Contributing
 
-Some of our development discussion takes place in Slack.  For an invite to our Slack, please contact us
-at Twitter via: [@VentDevelopment](https://twitter.com/VentDevelopment)
-
 Before making a change to this repository, please first discuss it with the team via:
 - [GitHub issue](https://github.com/joshuasorkin/vent-taskrouter/issues)
-- [Twitter](https://twitter.com/VentDevelopment)
-- Slack
+- Twitter: [@VentDevelopment](https://twitter.com/VentDevelopment)
+- [Slack](vent-development.slack.com)
 
-Please note we have a code of conduct, please follow it in all your interactions with the project.
+We have a code of conduct; please follow it in all your interactions with the project.
 
 If someone takes responsibility for an issue during a meeting:
 
-1. they should expect to be the only one working on it
-   2, and, nobody else should make PRs related to that issue without consulting with them first.
+1. they should expect to be the only one working on it, and
+2. nobody else should make PRs related to that issue without consulting with them first.
 
 ## Pull Request Process
 
@@ -21,7 +18,7 @@ If someone takes responsibility for an issue during a meeting:
    build.
 2. Update the README.md with details of changes to the interface, this includes new environment
    variables, exposed ports, useful file locations and container parameters.
-3. Increase the version numbers in any examples files and the README.md to the new version that this
+3. Increase the version numbers in any example files and the README.md to the new version that this
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
 4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you
    do not have permission to do that, you may request the second reviewer to merge it for you.
@@ -31,7 +28,7 @@ If someone takes responsibility for an issue during a meeting:
 ### Our Pledge
 
 In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
+contributors and maintainers pledge to make participation in our project and
 our community a harassment-free experience for everyone, regardless of age, body
 size, disability, ethnicity, gender identity and expression, level of experience,
 nationality, personal appearance, race, religion, or sexual identity and
