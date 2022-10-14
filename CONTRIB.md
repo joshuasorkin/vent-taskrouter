@@ -1,7 +1,12 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or Slack before making a change.
+Some of our development discussion takes place in Slack.  For an invite to our Slack, please contact us
+at Twitter via: [@VentDevelopment](https://twitter.com/VentDevelopment)
+
+Before making a change to this repository, please first discuss it with the team via:
+- [GitHub issue](https://github.com/joshuasorkin/vent-taskrouter/issues)
+- [Twitter](https://twitter.com/VentDevelopment)
+- Slack
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
