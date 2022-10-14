@@ -8,9 +8,8 @@ Before making a change to this repository, please first discuss it with the team
 We have a code of conduct; please follow it in all your interactions with the project.
 
 If someone takes responsibility for an issue during a meeting:
-
-1. they should expect to be the only one working on it, and
-2. nobody else should make PRs related to that issue without consulting with them first.
+1. They should expect to be the only one working on it, and
+2. Nobody else should make PRs related to that issue without consulting with them first.
 
 ## Pull Request Process
 
