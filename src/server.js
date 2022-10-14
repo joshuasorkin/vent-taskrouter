@@ -255,7 +255,7 @@ app.get(
           response,
           "I'm glad you enjoyed your conversation.  Good-bye."
         );
-        response.hangup;
+        response.hangup();
         break;
       case "2":
       case "No.":
