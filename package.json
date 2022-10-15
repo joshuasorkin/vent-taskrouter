@@ -48,7 +48,8 @@
     "tonegenerator": "^0.3.2",
     "twilio": "^3.33.1",
     "uuid": "^3.3.3",
-    "wav": "^1.0.2"
+    "wav": "^1.0.2",
+    "whatwg-url": "^11.0.0"
   },
   "devDependencies": {
     "@types/swagger-jsdoc": "^6.0.1",
