@@ -28,6 +28,13 @@ const MembershipRequester = require("./lib/membershipRequester");
 const DataValidator = require("./lib/dataValidator");
 const AppInitializer = require("./appInitializer");
 
+const shouldValidate =
+  process.env.NODE_ENV === "local"
+    ? twilio.webhook({ validate: false })
+    : twilio.webhook();
+
+const app = express();
+
 var appInitializer = new AppInitializer();
 var dataValidator = new DataValidator();
 var availableNotifier = new AvailableNotifier();
@@ -44,8 +51,6 @@ var taskrouter = null;
 
 var minMinutes = 1;
 var maxMinutes = 10;
-
-const app = express();
 
 appInitializer.initialize(app);
 
@@ -157,7 +162,7 @@ app.post("/submit_newuser", async function (req, res) {
  *       200:
  *         description: Success
  */
-app.post("/sms", twilio.webhook(), async function (req, res) {
+app.post("/sms", shouldValidate, async function (req, res) {
   var body = req.body.Body;
   var parameterObj;
   console.log("/sms: message SID " + req.body.sid);
@@ -211,7 +216,7 @@ app.post("/sms", twilio.webhook(), async function (req, res) {
  */
 app.get(
   "/conferenceAnnounceEnd_participantLeave",
-  twilio.webhook(),
+  shouldValidate,
   function (req, res) {
     var parameters = urlSerializer.deserialize(req);
     url = urlSerializer.serialize("endConference_update", parameters);
@@ -249,7 +254,7 @@ app.get(
  * Todo: refactor this, both of the conferenceAnnounceEnd should be the same function
  * /with different say() text passed in
  */
-app.get("/conferenceAnnounceEnd_timeUp", twilio.webhook(), function (req, res) {
+app.get("/conferenceAnnounceEnd_timeUp", shouldValidate, function (req, res) {
   var parameters = urlSerializer.deserialize(req);
   url = urlSerializer.serialize("endConference_update", parameters);
   const response = new VoiceResponse();
@@ -282,7 +287,7 @@ app.get("/conferenceAnnounceEnd_timeUp", twilio.webhook(), function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/postConferenceIVR", twilio.webhook(), function (req, res) {
+app.get("/postConferenceIVR", shouldValidate, function (req, res) {
   var parameters = urlSerializer.deserialize(req);
   const response = new VoiceResponse();
 
@@ -342,7 +347,7 @@ app.get("/postConferenceIVR", twilio.webhook(), function (req, res) {
  */
 app.get(
   "/process_postConferenceIVR",
-  twilio.webhook(),
+  shouldValidate,
   async function (req, res) {
     var parameters = urlSerializer.deserialize(req);
     var userInput;
@@ -403,7 +408,7 @@ app.get(
  *       200:
  *         description: Success
  */
-app.get("/endConference_update", twilio.webhook(), function (req, res) {
+app.get("/endConference_update", shouldValidate, function (req, res) {
   console.log("/endConference_update: reached this endpoint");
   var parameters = urlSerializer.deserialize(req);
   var conferenceSid = parameters.conferenceSid;
@@ -430,7 +435,7 @@ app.get("/endConference_update", twilio.webhook(), function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/conferenceAnnounceTime", twilio.webhook(), function (req, res) {
+app.get("/conferenceAnnounceTime", shouldValidate, function (req, res) {
   const response = new VoiceResponse();
   parameters = urlSerializer.deserialize(req);
   timeRemaining = parameters.timeRemaining;
@@ -483,7 +488,7 @@ app.get("/conferenceAnnounceTime", twilio.webhook(), function (req, res) {
  */
 app.get(
   "/processGatherConferenceMinutes",
-  twilio.webhook(),
+  shouldValidate,
   async function (req, res) {
     console.log(
       "/processGatherConferenceMinutes: req.query: " + JSON.stringify(req.query)
@@ -551,7 +556,7 @@ app.get(
  *       200:
  *         description: Success
  */
-app.post("/redirectToWait", twilio.webhook(), function (req, res) {
+app.post("/redirectToWait", shouldValidate, function (req, res) {
   response = new VoiceResponse();
   twimlBuilder.say(
     response,
@@ -574,7 +579,7 @@ app.post("/redirectToWait", twilio.webhook(), function (req, res) {
  *         description: Success
  */
 //used for repeating initial conference minutes gather if user - doesn't respond the first time
-app.get("/gatherConferenceMinutes", twilio.webhook(), function (req, res) {
+app.get("/gatherConferenceMinutes", shouldValidate, function (req, res) {
   parameters = urlSerializer.deserialize(req);
   const response = new VoiceResponse();
   twimlBuilder.gatherConferenceMinutes(
@@ -611,7 +616,7 @@ app.get("/gatherConferenceMinutes", twilio.webhook(), function (req, res) {
  *       200:
  *         description: Success
  */
-app.post("/voice", twilio.webhook(), async function (req, res) {
+app.post("/voice", shouldValidate, async function (req, res) {
   const response = new VoiceResponse();
 
   var generalStatus = await taskrouter.getFunctionalityStatus("general");
@@ -683,7 +688,7 @@ app.post("/voice", twilio.webhook(), async function (req, res) {
  *       200:
  *         description: Success
  */
-app.post("/randomSoundLoop", twilio.webhook(), function (req, res) {
+app.post("/randomSoundLoop", shouldValidate, function (req, res) {
   const response = new VoiceResponse();
   response.play(process.env.WAIT_URL);
   res.send(response.toString());
@@ -701,7 +706,7 @@ app.post("/randomSoundLoop", twilio.webhook(), function (req, res) {
  *       200:
  *         description: Success
  */
-app.post("/randomWordLoop", twilio.webhook(), function (req, res) {
+app.post("/randomWordLoop", shouldValidate, function (req, res) {
   const response = new VoiceResponse();
   var word = textsplitter.randomSentenceFromFiletextArray();
   twimlBuilder.sayReading(response, word);
@@ -721,7 +726,7 @@ app.post("/randomWordLoop", twilio.webhook(), function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/waitSound", twilio.webhook(), function (req, res) {
+app.get("/waitSound", shouldValidate, function (req, res) {
   res.append("Last-Modified", new Date(lastModifiedStringDate).toUTCString());
 });
 
@@ -773,7 +778,7 @@ app.post("/wait", twilio.webhook, function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/agent_answer_hangup", twilio.webhook(), function (req, res) {
+app.get("/agent_answer_hangup", shouldValidate, function (req, res) {
   parameters = urlSerializer.deserialize(req);
   const response = new VoiceResponse();
   twimlBuilder.say(response, "I didn't get any input from you.  Goodbye!");
@@ -822,7 +827,7 @@ app.get("/agent_answer_hangup", twilio.webhook(), function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/agent_answer", twilio.webhook(), async function (req, res) {
+app.get("/agent_answer", shouldValidate, async function (req, res) {
   parameters = urlSerializer.deserialize(req);
   const minutes = parameters.minutes;
   console.log("endpoint: agent_answer");
@@ -899,7 +904,7 @@ app.get("/agent_answer", twilio.webhook(), async function (req, res) {
  *       200:
  *         description: Success
  */
-app.post("/incomingCallEvents", twilio.webhook(), async function (req, res) {
+app.post("/incomingCallEvents", shouldValidate, async function (req, res) {
   event = req.body.StatusCallbackEvent;
   console.log("/incomingCallEvents:");
   console.log(JSON.stringify(req.body));
@@ -973,7 +978,7 @@ app.post("/incomingCallEvents", twilio.webhook(), async function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/conferenceEvents", twilio.webhook(), async function (req, res) {
+app.get("/conferenceEvents", shouldValidate, async function (req, res) {
   var responseValue = "";
   var callSid;
   var outboundCallSid;
@@ -1090,7 +1095,7 @@ app.get("/conferenceEvents", twilio.webhook(), async function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/updateCallToConference", twilio.webhook(), function (req, res) {
+app.get("/updateCallToConference", shouldValidate, function (req, res) {
   parameters = urlSerializer.deserialize(req);
   console.log(
     "/updateCallToConference: about to generate conference transfer twiml"
@@ -1150,7 +1155,7 @@ app.get("/updateCallToConference", twilio.webhook(), function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/agent_answer_process", twilio.webhook(), async function (req, res) {
+app.get("/agent_answer_process", shouldValidate, async function (req, res) {
   console.log("endpoint: agent_answer_process");
   console.log("/agent_answer_process: req.query: " + JSON.stringify(req.query));
   parameters = urlSerializer.deserialize(req);
@@ -1335,7 +1340,7 @@ app.get("/agent_answer_process", twilio.webhook(), async function (req, res) {
  *       200:
  *         description: Success
  */
-app.post("/assignment", twilio.webhook(), async function (req, res) {
+app.post("/assignment", shouldValidate, async function (req, res) {
   console.log("task attributes: " + req.body.TaskAttributes);
   console.log("worker attributes: " + req.body.WorkerAttributes);
   console.log("reservation sid: " + req.body.ReservationSid);
@@ -1471,7 +1476,7 @@ app.post("/assignment", twilio.webhook(), async function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/outboundCallEvent", twilio.webhook(), async function (req, res) {
+app.get("/outboundCallEvent", shouldValidate, async function (req, res) {
   var response = new VoiceResponse();
   parameters = urlSerializer.deserialize(req);
   switch (req.query.CallStatus) {
@@ -1506,7 +1511,7 @@ app.get("/outboundCallEvent", twilio.webhook(), async function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/endCall_automatic", twilio.webhook(), function (req, res) {
+app.get("/endCall_automatic", shouldValidate, function (req, res) {
   console.log("/endCall_automatic: now hanging up");
   var response = new VoiceResponse();
   response.hangup();
@@ -1537,7 +1542,7 @@ app.get("/endCall_automatic", twilio.webhook(), function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/automatic", twilio.webhook(), async function (req, res) {
+app.get("/automatic", shouldValidate, async function (req, res) {
   parameters = urlSerializer.deserialize(req);
   var response = new VoiceResponse();
   var url = urlSerializer.serialize("endCall_automatic", parameters);
@@ -1579,7 +1584,7 @@ app.get("/automatic", twilio.webhook(), async function (req, res) {
  *       200:
  *         description: Success
  */
-app.get("/processAutomatic", twilio.webhook(), function (req, res) {});
+app.get("/processAutomatic", shouldValidate, function (req, res) {});
 
 /**
  * @openapi
@@ -1623,7 +1628,7 @@ app.get("/processAutomatic", twilio.webhook(), function (req, res) {});
  *       200:
  *         description: Success
  */
-app.post("/workspaceEvent", twilio.webhook(), async function (req, res) {
+app.post("/workspaceEvent", shouldValidate, async function (req, res) {
   eventType = req.body.EventType;
   eventDescription = req.body.EventDescription;
   eventDate = req.body.EventDate;
