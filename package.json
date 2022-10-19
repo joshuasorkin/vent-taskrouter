@@ -1,6 +1,6 @@
 {
   "name": "vent-taskrouter",
-  "version": "1.0.0",
+  "version": "1.2.2",
   "description": "taskrouter implementation of vent prototype",
   "main": "./src/server.js",
   "directories": {
