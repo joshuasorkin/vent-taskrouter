@@ -9,9 +9,9 @@ const VoiceResponse = require("twilio").twiml.VoiceResponse;
 const MessagingResponse = require("twilio").twiml.MessagingResponse;
 
 const http_port = process.env.HTTP_PORT || process.env.PORT;
-const accountSid = process.env.TWILIO_ACCOUNT_SID; //add your account sid
-const authToken = process.env.TWILIO_AUTH_TOKEN; //add your auth token
-const workspaceSid = process.env.TWILIO_WORKSPACE_SID; //add your workspace sid
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const workspaceSid = process.env.TWILIO_WORKSPACE_SID;
 const workflowSid = process.env.TWILIO_WORKFLOW_SID;
 
 const client = require("twilio")(accountSid, authToken);
@@ -1692,43 +1692,20 @@ app.post("/workspaceEvent", shouldValidate, async function (req, res) {
     .send({ error: "error occurred in processing workspace event callback" });
 });
 
-//#region Existing admin dashboard
 /**
  * @openapi
- * '/submit_newuser':
- *  post:
+ * '/':
+ *  get:
  *     tags:
- *     - User
- *     summary: Show administration panel
+ *     summary: Root route
  *     parameters:
  *     responses:
  *       200:
  *         description: Success
- *       400:
- *         description: Bad request
  */
-app.get("/admin", function (req, res) {
-  res.sendFile(path.join(process.cwd() + "/public/admin.html"));
+app.get("/", function (req, res, next) {
+  res.status(200).json({ status: "up" });
 });
-
-/**
- * @openapi
- * '/submit_newuser':
- *  post:
- *     tags:
- *     - User
- *     summary: Register new user
- *     parameters:
- *     responses:
- *       200:
- *         description: Success
- *       400:
- *         description: Bad request
- */
-app.get("/apply", function (req, res) {
-  res.sendFile(path.join(process.cwd() + "/public/apply.html"));
-});
-//#endregion
 
 app.listen(http_port, async () => {
   console.log(`app listening on port ${http_port}`);
