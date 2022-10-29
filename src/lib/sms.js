@@ -345,6 +345,11 @@ class Sms {
     return responseValue;
   }
 
+  async admincontactinfo(parameterObj){
+    return `Name: ${process.env.ADMIN_NAME}\n`+
+              `Phone: ${process.env.ADMIN_PHONE_NUMBER}`;
+  }
+
   async status(parameterObj) {
     var attributes = JSON.parse(parameterObj.workerEntity.attributes);
     var do_not_contact = attributes.do_not_contact;

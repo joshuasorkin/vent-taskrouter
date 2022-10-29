@@ -27,6 +27,13 @@
         "parameterCount":4,
         "adminTask":"addUser"
     },
+    "admincontactinfo":{
+        "name":"admincontactinfo",
+        "description":"Returns contact info for the system administrator.",
+        "parameterUsage":"admincontactinfo",
+        "parameterCount":1,
+        "adminTask":null
+    },
     "changename":{
         "name":"changename",
         "description":"Changes a user's name.",
